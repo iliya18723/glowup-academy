@@ -10,6 +10,9 @@
     "backup": "node scripts/backup.js",
     "admin:password": "node scripts/change-admin-password.js"
   },
+  "engines": {
+    "node": "22.22.0"
+  },
   "dependencies": {
     "express": "^4.19.2",
     "express-session": "^1.18.0",
