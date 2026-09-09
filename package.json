@@ -4,9 +4,10 @@
   "description": "GlowUp Academy — final pre-deploy QA",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node scripts/seed-courses.js && node server.js",
     "dev": "nodemon server.js",
     "seed": "node db/seed.js",
+    "seed:courses": "node scripts/seed-courses.js",
     "backup": "node scripts/backup.js",
     "admin:password": "node scripts/change-admin-password.js"
   },
