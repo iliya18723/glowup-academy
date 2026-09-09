@@ -1,0 +1,30 @@
+<%- include('partials/header') %>
+<div class="container page-shell courses-discovery">
+  <div class="section-head reveal"><div><span class="eyebrow">DISCOVER</span><h1>کتابخانه‌ی دوره‌ها</h1><p>مسیر مناسب خودت را پیدا کن؛ جستجو، دسته‌بندی و مرتب‌سازی همه‌جا همراهت هستند.</p></div></div>
+
+  <form class="discovery-toolbar reveal" action="/courses" method="GET">
+    <div class="discovery-search"><span>⌕</span><input name="q" value="<%= q || '' %>" placeholder="نام دوره، موضوع یا مهارت…" aria-label="جستجوی دوره"></div>
+    <select name="category" aria-label="دسته‌بندی">
+      <option value="all" <%= category==='all'?'selected':'' %>>همه دسته‌ها</option>
+      <% categories.forEach(cat => { %><option value="<%= cat.id %>" <%= String(category)===String(cat.id)?'selected':'' %>><%= cat.title %></option><% }) %>
+    </select>
+    <select name="sort" aria-label="مرتب‌سازی">
+      <option value="featured" <%= sort==='featured'?'selected':'' %>>پیشنهاد گلوآپ</option>
+      <option value="newest" <%= sort==='newest'?'selected':'' %>>جدیدترین</option>
+      <option value="price_asc" <%= sort==='price_asc'?'selected':'' %>>ارزان‌ترین</option>
+      <option value="price_desc" <%= sort==='price_desc'?'selected':'' %>>گران‌ترین</option>
+    </select>
+    <button class="btn btn-gold" type="submit">اعمال فیلتر</button>
+    <% if(q || category!=='all' || sort!=='featured'){ %><a class="btn btn-outline" href="/courses">پاک کردن</a><% } %>
+  </form>
+
+  <div class="discovery-summary"><strong><%= courses.length %></strong> دوره پیدا شد <% if(q){ %><span>برای «<%= q %>»</span><% } %></div>
+  <% if (courses.length) { %>
+  <div class="course-grid reveal-stagger" id="courseGrid">
+    <% courses.forEach(c => { %><%- include('partials/course-card', { course: c }) %><% }) %>
+  </div>
+  <% } else { %>
+    <div class="empty-state glass discovery-empty"><div style="font-size:44px">⌕</div><h3>دوره‌ای پیدا نشد</h3><p>عبارت کوتاه‌تری امتحان کن یا فیلترها را پاک کن.</p><a class="btn btn-gold" href="/courses">نمایش همه دوره‌ها</a></div>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

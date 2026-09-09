@@ -1,0 +1,14 @@
+GlowUp Academy — Admin Pro 3.8
+Security Fortress
+
+- Super Admin Security Center
+- Secure admin password change from Settings
+- Current password verification
+- New password minimum 8 characters
+- Confirmation and reuse checks
+- bcrypt hashing with cost 12
+- Session regeneration after password change
+- Password-change audit event without storing passwords
+- Admin-only security routes
+- Security Center navigation
+- Dark Luxury / Gold responsive security UI

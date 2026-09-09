@@ -1,0 +1,7 @@
+GlowUp Academy 7.2.5 — Deep Stability Patch
+
+- Removed duplicate admin destructive-confirm handler (prevents double confirmation dialogs).
+- Kept admin category/table UX helpers without duplicate listeners.
+- Moved course-detail scripts before footer include so the HTML document structure is valid.
+- Hardened Zarinpal request/verify with timeout, safe JSON parsing, HTTP error handling and missing ref_id guard.
+- Added configurable ZARINPAL_TIMEOUT_MS (default 15000ms).

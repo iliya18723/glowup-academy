@@ -1,0 +1,9 @@
+GlowUp Academy 5.1.0 — P2-2 Professional Profile
+
+- Added authenticated /profile page with editable name, email and avatar URL.
+- Added learning stats: enrollments, XP, certificates, wishlist and level progress.
+- Added recent learning activity.
+- Added profile links in desktop/mobile navigation.
+- Synced avatar/email into the authenticated session.
+- Added CSRF-protected profile update form.
+- Added success/error feedback and a profile-updated notification.

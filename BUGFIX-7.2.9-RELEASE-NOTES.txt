@@ -1,0 +1,8 @@
+GlowUp Academy 7.2.9 - Admin QA / Data Integrity Bugfix
+
+- Fixed malformed Blog delete form: onsubmit confirmation now belongs to the form and CSRF field remains valid.
+- Added missing Homepage Section enable/disable button to the admin UI; backend toggle route already existed.
+- Course edit now recalculates sessions_count from course_sessions instead of trusting the submitted/read-only form value.
+- Category deletion now safely unassigns courses in a transaction, then deletes the category, preserving course/order data.
+- JS syntax checks passed for all project JS files.
+- EJS delimiter balance check passed.

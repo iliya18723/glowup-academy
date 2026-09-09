@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: glowup-academy
+    runtime: node
+    # Persistent disk is required for SQLite, sessions and local uploads.
+    # Render Persistent Disks are available on paid web services, not Free.
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    disk:
+      name: glowup-data
+      mountPath: /var/data
+      sizeGB: 10
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATA_DIR
+        value: /var/data
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: TRUST_PROXY
+        value: "1"
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_INITIAL_PHONE
+        sync: false
+      - key: ADMIN_INITIAL_PASSWORD
+        sync: false
+      - key: ZARINPAL_CURRENCY
+        value: IRT
+      - key: ZARINPAL_SANDBOX
+        value: "false"

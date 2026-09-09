@@ -1,0 +1,23 @@
+<%- include('partials/header') %>
+<div class="container page-shell wishlist-page">
+  <div class="wishlist-hero glass reveal">
+    <div><span class="eyebrow">MY SAVED COURSES</span><h1>❤️ دوره‌های ذخیره‌شده</h1><p>دوره‌هایی که برای بعد نگه داشتی، یکجا و مرتب.</p></div>
+    <div class="wishlist-count"><strong><%= saved.length %></strong><span>دوره ذخیره‌شده</span></div>
+  </div>
+
+  <% if (saved.length) { %>
+    <div class="wishlist-toolbar glass"><span>لیست علاقه‌مندی‌ها</span><a href="/courses" class="btn btn-outline">+ کشف دوره‌های جدید</a></div>
+    <div class="course-grid reveal-stagger"><% saved.forEach(c=>{ %><%- include('partials/course-card',{course:c}) %><% }) %></div>
+  <% } else { %>
+    <div class="empty-state glass wishlist-empty"><div class="wishlist-empty-icon">♡</div><h2>هنوز دوره‌ای ذخیره نکردی</h2><p>روی قلب کارت هر دوره بزن تا بعداً راحت برگردی سراغش.</p><a href="/courses" class="btn btn-gold">کشف دوره‌ها</a></div>
+  <% } %>
+
+  <% if (recommendations.length) { %>
+  <section class="wishlist-recommendations">
+    <div class="section-head"><div><span class="eyebrow">SMART PICKS</span><h2><%= saved.length ? 'شاید این‌ها هم به کارت بیاد' : 'پیشنهادهای محبوب برای شروع' %></h2><p>بر اساس دسته‌های مورد علاقه‌ات، چند انتخاب نزدیک‌تر را آماده کردیم.</p></div></div>
+    <div class="course-grid"><% recommendations.forEach(c=>{ %><%- include('partials/course-card',{course:c}) %><% }) %></div>
+  </section>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

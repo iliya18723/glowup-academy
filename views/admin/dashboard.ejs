@@ -1,0 +1,123 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar">
+  <div><h1>داشبورد</h1><div class="sub">نمای کلی وضعیت آکادمی</div></div>
+  <div class="admin-clock">🕐 <span id="adminClock">--:--</span></div>
+</div>
+
+<div class="admin-kpi-strip">
+  <div class="admin-kpi"><span>درآمد امروز</span><strong><%= stats.todayRevenue.toLocaleString('fa-IR') %></strong><small>تومان</small></div>
+  <div class="admin-kpi"><span>فروش امروز</span><strong><%= stats.todayOrders.toLocaleString('fa-IR') %></strong><small>سفارش موفق</small></div>
+  <div class="admin-kpi"><span>کاربر جدید امروز</span><strong><%= stats.newUsersToday.toLocaleString('fa-IR') %></strong><small>عضویت جدید</small></div>
+  <div class="admin-kpi"><span>کل ثبت‌نام دوره</span><strong><%= stats.enrollments.toLocaleString('fa-IR') %></strong><small>Enrollment</small></div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4Zm0 2c-3.3 0-8 1.6-8 4.5V21h16v-2.5c0-2.9-4.7-4.5-8-4.5Z"/></svg></div>
+    <div class="num" data-count="<%= stats.users %>">۰</div><div class="label">کاربران</div>
+    <div class="trend <%= stats.trends.users.dir %>"><%= stats.trends.users.dir === 'up' ? '↑' : (stats.trends.users.dir === 'down' ? '↓' : '·') %> <%= stats.trends.users.pct %>٪ نسبت به هفته قبل</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 8l10 5 8-4.2V16h2V8L12 3Z"/></svg></div>
+    <div class="num" data-count="<%= stats.courses %>">۰</div><div class="label">دوره‌ها</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 4 5v15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V5l-2-3H6Z"/></svg></div>
+    <div class="num" data-count="<%= stats.orders %>">۰</div><div class="label">سفارش‌های موفق</div>
+    <div class="trend <%= stats.trends.orders.dir %>"><%= stats.trends.orders.dir === 'up' ? '↑' : (stats.trends.orders.dir === 'down' ? '↓' : '·') %> <%= stats.trends.orders.pct %>٪ نسبت به هفته قبل</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+    <div class="num" data-count="<%= stats.revenue %>">۰</div><div class="label">درآمد کل (تومان)</div>
+    <div class="trend <%= stats.trends.revenue.dir %>"><%= stats.trends.revenue.dir === 'up' ? '↑' : (stats.trends.revenue.dir === 'down' ? '↓' : '·') %> <%= stats.trends.revenue.pct %>٪ نسبت به هفته قبل</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h13l3 3v13H4V4Z"/></svg></div>
+    <div class="num" data-count="<%= stats.posts %>">۰</div><div class="label">مطالب وبلاگ</div>
+  </div>
+  <div class="stat-card stat-accent"><div class="stat-icon">◉</div><div class="num" data-count="<%= stats.monthlyRevenue %>">۰</div><div class="label">درآمد این ماه (تومان)</div></div>
+  <div class="stat-card"><div class="stat-icon">⏳</div><div class="num" data-count="<%= stats.pendingOrders %>">۰</div><div class="label">سفارش در انتظار</div></div>
+</div>
+
+<div class="form-card glass" style="max-width:100%; margin:0 0 30px;">
+  <h3 style="margin-top:0; font-size:15px;">روند درآمد ۱۴ روز اخیر</h3>
+  <div class="revenue-chart-wrap"><canvas id="revenueChart"></canvas></div>
+</div>
+<script>window.__revenueChartData = <%- JSON.stringify(revenueChart) %>;</script>
+
+<div class="admin-grid-2" style="margin-bottom:30px;">
+  <div class="form-card glass">
+    <h3 style="margin-top:0;font-size:15px;">پرفروش‌ترین دوره‌ها</h3>
+    <% if (topCourses.length) { %>
+      <% topCourses.forEach((c,i)=>{ %><div class="rank-row"><b>#<%= i+1 %></b><span><%= c.title %></span><strong><%= c.sales.toLocaleString('fa-IR') %> فروش</strong></div><% }) %>
+    <% } else { %><p class="muted">هنوز فروشی ثبت نشده.</p><% } %>
+  </div>
+  <div class="form-card glass quick-panel">
+    <h3 style="margin-top:0;font-size:15px;">دسترسی سریع</h3>
+    <div class="quick-actions">
+      <a href="/admin/courses/new">＋ دوره جدید</a><a href="/admin/coupons">٪ کد تخفیف</a><a href="/admin/reports">⌁ گزارش فروش</a><a href="/admin/reviews">★ مدیریت نظرات</a><a href="/admin/settings">⚙ تنظیمات</a>
+    </div>
+  </div>
+</div>
+
+<section class="form-card glass" data-admin-live style="max-width:100%;margin:0 0 30px;">
+  <div class="panel-head"><div><span class="eyebrow">LIVE MONITOR</span><h3 style="margin:5px 0 0">نبض لحظه‌ای آکادمی</h3></div><span class="live-status"><i></i> بروزرسانی خودکار</span></div>
+  <div class="live-metrics"><div><small>درآمد کل</small><strong data-live="revenue">—</strong></div><div><small>درآمد امروز</small><strong data-live="todayRevenue">—</strong></div><div><small>سفارش امروز</small><strong data-live="todayOrders">—</strong></div><div><small>کاربران ۲۴ ساعت</small><strong data-live="activeUsers">—</strong></div><div><small>در انتظار پرداخت</small><strong data-live="pending">—</strong></div><div><small>Uptime</small><strong data-live-uptime>—</strong></div></div>
+</section>
+
+<div class="admin-dashboard-grid">
+  <section class="form-card glass attention-panel">
+    <div class="panel-head"><div><span class="eyebrow">ATTENTION</span><h3 style="margin:5px 0 0">مواردی که نیاز به اقدام دارند</h3></div><a class="small-link" href="/admin/activity">مشاهده فعالیت‌ها</a></div>
+    <div class="attention-list">
+      <% attention.forEach(a => { %>
+        <a href="<%= a.href %>" class="attention-item <%= a.tone %>"><span class="attention-icon"><%= a.icon %></span><span><b><%= a.label %></b><small>برای مدیریت کلیک کن</small></span><strong><%= a.value %></strong><span class="attention-arrow">←</span></a>
+      <% }) %>
+    </div>
+  </section>
+  <section class="form-card glass users-panel">
+    <div class="panel-head"><div><span class="eyebrow">NEW USERS</span><h3 style="margin:5px 0 0">آخرین کاربران</h3></div><a class="small-link" href="/admin/users">همه کاربران</a></div>
+    <div class="user-mini-list">
+      <% recentUsers.forEach(u => { %><a href="/admin/users/<%= u.id %>" class="user-mini"><span class="avatar-circle"><%= (u.full_name||'?').charAt(0) %></span><span><b><%= u.full_name %></b><small><%= u.phone || 'بدون شماره' %></small></span><time><%= new Date(u.created_at).toLocaleDateString('fa-IR') %></time></a><% }) %>
+      <% if (!recentUsers.length) { %><div class="empty-state">هنوز کاربر جدیدی ثبت نشده.</div><% } %>
+    </div>
+  </section>
+</div>
+
+<section class="admin-command-center reveal">
+  <div class="command-head">
+    <div><span class="eyebrow">CONTROL CENTER</span><h2>مرکز فرمان آکادمی</h2></div>
+    <span class="live-status"><i></i> سیستم فعال</span>
+  </div>
+  <div class="command-grid">
+    <a href="/admin/courses/new" class="command-card"><span class="command-icon">✦</span><b>ساخت دوره</b><small>دوره و جلسات جدید</small><span class="command-arrow">↗</span></a>
+    <a href="/admin/flash-sales" class="command-card hot"><span class="command-icon">⚡</span><b>فروش فوری</b><small>کمپین زمان‌دار</small><span class="command-arrow">↗</span></a>
+    <a href="/admin/notifications" class="command-card"><span class="command-icon">⌁</span><b>ارسال اعلان</b><small>ارتباط با کاربران</small><span class="command-arrow">↗</span></a>
+    <a href="/admin/analytics" class="command-card"><span class="command-icon">◌</span><b>آنالیز عمیق</b><small>فروش و رفتار کاربران</small><span class="command-arrow">↗</span></a>
+  </div>
+</section>
+
+<section class="form-card glass activity-panel" style="max-width:100%;margin:0 0 30px;">
+  <div class="panel-head"><div><span class="eyebrow">RECENT ACTIVITY</span><h3 style="margin:5px 0 0">آخرین اتفاقات</h3></div><span class="live-status"><i></i> به‌روزرسانی از دیتابیس</span></div>
+  <div class="activity-feed">
+    <% recentActivity.forEach(a => { %><div class="activity-row"><span class="activity-dot <%= a.type %>"><%= a.type === 'order' ? '💳' : '👤' %></span><div><b><%= a.label %></b><small><%= a.type === 'order' ? 'سفارش جدید ثبت کرد' : 'کاربر جدید ثبت‌نام کرد' %></small></div><span class="activity-value"><%= a.value == null ? '—' : Number(a.value).toLocaleString('fa-IR') + ' تومان' %></span><time><%= new Date(a.created_at).toLocaleDateString('fa-IR') %></time></div><% }) %>
+    <% if (!recentActivity.length) { %><div class="empty-state">فعالیت جدیدی وجود ندارد.</div><% } %>
+  </div>
+</section>
+
+<h3 style="font-size:15px;">سفارش‌های اخیر</h3>
+<table class="data-table">
+  <thead><tr><th>#</th><th>کاربر</th><th>مبلغ</th><th>وضعیت</th><th>تاریخ</th></tr></thead>
+  <tbody>
+    <% recentOrders.forEach(o => { %>
+      <tr>
+        <td><a class="small-link" href="/admin/orders/<%= o.id %>">#<%= o.id %></a></td>
+        <td><span class="avatar-circle"><%= o.full_name.charAt(0) %></span><%= o.full_name %></td>
+        <td><%= o.amount.toLocaleString('fa-IR') %> تومان</td>
+        <td><span class="status-pill status-<%= o.status %>"><%= o.status %></span></td>
+        <td><%= new Date(o.created_at).toLocaleDateString('fa-IR') %></td>
+      </tr>
+    <% }) %>
+    <% if (!recentOrders.length) { %><tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px;">هنوز سفارشی ثبت نشده</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('../partials/admin-footer') %>

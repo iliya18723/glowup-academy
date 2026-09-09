@@ -1,0 +1,21 @@
+GlowUp Academy 4.6.0 — P1-2 Student Dashboard Pro
+
+Implemented:
+- Redesigned student dashboard around active learning and resume flow.
+- Added enrolled course count, completed-course count, remaining-session count, and badge KPI.
+- Added Continue Learning hero using the first unfinished session.
+- Added weekly XP summary and recent XP activity from the immutable xp_events ledger.
+- Added richer course cards with completion state and improved CTA labels.
+- Added Quick Actions for courses, GlowUp quiz, and referral page.
+- Added responsive layouts for dashboard resume/activity sections.
+- Reused existing database tables; no migration required.
+
+Validation:
+- node --check routes/public.js
+- node --check server.js
+- node --check db/index.js
+
+Local runtime smoke test should be run on Windows after npm install:
+  npm install
+  npm start
+  http://localhost:3000/dashboard

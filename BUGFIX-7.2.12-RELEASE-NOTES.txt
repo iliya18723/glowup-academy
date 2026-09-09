@@ -1,0 +1,10 @@
+GlowUp Academy 7.2.12 — Cart & Purchase QA
+
+Fixed:
+1. Stale cart entries for already-enrolled courses are now removed from the visible cart.
+2. Checkout re-checks enrollment ownership server-side before charging, preventing duplicate standalone purchases from stale sessions.
+3. Payment authority is only persisted while the order is still pending.
+
+Validation:
+- JavaScript syntax checked with node --check.
+- ZIP integrity checked after packaging.

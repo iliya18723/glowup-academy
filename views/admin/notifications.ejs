@@ -1,0 +1,13 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar"><div><h1>مرکز اعلان‌ها</h1><div class="sub">برای یک کاربر یا همه کاربران پیام بفرست.</div></div></div>
+<div class="admin-grid-2"><form class="form-card glass admin-operation-form" action="/admin/notifications/send" method="POST">
+    <%- csrfField %>
+<h3>ارسال اعلان</h3>
+<div class="admin-form-intro">پیام را تنظیم کن، گیرنده را انتخاب کن و در پایان روی «ارسال اعلان» بزن.</div>
+<label>گیرنده<select name="user_id"><option value="all">همه کاربران</option><%users.forEach(u=>{%><option value="<%=u.id%>"><%=u.full_name%> — <%=u.phone%></option><%})%></select><small class="admin-field-help">اگر «همه کاربران» را انتخاب کنی، اعلان برای تمام کاربران ارسال می‌شود.</small></label>
+<label>عنوان<input name="title" maxlength="120" required placeholder="مثلاً: یک جلسه جدید به دوره اضافه شد"><small class="admin-field-help">یک عنوان کوتاه و قابل فهم بنویس.</small></label>
+<label>متن<textarea name="body" maxlength="500" rows="5" placeholder="متن اعلان را اینجا بنویس…"></textarea><small class="admin-field-help">متن اصلی پیام را واضح و کوتاه نگه دار.</small></label>
+<label>لینک<input name="link" value="/dashboard" maxlength="300" dir="ltr" placeholder="/dashboard"><small class="admin-field-help">اختیاری؛ با کلیک روی اعلان کاربر به این آدرس می‌رود.</small></label>
+<div class="form-actions"><button type="submit" class="btn btn-gold">✦ ارسال اعلان</button><span class="save-status">اطلاعات قبل از ارسال قابل ویرایش است.</span></div>
+</form><section class="form-card glass"><h3>آخرین اعلان‌ها</h3><div class="saved-list"><%recent.forEach(n=>{%><div class="notification-item"><span>✦</span><div><strong><%=n.title%></strong><small><%=n.full_name||'کاربر حذف‌شده'%> · <%=new Date(n.created_at).toLocaleDateString('fa-IR')%></small></div></div><%})%></div></section></div>
+<%- include('../partials/admin-footer') %>

@@ -1,0 +1,28 @@
+<div class="course-card-shell">
+<a class="course-card tilt premium-course-card" href="/courses/<%= course.slug %>" <% if (typeof course.category_id !== 'undefined') { %>data-category="<%= course.category_id %>"<% } %>>
+  <div class="card-glow"></div><div class="card-shine"></div><div class="thumb"><div class="image-frame"></div><div class="image-vignette"></div>
+    <% if (course.cover_image) { %>
+      <img src="<%= course.cover_image %>" alt="<%= course.title %>"
+           onerror="this.onerror=null; this.outerHTML = document.getElementById('art-fallback-<%= course.id %>').innerHTML;">
+      <template id="art-fallback-<%= course.id %>"><%- include('svg-art', { seedId: course.id }) %></template>
+    <% } else { %>
+      <%- include('svg-art', { seedId: course.id }) %>
+    <% } %>
+    <% if (course.discount_price) { %><div class="discount-flag">تخفیف ویژه</div><% } %>
+    <% if (course.is_featured) { %><div class="badge-flag">✦ پرطرفدار</div><% } %>
+    <div class="thumb-topline"><span>GLOW UP ACADEMY</span><span><%= String(course.sessions_count || 0).padStart(2, "0") %> SESSIONS</span></div><div class="thumb-cta"><span class="play-dot">▶</span> مشاهده دوره</div>
+  </div>
+  <div class="card-depth"><span>GLOW UP</span><em>EXPERIENCE</em></div><div class="body">
+    <h3><%= course.title %></h3>
+    <p><%= course.subtitle %></p>
+    <div class="meta">
+      <span class="tag"><%= course.sessions_count %> جلسه</span>
+      <span class="price">
+        <% if (course.discount_price) { %><del><%= course.price.toLocaleString('fa-IR') %></del><% } %>
+        <%= (course.flash_sale_price || course.discount_price || course.price).toLocaleString('fa-IR') %> تومان
+      </span>
+    </div>
+  </div>
+</a>
+<% if (user) { %><button type="button" class="card-wishlist" data-course-id="<%= course.id %>" aria-label="ذخیره <%= course.title %>" aria-pressed="<%= course.wished ? 'true' : 'false' %>" title="<%= course.wished ? 'حذف از ذخیره‌ها' : 'ذخیره دوره' %>"><%= course.wished ? '♥' : '♡' %></button><% } %>
+</div>

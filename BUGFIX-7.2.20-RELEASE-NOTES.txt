@@ -1,0 +1,6 @@
+GlowUp Academy 7.2.20 — Final System QA
+
+- Course creation now always initializes sessions_count to 0; the value is derived from actual course_sessions records.
+- Login returnTo is constrained to a local single-slash path to prevent redirect abuse if session state is manipulated.
+- Retained previous payment, coupon-concurrency, media-cleanup, protected-video, authentication and production-security hardening.
+- Static JavaScript syntax checks passed.

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0d">
+  <meta name="csrf-token" content="<%= csrfToken %>">
+  <meta name="description" content="<%= typeof description !== 'undefined' ? description : 'آکادمی گلو آپ؛ مسیر حرفه‌ای برای ارتقای ظاهر، ذهن، استایل و سبک زندگی.' %>">
+  <meta property="og:title" content="<%= title %> | گلو آپ آکادمی">
+  <meta property="og:description" content="<%= typeof description !== 'undefined' ? description : 'مسیر حرفه‌ای گلوآپ مردانه.' %>">
+  <title><%= title %> | گلو آپ آکادمی</title>
+  <link rel="stylesheet" href="/css/style.css?v=p10-fix">
+    <link rel="stylesheet" href="/css/responsive-final.css?v=p10-fix">
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">
+      <div class="logo-text">GLOW UP<span>ACADEMY</span></div>
+      <div class="mark">G</div>
+    </div>
+    <nav class="main-nav">
+      <ul>
+        <% if (siteNav && siteNav.length) { %>
+          <% siteNav.forEach(item => { %><li><a href="<%= item.url %>"><%= item.label %></a></li><% }) %>
+        <% } else { %>
+          <li><a href="/">خانه</a></li><li><a href="/courses">دوره‌ها</a></li><li><a href="/search">جستجو</a></li><li><a href="/blog">وبلاگ</a></li><li><a href="/#about">درباره</a></li><li><a href="/#contact">تماس با ما</a></li>
+        <% } %>
+        <% if (user) { %><li><a href="/dashboard">داشبورد من</a></li><li><a href="/achievements">دستاوردها</a></li><li><a href="/profile">پروفایل</a></li><% } %>
+      </ul>
+    </nav>
+    <div class="header-actions"><a href="/search" class="icon-btn hide-mobile" title="جستجو">⌕</a>
+      <% if (user) { %><div class="notification-menu"><a href="/notifications" class="icon-btn notification-trigger" title="اعلان‌ها" aria-label="اعلان‌ها">🔔<% if (notificationUnreadCount > 0) { %><span class="notification-count"><%= notificationUnreadCount > 99 ? '99+' : notificationUnreadCount %></span><% } %></a><div class="notification-dropdown"><div class="notification-dropdown-head"><strong>اعلان‌ها</strong><a href="/notifications">مشاهده همه</a></div><% if (notificationPreview.length) { notificationPreview.forEach(n=>{ %><a href="<%= n.link || '/notifications' %>" class="notification-preview <%= n.is_read?'':'unread' %>"><span><%= n.type==='certificate'?'🏆':n.type==='referral'?'🎁':n.type==='progress'?'🚀':n.type==='review'?'⭐':'✦' %></span><div><b><%= n.title %></b><small><%= n.body || '' %></small></div></a><% }) %><% } else { %><div class="notification-empty">فعلاً اعلان جدیدی نداری ✨</div><% } %></div></div><% } %>
+      <a href="/cart" class="icon-btn">🛒<% if (cartCount > 0) { %><span class="badge"><%= cartCount %></span><% } %></a>
+      <% if (user) { %>
+        <% if (['admin','editor','support'].includes(user.role)) { %><a href="/admin" class="btn btn-outline hide-mobile">پنل ادمین</a><% } %>
+        <form action="/logout" method="POST" style="display:inline" class="hide-mobile"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit" class="btn btn-outline"><%= user.full_name %> | خروج</button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="btn btn-gold hide-mobile">ورود / ثبت‌نام</a>
+      <% } %>
+      <button class="icon-btn hamburger" id="hamburgerBtn" aria-label="منو">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="menu-backdrop" id="menuBackdrop"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <% if (siteNav && siteNav.length) { %><% siteNav.forEach(item => { %><a href="<%= item.url %>"><%= item.label %></a><% }) %><% } else { %>
+      <a href="/">خانه</a><a href="/courses">دوره‌ها</a><a href="/blog">وبلاگ</a><a href="/#about">درباره</a><a href="/#contact">تماس با ما</a>
+    <% } %><% if (user) { %><a href="/dashboard">داشبورد من</a><a href="/achievements">🏆 دستاوردها</a><a href="/profile">پروفایل من</a><a href="/notifications">🔔 اعلان‌ها<% if (notificationUnreadCount > 0) { %> (<%= notificationUnreadCount %>)<% } %></a><% } %>
+    <hr>
+    <a href="/search">جستجو</a><a href="/cart">سبد خرید<% if (cartCount > 0) { %> (<%= cartCount %>)<% } %></a>
+    <% if (user) { %>
+      <% if (['admin','editor','support'].includes(user.role)) { %><a href="/admin">پنل ادمین</a><% } %>
+      <form action="/logout" method="POST"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="btn btn-outline" style="width:100%; margin-top:8px;">خروج (<%= user.full_name %>)</button></form>
+    <% } else { %>
+      <a href="/login" class="btn btn-gold" style="text-align:center; margin-top:8px;">ورود / ثبت‌نام</a>
+    <% } %>
+  </div>
+
+  <main>

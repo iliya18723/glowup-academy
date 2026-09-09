@@ -1,0 +1,11 @@
+GlowUp Academy — 7.2.27 Security / Edge QA
+
+- Hardened CMS HTML sanitization with an explicit tag/attribute allow-list.
+- Removed dangerous element blocks (script/style/iframe/object/embed/form/svg/math) including their contents.
+- Removed inline event-handler/style/srcdoc attributes from rendered blog HTML.
+- Restricted blog links and image URLs to http/https or safe same-site relative paths.
+- Added safe handling for target/rel and numeric image dimensions.
+- Profile avatar URLs now accept only http/https URLs; javascript/data/file-style payloads are rejected server-side.
+- Preserved EJS escaping for normal user-generated text.
+- CSRF middleware and upload-route CSRF checks remain enabled.
+- Syntax checks passed for modified application files.

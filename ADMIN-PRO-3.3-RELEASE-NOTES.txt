@@ -1,0 +1,16 @@
+GlowUp Academy — Admin Pro 3.3
+Users & Orders Pro
+
+- Advanced user search by name, phone, email.
+- Role filters and role counters.
+- Advanced order search by customer, phone, tracking code, or order ID.
+- Order status filters and counters.
+- Super Admin-only manual order status transition endpoint.
+- Order detail status control with CSRF token.
+- Premium responsive filter/stat UI.
+- Version bumped to 3.3.0.
+
+Validation:
+- node --check routes/admin.js
+- node --check server.js
+- ZIP integrity check

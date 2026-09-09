@@ -1,0 +1,9 @@
+GlowUp Academy P10 — Premium Course Showcase
+
+- Built on P9 Production Ready, preserving its security, admin, database, upload and Render improvements.
+- Redesigned the first viewport around database-driven featured courses.
+- Featured course cards now appear immediately inside the hero.
+- Premium 3D coverflow presentation with a larger central card, side depth and controls.
+- Course cards continue to use real published/featured course data from SQLite.
+- Responsive behavior tuned for desktop, tablet and mobile.
+- Removed the duplicate lower 3D showcase from the home page to keep the first viewport focused.

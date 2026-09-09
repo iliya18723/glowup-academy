@@ -1,0 +1,73 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar marketing-pro-head">
+  <div><span class="eyebrow">MARKETING INTELLIGENCE</span><h1>مرکز بازاریابی هوشمند</h1><div class="sub">کمپین، تخفیف، فروش فوری و معرفی دوستان را از یک داشبورد کنترل کن.</div></div>
+  <div class="marketing-actions"><a class="btn btn-outline" href="/admin/analytics">آنالیز فروش</a><a class="btn btn-primary" href="/admin/notifications">ارسال اعلان</a></div>
+</div>
+<% if (notice) { %><div class="notice success"><%= notice %></div><% } %><% if (error) { %><div class="notice error"><%= error %></div><% } %>
+
+<div class="marketing-kpi-grid">
+  <div class="stat-card"><span class="marketing-label">فروش موفق</span><strong><%= stats.paidOrders.toLocaleString('fa-IR') %></strong><small>کل سفارش‌های پرداخت‌شده</small></div>
+  <div class="stat-card stat-accent"><span class="marketing-label">درآمد</span><strong><%= stats.revenue.toLocaleString('fa-IR') %></strong><small>تومان</small></div>
+  <div class="stat-card"><span class="marketing-label">خریدار یکتا</span><strong><%= stats.buyers.toLocaleString('fa-IR') %></strong><small>از <%= stats.users.toLocaleString('fa-IR') %> کاربر</small></div>
+  <div class="stat-card"><span class="marketing-label">تبدیل فعلی</span><strong><%= stats.conversion %>٪</strong><small>کاربر → خریدار</small></div>
+</div>
+
+<div class="marketing-grid-main">
+  <section class="form-card glass campaign-builder">
+    <div class="section-head"><div><span class="eyebrow">CAMPAIGN BUILDER</span><h3>ساخت لینک کمپین</h3></div><span>UTM Ready</span></div>
+    <div class="marketing-form-grid">
+      <label>لینک مقصد<input id="utmUrl" value="/courses" placeholder="https://example.com/courses"></label>
+      <label>نام کمپین<input id="utmCampaign" placeholder="summer-sale"></label>
+      <label>کانال
+        <select id="utmSource"><option value="instagram">Instagram</option><option value="telegram">Telegram</option><option value="google">Google</option><option value="sms">SMS</option><option value="direct">Direct</option></select>
+      </label>
+      <label>نوع رسانه<input id="utmMedium" value="social" placeholder="social"></label>
+    </div>
+    <div class="utm-output"><code id="utmResult">—</code><button type="button" class="btn btn-outline" id="copyUtm">کپی لینک</button></div>
+    <div class="campaign-log">
+      <form method="post" action="/admin/marketing/log">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="channel" id="logChannel"><input type="hidden" name="source" id="logSource"><input type="hidden" name="medium" id="logMedium">
+        <input name="campaign" id="logCampaign" placeholder="برای ثبت کمپین، نام کمپین را وارد کن" required>
+        <button class="btn btn-primary">ثبت در فعالیت‌ها</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="form-card glass marketing-health">
+    <div class="section-head"><div><span class="eyebrow">GROWTH ENGINE</span><h3>موتور رشد</h3></div><span>وضعیت امروز</span></div>
+    <a class="growth-action" href="/admin/flash-sales"><b>⚡ فروش فوری</b><span><%= activeSales.length %> کمپین فعال</span><i>←</i></a>
+    <a class="growth-action" href="/admin/coupons"><b>٪ تخفیف</b><span><%= coupons.length %> کد در دسترس</span><i>←</i></a>
+    <a class="growth-action" href="/admin/referrals"><b>↗ معرفی دوستان</b><span><%= Number(referrals.referred||0).toLocaleString('fa-IR') %> معرفی</span><i>←</i></a>
+    <a class="growth-action" href="/admin/notifications"><b>⌁ ارتباط</b><span>اعلان هدفمند برای کاربران</span><i>←</i></a>
+  </section>
+</div>
+
+<div class="marketing-grid-main">
+  <section class="form-card glass">
+    <div class="section-head"><div><span class="eyebrow">PROMOTION STACK</span><h3>کدهای تخفیف</h3></div><a class="small-link" href="/admin/coupons">مدیریت همه ←</a></div>
+    <div class="marketing-list"><% coupons.forEach(c=>{ %><div class="marketing-row"><span class="promo-icon">٪</span><span><b><%= c.code %></b><small><%= c.type==='percent'?c.value+'٪ تخفیف':Number(c.value).toLocaleString('fa-IR')+' تومان' %></small></span><strong><%= Number(c.used_count||0).toLocaleString('fa-IR') %> استفاده</strong></div><% }) %><% if(!coupons.length){ %><div class="empty-state">هنوز کد تخفیفی ساخته نشده.</div><% } %></div>
+  </section>
+  <section class="form-card glass">
+    <div class="section-head"><div><span class="eyebrow">TOP CONTENT</span><h3>بهترین محتوا برای کمپین</h3></div><span>۳۰ روز اخیر</span></div>
+    <div class="marketing-list"><% topCourses.forEach((c,i)=>{ %><div class="marketing-row"><span class="rank-badge">#<%= i+1 %></span><span><b><%= c.title %></b><small><%= c.sales %> فروش</small></span><strong><%= Number(c.revenue).toLocaleString('fa-IR') %></strong></div><% }) %><% if(!topCourses.length){ %><div class="empty-state">برای پیشنهاد محتوا هنوز فروش کافی ثبت نشده.</div><% } %></div>
+  </section>
+</div>
+
+<section class="form-card glass">
+  <div class="section-head"><div><span class="eyebrow">ACTIVE OFFERS</span><h3>پیشنهادهای فعال</h3></div><a class="small-link" href="/admin/flash-sales">فروش فوری ←</a></div>
+  <div class="offer-grid"><% activeSales.forEach(s=>{ %><div class="offer-card"><span>⚡ ACTIVE</span><b><%= s.title %></b><small><%= Number(s.price).toLocaleString('fa-IR') %> → <%= Number(s.sale_price).toLocaleString('fa-IR') %> تومان</small><time>تا <%= new Date(s.ends_at).toLocaleString('fa-IR') %></time></div><% }) %><% if(!activeSales.length){ %><div class="empty-state">فروش فوری فعالی وجود ندارد.</div><% } %></div>
+</section>
+<script>
+(function(){
+ const $=id=>document.getElementById(id); const result=$('utmResult');
+ function build(){
+   let base=$('utmUrl').value.trim()||'/courses'; const sep=base.includes('?')?'&':'?';
+   const src=$('utmSource').value.trim(), med=$('utmMedium').value.trim(), camp=$('utmCampaign').value.trim();
+   const params=new URLSearchParams({utm_source:src,utm_medium:med,utm_campaign:camp||'campaign'}); result.textContent=base+sep+params.toString();
+   $('logChannel').value=src; $('logSource').value=src; $('logMedium').value=med; $('logCampaign').value=camp;
+ }
+ ['utmUrl','utmCampaign','utmSource','utmMedium'].forEach(id=>$(id).addEventListener('input',build)); $('utmSource').addEventListener('change',build); build();
+ $('copyUtm').addEventListener('click',async()=>{const text=result.textContent;try{if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(text);else{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();} $('copyUtm').textContent='کپی شد ✓'; setTimeout(()=>$('copyUtm').textContent='کپی لینک',1300);}catch(e){prompt('لینک کمپین را کپی کن',text);}});
+})();
+</script>
+<%- include('../partials/admin-footer') %>

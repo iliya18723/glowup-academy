@@ -1,0 +1,11 @@
+GlowUp Academy 7.2.1 — Bugfix release
+
+Fixed:
+- Learning progress endpoint no longer references undefined xpNow.
+- Bundle purchases now persist every included course into order_items so successful payments and manual paid-order fulfillment grant all bundle enrollments.
+- Wishlist buttons now work on every page using the shared course-card partial, not only on /wishlist.
+- Removed duplicate /admin/marketing GET route left by the 7.2 merge.
+- Added aria-pressed updates for wishlist state.
+
+Notes:
+- Bundle revenue remains the order-level amount; bundle course order-item prices are zero because the bundle is sold as one offer.

@@ -1,0 +1,22 @@
+GlowUp Academy Admin Pro 4.4 — P0-6 Admin Security & Forms
+
+Implemented:
+- Added explicit CSRF hidden fields to admin POST forms so security no longer depends on client-side JavaScript injection.
+- Kept multipart upload CSRF validation after multer parsing and preserved cleanup of rejected uploads.
+- Rotated the CSRF token after successful login and registration instead of carrying the pre-authentication token forward.
+- Synchronized the authenticated user's role/name/phone from the database on each request, preventing stale role permissions after an admin changes a user's role.
+- If a session references a deleted user, the session is destroyed and the request continues as anonymous.
+- Production session cookies now require COOKIE_SECURE=true to be sent securely; development remains usable over localhost HTTP.
+- Logout clears the session cookie after destroying the server-side session.
+- Bumped package version to 4.4.0.
+
+Validation:
+- node --check server.js
+- node --check routes/auth.js
+- node --check middleware/auth.js
+- node --check routes/admin.js
+- Explicit CSRF fields verified across admin POST forms.
+
+Notes:
+- Existing admin JS CSRF fallback remains for compatibility with dynamic forms and fetch calls.
+- Local development can continue with npm start and http://localhost:3000.

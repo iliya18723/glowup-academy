@@ -1,0 +1,33 @@
+<%
+// این پارشیال یک گرافیک خطی طلایی/تیره اختصاصی برای دوره‌هایی که هنوز عکس واقعی ندارند رسم می‌کند.
+// به محض این‌که از پنل ادمین عکس واقعی آپلود شود، این گرافیک جایگزین می‌شود.
+const artTypes = ['fitness', 'face', 'play', 'style', 'mind'];
+const artColors = {
+  fitness: ['#3a3226', '#0c0c0e'],
+  face:    ['#332e28', '#0c0c0e'],
+  play:    ['#352b1c', '#0c0c0e'],
+  style:   ['#2e2c33', '#0c0c0e'],
+  mind:    ['#2a2f33', '#0c0c0e']
+};
+const type = artTypes[(typeof seedId !== 'undefined' ? seedId : 0) % artTypes.length];
+const colors = artColors[type];
+%>
+<div style="width:100%;height:100%;background:linear-gradient(160deg,<%= colors[0] %>,<%= colors[1] %> 70%);display:flex;align-items:center;justify-content:center;">
+  <svg width="42%" viewBox="0 0 100 100" fill="none" stroke="#f0d9a0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <% if (type === 'fitness') { %>
+      <line x1="10" y1="50" x2="90" y2="50"/>
+      <rect x="0" y="35" width="14" height="30" rx="4" fill="#f0d9a0" stroke="none"/>
+      <rect x="86" y="35" width="14" height="30" rx="4" fill="#f0d9a0" stroke="none"/>
+    <% } else if (type === 'face') { %>
+      <path d="M30 20 C20 40 22 65 38 80 C50 90 65 88 75 75 C82 62 80 40 72 22 C65 8 45 5 35 10 C28 13 25 15 30 20 Z"/>
+    <% } else if (type === 'play') { %>
+      <circle cx="50" cy="50" r="35" fill="#f0d9a0" stroke="none"/>
+      <path d="M42 35 L68 50 L42 65 Z" fill="#171208" stroke="none"/>
+    <% } else if (type === 'style') { %>
+      <path d="M25 15 L50 35 L75 15 L65 90 L35 90 Z"/>
+    <% } else { %>
+      <path d="M10 20 L10 80 L48 68 L48 12 Z"/>
+      <path d="M90 20 L90 80 L52 68 L52 12 Z"/>
+    <% } %>
+  </svg>
+</div>

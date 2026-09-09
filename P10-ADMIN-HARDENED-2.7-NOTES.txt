@@ -1,0 +1,8 @@
+GlowUp Academy 2.7.0 — Admin Hardening + Cinematic Course Covers
+
+- Fixed editor/support permission mismatches that could produce unexpected 403s on valid sub-routes.
+- Added /admin/dashboard alias to avoid stale-link 404s.
+- Stale course/session/order/blog links now redirect back to the relevant admin list instead of raw 404 pages.
+- Missing uploaded files are cleaned up when an edit target no longer exists.
+- Course showcase covers now use a cinematic portrait frame, vignette, gold micro-border, metadata strip, glass play CTA, and stronger 3D depth.
+- Existing database-driven course images remain unchanged; the presentation layer is upgraded.

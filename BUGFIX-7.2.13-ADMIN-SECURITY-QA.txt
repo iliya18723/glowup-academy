@@ -1,0 +1,9 @@
+GlowUp Academy 7.2.13
+
+Admin Panel Security & UX QA
+- Protected Super Admin accounts from deletion and protected the last Super Admin from demotion.
+- Validated target users on role changes.
+- Hardened bulk course actions against invalid/duplicate IDs and actions.
+- Hardened banner/menu/homepage reorder payloads.
+- Added destructive confirmations to bundle, flash-sale, and coupon deletion.
+- Added clearer admin feedback for bulk operations.

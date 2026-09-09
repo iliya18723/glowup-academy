@@ -1,0 +1,12 @@
+GlowUp Academy P8 - Mobile Responsive Fix
+
+Changes:
+- Redesigned mobile header, hero, stats, course cards and filters.
+- Prevented accidental horizontal page overflow.
+- Improved mobile forms and touch targets.
+- Disabled mouse-only 3D effects on touch devices.
+- Improved course/watch layouts on small screens.
+- Added a real mobile drawer menu for the admin sidebar.
+- Added mobile admin table scrolling instead of breaking the page layout.
+- Added mobile admin menu overlay and toggle button.
+- Preserved the existing P8 desktop design and functionality.

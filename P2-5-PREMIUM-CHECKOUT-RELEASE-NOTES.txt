@@ -1,0 +1,8 @@
+GlowUp Academy 5.4.0 — P2-5 Premium Checkout & Shopping Experience
+
+- Premium cart/checkout layout with clear 3-step progress.
+- Sticky desktop order summary and responsive mobile layout.
+- Security, immediate access, and permanent access trust points.
+- Related-course recommendations based on cart categories.
+- Existing coupon, referral, bundle, CSRF, and payment flows preserved.
+- No database schema changes.

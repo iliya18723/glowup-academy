@@ -1,0 +1,8 @@
+GlowUp Academy 7.2.24
+
+- Bundle checkout excludes courses already owned by the user.
+- Bundle price is prorated by remaining course count, so owned courses are not charged again.
+- Fully owned bundles are removed from the payable cart.
+- Overlapping selected bundles are blocked instead of charging duplicate courses.
+- Cart displays the actual adjusted bundle charge.
+- Bundle add now rejects overlap with an already selected bundle.

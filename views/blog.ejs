@@ -1,0 +1,42 @@
+<%- include('partials/header') %>
+<div class="container" style="padding-top:30px;">
+  <div class="section-title reveal"><div><span class="eyebrow">مطالب آموزشی</span><h2>وبلاگ گلو‌آپ آکادمی</h2></div></div>
+
+  <% if (posts.length) { %>
+    <a class="blog-hero-card reveal" href="/blog/<%= posts[0].slug %>">
+      <div class="blog-hero-img">
+        <img src="<%= posts[0].cover_image || '/uploads/placeholder.jpg' %>" alt="<%= posts[0].title %>">
+      </div>
+      <div class="blog-hero-body">
+        <span class="tag">تازه‌ترین مطلب</span>
+        <h2><%= posts[0].title %></h2>
+        <p><%= posts[0].excerpt %></p>
+        <div class="blog-meta">
+          <span>📖 <%= posts[0].reading_time %> دقیقه مطالعه</span>
+          <span>🗓 <%= new Date(posts[0].created_at).toLocaleDateString('fa-IR') %></span>
+        </div>
+      </div>
+    </a>
+  <% } %>
+
+  <div class="course-grid reveal-stagger">
+    <% posts.slice(1).forEach(p => { %>
+      <a class="course-card tilt blog-card" href="/blog/<%= p.slug %>">
+        <div class="thumb">
+          <img src="<%= p.cover_image || '/uploads/placeholder.jpg' %>" alt="<%= p.title %>">
+          <div class="thumb-cta"><span class="play-dot">📖</span> مطالعه مطلب</div>
+        </div>
+        <div class="body">
+          <h3><%= p.title %></h3>
+          <p><%= p.excerpt %></p>
+          <div class="meta">
+            <span class="tag"><%= p.reading_time %> دقیقه</span>
+            <span class="price" style="font-size:11px; color:var(--text-muted); font-weight:400;"><%= new Date(p.created_at).toLocaleDateString('fa-IR') %></span>
+          </div>
+        </div>
+      </a>
+    <% }) %>
+    <% if (!posts.length) { %><p style="color:var(--text-muted)">هنوز مطلبی منتشر نشده.</p><% } %>
+  </div>
+</div>
+<%- include('partials/footer') %>

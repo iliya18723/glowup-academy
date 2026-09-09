@@ -1,0 +1,11 @@
+GlowUp Academy 5.3.0 — P2-4 Wishlist & Smart Recommendations
+
+- Added dedicated /wishlist page for saved courses.
+- Added quick wishlist heart action to course cards.
+- Added removal animation on wishlist page.
+- Added related-course recommendations on course detail pages.
+- Added category-aware recommendations that exclude already-saved courses.
+- Added saved-course count and discovery CTA.
+- Added responsive wishlist UI.
+- Preserved existing wishlist database table and toggle endpoint.
+- Preserved CSRF protection for wishlist mutations.

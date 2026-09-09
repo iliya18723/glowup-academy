@@ -1,0 +1,7 @@
+GlowUp Academy 7.2.17 — Coupon Concurrency QA
+
+- Coupon max_uses is re-checked inside the SQLite write transaction that creates the order.
+- Recent pending orders reserve a coupon use for 30 minutes, preventing two simultaneous checkouts from consuming the same final coupon slot.
+- Expired/failed old pending attempts no longer permanently consume a coupon slot.
+- If the final coupon slot is taken concurrently, the checkout stops cleanly and clears the stale coupon from the session.
+- package.json version bumped to 7.2.17.

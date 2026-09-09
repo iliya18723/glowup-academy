@@ -1,0 +1,20 @@
+<%- include('../partials/admin-header') %>
+<h1>سفارش #<%= order.id %></h1>
+<div class="form-card">
+  <p><b>کاربر:</b> <%= order.full_name %> (<%= order.phone %>)</p>
+  <p><b>مبلغ کل:</b> <%= order.amount.toLocaleString('fa-IR') %> تومان</p>
+  <p><b>وضعیت:</b> <span class="status-pill status-<%= order.status %>"><%= order.status %></span></p>
+<form action="/admin/orders/<%=order.id%>/status" method="POST" class="pro-status-form"><input type="hidden" name="_csrf" value="<%=csrfToken%>"><label>تغییر وضعیت</label><select name="status"><option value="pending" <%=order.status==='pending'?'selected':''%>>در انتظار</option><option value="paid" <%=order.status==='paid'?'selected':''%>>پرداخت موفق</option><option value="failed" <%=order.status==='failed'?'selected':''%>>ناموفق</option><option value="canceled" <%=order.status==='canceled'?'selected':''%>>لغوشده</option></select><button class="btn btn-gold">ذخیره وضعیت</button></form>
+  <p><b>کد پیگیری:</b> <%= order.ref_id || '-' %></p>
+  <p><b>تاریخ ثبت:</b> <%= new Date(order.created_at).toLocaleString('fa-IR') %></p>
+</div>
+<h2 style="margin-top:30px;">اقلام سفارش</h2>
+<table class="data-table">
+  <thead><tr><th>دوره</th><th>قیمت</th></tr></thead>
+  <tbody>
+    <% items.forEach(i => { %>
+      <tr><td><%= i.course_title %></td><td><%= i.price.toLocaleString('fa-IR') %> تومان</td></tr>
+    <% }) %>
+  </tbody>
+</table>
+<%- include('../partials/admin-footer') %>

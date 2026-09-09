@@ -1,0 +1,19 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar"><div><span class="eyebrow">فروش</span><h1>کدهای تخفیف</h1><div class="sub">کمپین‌ها و پیشنهادهای ویژه را مدیریت کن.</div></div></div>
+<section class="form-card glass admin-form-grid">
+<form action="/admin/coupons/new" method="POST" class="coupon-form">
+    <%- csrfField %>
+  <label>کد تخفیف<input name="code" required placeholder="GLOW20"></label>
+  <label>نوع<select name="type"><option value="percent">درصدی</option><option value="fixed">مبلغ ثابت</option></select></label>
+  <label>مقدار<input name="value" type="number" min="1" required placeholder="20"></label>
+  <label>حداکثر استفاده<input name="max_uses" type="number" min="1" placeholder="بدون محدودیت"></label>
+  <label>انقضا<input name="expires_at" type="datetime-local"></label>
+  <button class="btn btn-gold" type="submit">ساخت کد تخفیف +</button>
+</form></section>
+<table class="data-table"><thead><tr><th>کد</th><th>تخفیف</th><th>استفاده</th><th>انقضا</th><th>وضعیت</th><th></th></tr></thead><tbody>
+<% coupons.forEach(c=>{ %><tr><td><strong class="code-chip"><%= c.code %></strong></td><td><%= c.value.toLocaleString('fa-IR') %> <%= c.type==='percent'?'٪':'تومان' %></td><td><%= c.used_count.toLocaleString('fa-IR') %><%= c.max_uses?' / '+c.max_uses.toLocaleString('fa-IR'):'' %></td><td><%= c.expires_at?new Date(c.expires_at).toLocaleString('fa-IR'):'بدون انقضا' %></td><td><span class="status-pill <%= c.is_active?'status-paid':'status-canceled' %>"><%= c.is_active?'فعال':'خاموش' %></span></td><td class="row-actions"><form method="POST" action="/admin/coupons/<%= c.id %>/toggle">
+  <%- csrfField %><button class="btn btn-outline">فعال / غیرفعال</button></form><form method="POST" action="/admin/coupons/<%= c.id %>/delete" onsubmit="return confirm('این کد تخفیف حذف شود؟')">
+  <%- csrfField %>
+<button class="btn btn-danger">حذف</button></form></td></tr><% }) %>
+</tbody></table>
+<%- include('../partials/admin-footer') %>

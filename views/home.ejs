@@ -1,0 +1,170 @@
+<%- include('partials/header') %>
+
+<section class="hero hero-premium p10-hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+
+  <div class="p10-hero-copy hero-fade">
+    <div class="hero-pill">✦ <b>آکادمی تخصصی</b> گلو‌آپ مردانه</div>
+    <h1><% if(settings.home_headline){ %><%= settings.home_headline %><% } else { %>بهترین <span class="gold">نسخه‌ی خودت</span> باش<% } %></h1>
+    <p><%= settings.home_subheadline || "دوره‌های کاربردی برای تغییر واقعی در ظاهر، ذهن و سبک زندگی — طراحی‌شده برای مردانی که برای خودشان وقت می‌گذارند." %></p>
+  </div>
+
+  <% if (featured && featured.length) { %>
+  <div class="p10-course-showcase hero-fade" style="animation-delay:.2s" aria-label="دوره‌های پرطرفدار">
+    <div class="p10-showcase-heading">
+      <div><span class="eyebrow">دوره‌های پرطرفدار</span><strong>مسیر تحول تو از اینجا شروع می‌شود</strong></div>
+      <span class="p10-showcase-note">حرکت بده، انتخاب کن، شروع کن</span>
+    </div>
+    <div class="coverflow p10-coverflow">
+      <div class="coverflow-stage">
+        <% featured.forEach((c, i) => { %>
+          <div class="coverflow-item" data-index="<%= i %>" style="direction:rtl;">
+            <%- include('partials/course-card', { course: c }) %>
+          </div>
+        <% }) %>
+      </div>
+      <div class="coverflow-controls">
+        <button class="carousel-arrow cf-prev" aria-label="قبلی">‹</button>
+        <div class="coverflow-dots">
+          <% featured.forEach((c, i) => { %><span class="cf-dot" data-index="<%= i %>"></span><% }) %>
+        </div>
+        <button class="carousel-arrow cf-next" aria-label="بعدی">›</button>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
+  <div class="p10-hero-actions hero-fade" style="animation-delay:.35s">
+    <a href="/quiz" class="btn btn-gold btn-xl">شروع تست گلوآپ ✦</a>
+    <a href="/courses" class="btn btn-outline btn-xl">مشاهده همه دوره‌ها</a>
+  </div>
+  <div class="hero-trust hero-fade" style="animation-delay:.42s"><span>✦ دسترسی دائمی</span><span>✦ پشتیبانی واقعی</span><span>✦ آپدیت رایگان</span></div>
+</section>
+
+<!-- P1-4: Course cards are intentionally visible outside the 3D hero carousel too. -->
+<% if (featured && featured.length) { %>
+<section class="container p14-courses-section reveal" aria-label="دوره‌های گلوآپ">
+  <div class="p14-section-head">
+    <div>
+      <span class="eyebrow">GLOW UP ACADEMY</span>
+      <h2>دوره‌ای که به کارت می‌آید را انتخاب کن</h2>
+      <p>همین حالا مسیر مناسب خودت را پیدا کن و از همان جلسه اول شروع کن.</p>
+    </div>
+    <a href="/courses" class="btn btn-outline">مشاهده همه دوره‌ها ←</a>
+  </div>
+  <div class="p14-course-grid reveal-stagger">
+    <% featured.slice(0, 6).forEach((c) => { %>
+      <%- include('partials/course-card', { course: c }) %>
+    <% }) %>
+  </div>
+</section>
+<% } %>
+
+<% if (banners && banners.length) { %>
+<section class="container premium-banner-stage reveal" aria-label="پیشنهادهای ویژه">
+  <% banners.forEach((b,i)=>{ %>
+    <article class="premium-banner <%= i===0?'is-active':'' %>" data-banner-index="<%= i %>">
+      <div class="banner-orb"></div><div class="banner-copy"><span class="eyebrow"><%= b.eyebrow || 'GLOW UP / SPECIAL' %></span><h2><%= b.title %></h2><p><%= b.subtitle || '' %></p><% if(b.cta_text){ %><a class="btn btn-gold" href="<%= b.cta_url || '/courses' %>"><%= b.cta_text %> ←</a><% } %></div>
+      <% if(b.image){ %><div class="banner-media"><img src="<%= b.image %>" alt="<%= b.title %>"></div><% } else { %><div class="banner-media banner-no-image"><span>✦</span><small>PREMIUM</small></div><% } %>
+    </article>
+  <% }) %>
+  <% if(banners.length>1){ %><div class="banner-dots"><% banners.forEach((b,i)=>{ %><button type="button" class="banner-dot <%= i===0?'active':'' %>" data-banner-to="<%= i %>" aria-label="بنر <%= i+1 %>"></button><% }) %></div><% } %>
+</section>
+<% } %>
+
+<% if (homepageSections && homepageSections.length) { %>
+  <div class="container home-cms-sections">
+    <% homepageSections.forEach(sec=>{ %><section class="quiz-banner reveal"><div><span class="eyebrow"><%= sec.section_key %></span><h2><%= sec.title %></h2><p><%= sec.subtitle || sec.content %></p></div><% if(sec.cta_text){ %><a class="btn btn-gold" href="<%= sec.cta_url || '/courses' %>"><%= sec.cta_text %> ←</a><% } %></section><% }) %>
+  </div>
+<% } %>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>قدرت</span><span>·</span><span>انضباط</span><span>·</span><span>استایل</span><span>·</span><span>تمرکز</span><span>·</span><span>اعتماد‌به‌نفس</span><span>·</span>
+    <span>قدرت</span><span>·</span><span>انضباط</span><span>·</span><span>استایل</span><span>·</span><span>تمرکز</span><span>·</span><span>اعتماد‌به‌نفس</span><span>·</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="stats-strip">
+    <div class="stat-item"><b class="counter" data-target="10000">۰</b><span>دانشجو</span></div>
+    <div class="stat-item"><b>دسترسی دائمی</b><span>به تمام دوره‌ها</span></div>
+    <div class="stat-item"><b>پشتیبانی واقعی</b><span>پاسخ‌گویی مستقیم</span></div>
+    <div class="stat-item"><b>آپدیت منظم</b><span>محتوای تازه</span></div>
+  </div>
+
+  <section class="quiz-banner reveal"><div><span class="eyebrow">شروع شخصی‌سازی‌شده</span><h2>نمی‌دونی از کجا شروع کنی؟</h2><p>با چند سؤال کوتاه، مسیر مناسب خودت را پیدا کن.</p></div><a href="/quiz" class="btn btn-gold">شروع تست گلوآپ ←</a></section>
+
+  <div class="section-title reveal">
+    <div><span class="eyebrow">چرا گلو‌آپ آکادمی</span><h2>یک مسیر، سه محور تحول</h2></div>
+  </div>
+  <div class="feature-grid reveal-stagger">
+    <div class="feature-card tilt">
+      <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5h11v11h-11z"/><path d="M2 9.5h4M2 14.5h4M18 9.5h4M18 14.5h4M9.5 2v4M14.5 2v4M9.5 18v4M14.5 18v4"/></svg></div>
+      <h3>برنامه‌ی اختصاصی</h3>
+      <p>هر دوره بر اساس هدف مشخص طراحی شده، نه یک محتوای عمومی و کلی.</p>
+    </div>
+    <div class="feature-card tilt">
+      <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.5 8.7 8 10 4.5-1.3 8-5 8-10V6l-8-4Z"/></svg></div>
+      <h3>پیگیری واقعی</h3>
+      <p>تیم پشتیبانی مسیر پیشرفت هر دانشجو را تا رسیدن به هدف دنبال می‌کند.</p>
+    </div>
+    <div class="feature-card tilt">
+      <div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2M7 10l5 5 5-5M12 15V3"/></svg></div>
+      <h3>دسترسی دائمی</h3>
+      <p>یک‌بار خرید می‌کنی، برای همیشه به دوره و آپدیت‌های بعدی‌اش دسترسی داری.</p>
+    </div>
+  </div>
+
+  <div class="section-title reveal">
+    <div><span class="eyebrow">تجربه‌ی دانشجوها</span><h2>چی می‌گن؟</h2></div>
+  </div>
+  <div class="testimonial-grid reveal-stagger">
+    <div class="testimonial-card tilt">
+      <p>«تا قبل از این دوره فکر می‌کردم تغییر ظاهری یعنی فقط باشگاه رفتن. برنامه‌ی چهارفازی کمکم کرد هم رژیم و هم استایلم رو منظم کنم.»</p>
+      <div class="testimonial-author">— امیرحسین، دانشجوی دوره‌ی «گلو‌آپ در ۳۰ روز»</div>
+    </div>
+    <div class="testimonial-card tilt">
+      <p>«جلسات ذهن قدرتمند واقعاً روی نظم روزانه‌م اثر گذاشت. چیزی که بیشتر از همه دوست داشتم، پیگیری واقعی پشتیبانی بود.»</p>
+      <div class="testimonial-author">— محمد، دانشجوی دوره‌ی «ذهن قدرتمند»</div>
+    </div>
+  </div>
+
+  <% if (testimonials && testimonials.length) { %>
+  <div class="section-title reveal"><div><span class="eyebrow">SOCIAL PROOF</span><h2>تغییر واقعی، تجربه واقعی</h2></div></div>
+  <div class="testimonial-grid reveal-stagger">
+    <% testimonials.forEach(t => { %><div class="testimonial-card tilt"><div class="stars"><%= '★'.repeat(t.rating) %></div><p>«<%= t.quote %>»</p><div class="testimonial-author">— <%= t.name %><%= t.role ? '، '+t.role : '' %></div></div><% }) %>
+  </div>
+  <% } %>
+
+  <% if (faqs && faqs.length) { %>
+  <div class="section-title reveal"><div><span class="eyebrow">FAQ</span><h2>سؤال‌های پرتکرار</h2></div></div>
+  <div class="faq-list reveal-stagger"><% faqs.forEach(f=>{ %><details class="faq-item"><summary><%= f.question %><span>＋</span></summary><p><%= f.answer %></p></details><% }) %></div>
+  <% } %>
+
+  <% if (posts.length) { %>
+  <div class="section-title reveal">
+    <div><span class="eyebrow">وبلاگ</span><h2>آخرین مطالب</h2></div>
+    <a href="/blog" class="small-link">مشاهده همه ←</a>
+  </div>
+  <div class="course-grid reveal-stagger">
+    <% posts.forEach(p => { %>
+      <a class="course-card tilt" href="/blog/<%= p.slug %>">
+        <div class="thumb">
+          <% if (p.cover_image) { %><img src="<%= p.cover_image %>" alt="<%= p.title %>">
+          <% } else { %><%- include('partials/svg-art', { seedId: p.id }) %><% } %>
+        </div>
+        <div class="body">
+          <h3><%= p.title %></h3>
+          <p><%= p.excerpt %></p>
+          <span class="tag">📖 <%= p.reading_time %> دقیقه مطالعه</span>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

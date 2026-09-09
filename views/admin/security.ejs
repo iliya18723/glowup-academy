@@ -1,0 +1,7 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar"><div><span class="eyebrow">SECURITY FORTRESS</span><h1>مرکز امنیت</h1><div class="sub">کنترل حساب‌های مدیریتی و آخرین رویدادهای امنیتی.</div></div></div>
+<div class="pro-role-grid security-grid">
+  <section class="form-card glass"><h3>حساب‌های Super Admin</h3><div class="security-list"><% admins.forEach(a=>{ %><div class="security-row"><div><strong><%= a.full_name %></strong><small><%= a.phone %></small></div><span class="security-badge">ADMIN</span></div><% }) %></div></section>
+  <section class="form-card glass"><h3>آخرین رویدادهای امنیتی</h3><div class="security-list"><% if(!recent.length){ %><div class="empty-state">هنوز رویداد امنیتی ثبت نشده است.</div><% } else { recent.forEach(r=>{ %><div class="security-row"><div><strong><%= r.full_name || 'سیستم' %></strong><small><%= r.action %> · <%= r.created_at %></small></div><span class="security-badge">LOG</span></div><% }) } %></div></section>
+</div>
+<%- include('../partials/admin-footer') %>

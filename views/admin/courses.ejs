@@ -1,0 +1,86 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar">
+  <div><h1>مدیریت دوره‌ها</h1><div class="sub"><%= courses.length %> دوره ثبت شده</div></div>
+  <div class="table-search-wrap">
+    <span class="ts-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+    <input type="text" class="js-table-search" placeholder="جستجوی عنوان دوره…">
+  </div>
+  <a href="/admin/courses/new" class="btn btn-gold">+ دوره جدید</a>
+</div>
+<form action="/admin/courses/bulk" method="POST" class="admin-bulkbar glass">
+    <%- csrfField %>
+
+  <div class="bulk-left">
+    <label class="bulk-check"><input type="checkbox" id="selectAllCourses"> انتخاب همه</label>
+    <span id="selectedCoursesCount">۰ انتخاب</span>
+  </div>
+  <div class="bulk-actions">
+    <select name="action" id="courseBulkAction">
+      <option value="">عملیات گروهی…</option>
+      <option value="publish">انتشار</option>
+      <option value="draft">پیش‌نویس</option>
+      <option value="feature">ویژه کردن</option>
+      <option value="unfeature">برداشتن ویژه</option>
+    </select>
+    <button class="btn btn-outline" type="submit">اعمال</button>
+  </div>
+</form>
+<table class="data-table">
+  <thead><tr><th class="check-col"><input type="checkbox" id="selectAllCoursesHead"></th><th>عنوان</th><th>دسته</th><th>قیمت</th><th>جلسات</th><th>وضعیت</th><th>عملیات</th></tr></thead>
+  <tbody>
+    <% courses.forEach(c => { %>
+      <tr>
+        <td class="check-col"><input type="checkbox" class="course-check" name="course_ids" value="<%= c.id %>" ></td>
+        <td style="display:flex; align-items:center; gap:10px;">
+          <span style="width:36px; height:36px; border-radius:9px; overflow:hidden; display:inline-block; flex-shrink:0; border:1px solid var(--border);">
+            <% if (c.cover_image) { %>
+              <img src="<%= c.cover_image %>" style="width:100%; height:100%; object-fit:cover;"
+                   onerror="this.onerror=null; this.outerHTML = document.getElementById('art-fallback-row-<%= c.id %>').innerHTML;">
+              <template id="art-fallback-row-<%= c.id %>"><%- include('../partials/svg-art', { seedId: c.id }) %></template>
+            <% } else { %>
+              <%- include('../partials/svg-art', { seedId: c.id }) %>
+            <% } %>
+          </span>
+          <%= c.title %>
+        </td>
+        <td><%= c.category_title || '-' %></td>
+        <td><%= (c.discount_price || c.price).toLocaleString('fa-IR') %> تومان</td>
+        <td><%= c.sessions_count %></td>
+        <td><span class="status-pill <%= c.is_published ? 'status-paid' : 'status-pending' %>"><%= c.is_published ? 'منتشر شده' : 'پیش‌نویس' %></span></td>
+        <td>
+          <a href="/admin/courses/<%= c.id %>/edit" class="small-link">ویرایش</a>
+          &nbsp;|&nbsp;
+          <form action="/admin/courses/<%= c.id %>/duplicate" method="POST" style="display:inline" onsubmit="return confirm('از این دوره یک کپی پیش‌نویس ساخته شود؟')">
+            <%- csrfField %><button type="submit" style="background:none;border:none;color:var(--gold-light);cursor:pointer;">کپی</button>
+          </form>
+          &nbsp;|&nbsp;
+          <form action="/admin/courses/<%= c.id %>/delete" method="POST" style="display:inline" onsubmit="return confirm('حذف شود؟')">
+            <%- csrfField %><button type="submit" style="background:none;border:none;color:#ff9a9a;cursor:pointer;">حذف</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+    <% if (!courses.length) { %><tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:24px;">هنوز دوره‌ای ثبت نشده</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('../partials/admin-footer') %>
+
+<script>
+(function(){
+  const bar=document.querySelector('.admin-bulkbar');
+  const checks=[...document.querySelectorAll('.course-check')];
+  const all=[document.getElementById('selectAllCourses'),document.getElementById('selectAllCoursesHead')];
+  const count=document.getElementById('selectedCoursesCount');
+  const form=bar;
+  function sync(){
+    const selected=checks.filter(x=>x.checked);
+    count.textContent=selected.length.toLocaleString('fa-IR')+' انتخاب';
+    all.forEach(x=>{if(x)x.checked=checks.length>0&&selected.length===checks.length;});
+    form.querySelectorAll('input[data-bulk]').forEach(x=>x.remove());
+    selected.forEach(x=>{const h=document.createElement('input');h.type='hidden';h.name='course_ids';h.value=x.value;h.dataset.bulk='1';form.appendChild(h);});
+  }
+  checks.forEach(x=>x.addEventListener('change',sync));
+  all.forEach(x=>x&&x.addEventListener('change',()=>{checks.forEach(c=>c.checked=x.checked);sync();}));
+  form.addEventListener('submit',e=>{if(!checks.some(x=>x.checked)||!document.getElementById('courseBulkAction').value){e.preventDefault();}});
+})();
+</script>

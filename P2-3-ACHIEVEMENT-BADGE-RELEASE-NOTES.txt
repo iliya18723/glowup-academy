@@ -1,0 +1,9 @@
+GlowUp Academy 5.2.0 — P2-3 Achievement & Badge System
+
+- Added 10 idempotent achievement definitions.
+- Added /achievements page with earned/locked states and progress bars.
+- Awards are evaluated from server-side learning/profile activity.
+- New badge awards create a notification and link to the achievements center.
+- Added dashboard/profile/header navigation to achievements.
+- Existing XP ledger and user_badges tables remain the source of truth.
+- Added responsive premium achievement UI.

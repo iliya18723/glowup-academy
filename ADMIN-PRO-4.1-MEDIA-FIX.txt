@@ -1,0 +1,14 @@
+GlowUp Academy — Admin Pro 4.1
+
+Media Studio repair:
+- Linked the previously missing /css/admin.css stylesheet. This was the primary reason Pro stat/grid styles were not applied and the Media Studio collapsed into a tall broken layout.
+- Rebuilt Media Studio layout with explicit responsive grid rules.
+- Media library pagination (36 items/page) to avoid rendering hundreds of cards at once.
+- Media statistics now come from SQL COUNT/SUM across the full filtered library, not only the visible page.
+- Media upload is disk-backed and accepts whitelisted media types up to 1 GiB.
+- Upload errors are handled gracefully, including 1 GiB limit and unsupported MIME types.
+- Failed DB insertion cleans up the uploaded file.
+- Added clear 1 GiB upload guidance.
+- Preserved CSRF and role authorization from existing Admin middleware.
+
+Note: 1 GiB is the application-level local upload ceiling. Hosting/proxy limits and Render Free ephemeral storage can still impose separate platform constraints.

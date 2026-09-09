@@ -1,0 +1,9 @@
+GlowUp Academy — Admin Pro 3.7
+Automation Intelligence
+
+- Smart admin alerts for pending orders, unapproved reviews and no-sales day.
+- Configurable thresholds and enable/disable rules stored in settings.
+- Manual automation scan with CSRF protection.
+- Admin notifications and activity log entries for generated alerts.
+- New Automation Center UI and navigation.
+- Version 3.7.0.

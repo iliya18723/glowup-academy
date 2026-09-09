@@ -1,0 +1,33 @@
+GlowUp Academy — P9 Production Ready
+
+Implemented on top of the supplied P8 Responsive All Devices build.
+
+1) Runtime / deployment
+- Added /health endpoint for Render and uptime checks.
+- Added render.yaml with npm install, npm start and health check configuration.
+- Validated PORT as a numeric TCP port.
+- Added graceful SIGTERM/SIGINT shutdown and SQLite close.
+- Production uncaughtException now exits so the platform can restart a broken process.
+
+2) Security
+- Added baseline security headers.
+- Added body-size limits for urlencoded/JSON requests.
+- Login throttling: 8 failed attempts per IP+phone in a 10-minute window.
+- Regenerates the session after successful login to reduce session fixation risk.
+- Stronger bcrypt cost for newly registered accounts.
+- Safer upload filenames using random bytes instead of original filenames.
+- Image uploads limited to configured size and common image MIME types.
+- Video uploads limited to configured size and supported video MIME types.
+
+3) Uploads
+- Upload directories are created automatically.
+- Added safe upload middleware with friendly 400 responses.
+- MAX_IMAGE_MB and MAX_VIDEO_MB are configurable through environment variables.
+
+4) Operations
+- Added scripts/backup.js and npm run backup for SQLite backups.
+- Added .env.example production-safe settings.
+
+Important:
+- SQLite and local uploads are still ephemeral on Render Free. P9 makes the app safer and easier to operate, but persistent production data requires persistent storage (or a managed database/object storage).
+- A complete browser/E2E test and a real Render deployment test require an environment with installed dependencies and the actual deployed service.

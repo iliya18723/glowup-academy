@@ -1,0 +1,81 @@
+<%- include('partials/header') %>
+<div class="container dashboard-page">
+  <section class="dashboard-hero premium-panel reveal">
+    <div class="dashboard-hero-copy">
+      <span class="eyebrow">GLOWUP ID</span>
+      <h1>سلام <span class="gold"><%= user.full_name %></span> 👋</h1>
+      <p>مسیرت را ادامه بده؛ هر جلسه یک قدم به نسخه بهتر خودت نزدیک‌ترت می‌کند.</p>
+      <div class="level-line"><span>LEVEL <%= level %></span><span><%= xp.toLocaleString('fa-IR') %> XP</span></div>
+      <div class="xp-bar"><i style="width:<%= levelProgress %>%"></i></div>
+      <small class="level-hint"><%= Math.max(0, 250 - (xp % 250)).toLocaleString('fa-IR') %> XP تا Level بعدی</small>
+    </div>
+    <div class="streak-card"><strong>🔥</strong><b><%= streak.toLocaleString('fa-IR') %></b><small>روز استریک</small><span><%= weeklyXp.toLocaleString('fa-IR') %> XP در ۷ روز اخیر</span></div>
+  </section>
+
+  <div class="dashboard-kpis reveal">
+    <div class="glass kpi"><span>دوره‌های من</span><b><%= enrolledCount.toLocaleString('fa-IR') %></b><small>مسیر فعال</small></div>
+    <div class="glass kpi"><span>جلسات کامل‌شده</span><b><%= completed.toLocaleString('fa-IR') %></b><small><%= remainingSessions.toLocaleString('fa-IR') %> جلسه باقی مانده</small></div>
+    <div class="glass kpi"><span>دوره‌های تمام‌شده</span><b><%= completedCourses.toLocaleString('fa-IR') %></b><small>آماده دریافت گواهی</small></div>
+    <div class="glass kpi"><span>نشان‌ها</span><b><%= badges.length.toLocaleString('fa-IR') %></b><small>از دستاوردهای تو</small></div>
+  </div>
+
+  <% if (resumeCourse) { %>
+  <section class="resume-learning glass reveal">
+    <div class="resume-cover">
+      <% if (resumeCourse.cover_image) { %><img src="<%= resumeCourse.cover_image %>" alt="<%= resumeCourse.title %>"><% } else { %><%- include('partials/svg-art', { seedId: resumeCourse.id }) %><% } %>
+      <span>ادامه یادگیری</span>
+    </div>
+    <div class="resume-body">
+      <span class="eyebrow">CONTINUE LEARNING</span>
+      <h2><%= resumeCourse.title %></h2>
+      <p><%= resumeCourse.nextSession ? `جلسه بعدی: ${resumeCourse.nextSession.title}` : 'آماده ادامه مسیر هستی.' %></p>
+      <div class="resume-progress"><div><span>پیشرفت دوره</span><b><%= resumeCourse.progress.toLocaleString('fa-IR') %>٪</b></div><div class="course-progress-bar"><div class="course-progress-fill" style="width:<%= resumeCourse.progress %>%"></div></div></div>
+      <% if (resumeCourse.nextSession) { %><a href="/courses/<%= resumeCourse.slug %>/watch/<%= resumeCourse.nextSession.id %>" class="btn btn-gold">ادامه از همین‌جا ←</a><% } %>
+    </div>
+  </section>
+  <% } %>
+
+  <% if (!courses.length) { %>
+    <div class="empty-state glass reveal"><span class="eyebrow">START HERE</span><h2>هنوز مسیری شروع نکردی</h2><p>یک دوره انتخاب کن و اولین قدم گلوآپت رو بردار.</p><a href="/courses" class="btn btn-gold">ساخت مسیر من ←</a></div>
+  <% } else { %>
+    <div class="section-title reveal"><div><span class="eyebrow">YOUR JOURNEY</span><h2>دوره‌های من</h2></div><a href="/courses" class="small-link">کشف دوره‌های بیشتر ←</a></div>
+    <div class="dashboard-grid reveal-stagger">
+      <% courses.forEach(c => { %>
+        <article class="dashboard-course glass">
+          <div class="dashboard-cover">
+            <% if (c.cover_image) { %><img src="<%= c.cover_image %>" alt="<%= c.title %>"><% } else { %><%- include('partials/svg-art', { seedId: c.id }) %><% } %>
+            <span class="progress-badge"><%= c.progress.toLocaleString('fa-IR') %>٪</span>
+            <% if(c.progress>=100){ %><span class="completed-ribbon">✓ تکمیل شد</span><% } %>
+          </div>
+          <div class="dashboard-course-body"><span class="eyebrow">دوره‌ی من</span><h3><%= c.title %></h3>
+            <div class="course-progress-bar"><div class="course-progress-fill" style="width:<%= c.progress %>%"></div></div>
+            <div class="progress-meta"><span><%= c.completed_sessions %> از <%= c.total_sessions %> جلسه</span><span><%= c.progress.toLocaleString('fa-IR') %>٪</span></div>
+            <% if (c.nextSession) { %><a href="/courses/<%= c.slug %>/watch/<%= c.nextSession.id %>" class="btn btn-gold full-btn"><%= c.progress >= 100 ? 'مرور دوره' : (c.progress ? 'ادامه مسیر' : 'شروع دوره') %> ←</a><% } %>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <div class="dashboard-lower-grid reveal">
+    <section class="form-card glass activity-panel"><div class="section-mini-head"><div><span class="eyebrow">RECENT ACTIVITY</span><h2>آخرین فعالیت‌ها</h2></div><span class="activity-xp">+<%= weeklyXp.toLocaleString('fa-IR') %> XP / ۷ روز</span></div>
+      <div class="activity-list"><% recentActivity.forEach(a=>{ %><a class="activity-row" href="/courses/<%= a.slug %>"><span class="activity-icon">✓</span><div><strong><%= a.session_title %></strong><small><%= a.course_title %></small></div><b>+<%= a.amount %> XP</b></a><% }) %><% if(!recentActivity.length){ %><div class="activity-empty">هنوز فعالیتی ثبت نشده؛ اولین جلسه را شروع کن 🚀</div><% } %></div>
+    </section>
+    <section class="form-card glass quick-panel"><div class="section-mini-head"><div><span class="eyebrow">QUICK ACTIONS</span><h2>دسترسی سریع</h2></div></div>
+      <div class="quick-actions"><a href="/courses" class="quick-action"><span>📚</span><div><b>همه دوره‌ها</b><small>دوره جدید پیدا کن</small></div><i>←</i></a><a href="/quiz" class="quick-action"><span>✦</span><div><b>تست گلوآپ</b><small>مسیر مناسب خودت را پیدا کن</small></div><i>←</i></a><a href="/referral" class="quick-action"><span>🎁</span><div><b>دعوت دوستان</b><small>پاداش معرفی را ببین</small></div><i>←</i></a></div>
+    </section>
+  </div>
+
+  <section class="section-title reveal"><div><span class="eyebrow">ACHIEVEMENTS</span><h2>نشان‌های من</h2></div><a href="/achievements" class="small-link">همه دستاوردها ←</a></div></section>
+  <div class="badge-grid reveal-stagger">
+    <% if(badges.length){ badges.forEach(b=>{ %><div class="badge-card glass"><span><%= b.icon %></span><div><b><%= b.title %></b><small><%= b.description %></small></div></div><% }) } else { %><div class="badge-card glass muted-badge"><span>✦</span><div><b>اولین نشان نزدیکه</b><small>یک جلسه را کامل کن تا اولین Badge باز شود.</small></div></div><% } %>
+  </div>
+</div>
+
+<div class="dashboard-extra-grid">
+<section class="form-card glass"><div class="section-mini-head"><div><span class="eyebrow">SAVED</span><h2>علاقه‌مندی‌ها</h2></div><a href="/wishlist" class="link-btn">مشاهده همه</a></div><div class="saved-list"><% wishlist.forEach(c=>{ %><a href="/courses/<%= c.slug %>" class="saved-item"><span><%= c.title %></span><b>›</b></a><% }) %><% if(!wishlist.length){ %><p class="muted">هنوز دوره‌ای ذخیره نکردی.</p><% } %></div></section>
+<section class="form-card glass"><div class="section-mini-head"><div><span class="eyebrow">CERTIFICATES</span><h2>گواهی‌های من</h2></div></div><div class="saved-list"><% certificates.forEach(c=>{ %><a href="/certificate/<%= c.certificate_code %>" class="saved-item"><span>🏆 <%= c.course_title %></span><b>مشاهده</b></a><% }) %><% if(!certificates.length){ %><p class="muted">با تکمیل ۱۰۰٪ یک دوره، گواهی اینجا ظاهر می‌شود.</p><% } %></div></section>
+<section class="form-card glass notification-card"><div class="section-mini-head"><div><span class="eyebrow">INBOX</span><h2>اعلان‌ها</h2></div><a href="/notifications" class="link-btn">مشاهده همه</a><form action="/notifications/read-all" method="POST"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="link-btn">همه را خواندم</button></form></div><div class="saved-list"><% notifications.forEach(n=>{ %><div class="notification-item <%= n.is_read?'':'unread' %>"><span><%= n.type==='certificate'?'🏆':n.type==='review'?'⭐':'✦' %></span><div><strong><%= n.title %></strong><small><%= n.body %></small></div><% if(!n.is_read){ %><form action="/notifications/<%= n.id %>/read" method="POST"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button>✓</button></form><% } %></div><% }) %><% if(!notifications.length){ %><p class="muted">اعلان جدیدی نداری.</p><% } %></div></section>
+</div>
+
+<%- include('partials/footer') %>

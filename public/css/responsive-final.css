@@ -1,0 +1,62 @@
+
+/* GlowUp Academy — Final all-device responsive layer */
+html{box-sizing:border-box;overflow-x:hidden}
+*,*:before,*:after{box-sizing:inherit}
+body{width:100%;max-width:100%;overflow-x:hidden}
+img,video,iframe,svg,canvas{max-width:100%}
+img{height:auto}
+button,input,select,textarea{max-width:100%}
+table{max-width:100%}
+
+@media (max-width:1200px){
+ .container{width:min(100% - 32px,1100px);margin-inline:auto}
+ .hero-content,.hero-inner,.hero-grid,.two-column,.two-col,.content-grid{grid-template-columns:1fr!important}
+ .course-grid,.courses-grid,.cards-grid,.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .admin-layout,.dashboard-layout{grid-template-columns:1fr!important}
+ .admin-main,.dashboard-content{min-width:0;width:100%}
+}
+@media (max-width:900px){
+ .container{width:min(100% - 28px,760px)}
+ .admin-sidebar{transform:translateX(110%);z-index:1000}
+ .admin-sidebar.open{transform:translateX(0)}
+ .table-wrap,.responsive-table,.data-table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+ .table-wrap table,.responsive-table table,.data-table-wrap table{min-width:680px}
+}
+@media (max-width:640px){
+ .container{width:calc(100% - 24px)}
+ h1{font-size:clamp(1.75rem,8vw,2.5rem);line-height:1.12}
+ h2{font-size:clamp(1.35rem,6vw,2rem)}
+ h3{font-size:clamp(1.1rem,5vw,1.4rem)}
+ .course-grid,.courses-grid,.cards-grid,.stats-grid,.grid,.features-grid,.testimonials-grid{grid-template-columns:1fr!important}
+ .hero,.hero-section{padding-block:48px}
+ .actions,.button-row,.form-actions{flex-wrap:wrap}
+ input,select,textarea{width:100%;min-height:44px;font-size:16px}
+ .nav-links,.desktop-nav{display:none!important}
+ .mobile-menu,.mobile-nav-toggle,.menu-toggle{display:inline-flex!important}
+ .course-card,.card,.panel,.stat-card{min-width:0;max-width:100%}
+ .modal,.dialog,.drawer{width:min(94vw,520px);max-width:94vw;max-height:90vh;overflow-y:auto}
+ .admin-topbar,.page-header,.toolbar{flex-wrap:wrap;gap:10px}
+ .admin-main,.dashboard-main,.page-content{padding-inline:12px!important}
+ .course-card:hover,.card:hover,[data-tilt]:hover{transform:none!important}
+}
+@media (max-width:430px){
+ .container{width:calc(100% - 20px)}
+ .hero,.hero-section{padding-block:34px}
+ .hero h1{font-size:clamp(1.65rem,9vw,2.2rem)}
+ .btn,button,.button,a.button{min-height:44px;padding:10px 14px}
+ .stat-card{padding:14px}
+ .course-card .card-body,.card-body{padding:14px}
+ .admin-sidebar{width:min(88vw,330px)}
+}
+@media (max-width:360px){
+ .container{width:calc(100% - 16px)}
+ .hero h1{font-size:1.55rem}
+ .btn,button,.button{width:100%}
+ .actions>*,.button-row>*,.form-actions>*{width:100%}
+}
+@media (min-width:1440px){
+ .container{width:min(100% - 64px,1280px);margin-inline:auto}
+}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}

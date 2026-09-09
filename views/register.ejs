@@ -1,0 +1,117 @@
+<%- include('partials/header') %>
+<div class="auth-screen">
+  <div class="auth-visual">
+    <canvas id="particle-canvas"></canvas>
+    <div class="av-orb av-orb-1"></div>
+    <div class="av-orb av-orb-2"></div>
+    <span class="av-badge">✦ شروع مسیر تحول</span>
+    <h2>بهترین <span class="gold">نسخه‌ی خودت</span> رو بساز</h2>
+    <p>با ساخت حساب کاربری، به دوره‌های تخصصی گلو‌آپ آکادمی دسترسی پیدا می‌کنی و پیشرفتت رو مرحله‌به‌مرحله دنبال می‌کنی.</p>
+    <div class="av-points">
+      <div><span class="av-ico">✓</span> ثبت‌نام رایگان و سریع</div>
+      <div><span class="av-ico">✓</span> دسترسی دائمی بعد از خرید هر دوره</div>
+      <div><span class="av-ico">✓</span> آپدیت‌های محتوایی رایگان</div>
+    </div>
+    <div class="av-stats">
+      <div><b>+۱۲۰۰</b><span>دانشجو</span></div>
+      <div><b>۴.۹</b><span>میانگین رضایت</span></div>
+      <div><b>۲۴/۷</b><span>پشتیبانی</span></div>
+    </div>
+    <div class="av-quote" id="quoteBox">
+      <p id="quoteText">«جلسات ذهن قدرتمند واقعاً روی نظم روزانه‌م اثر گذاشت. پیگیری واقعی پشتیبانی هم عالی بود.»</p>
+      <div class="av-quote-author" id="quoteAuthor">— محمد، دانشجوی دوره‌ی ذهن قدرتمند</div>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-box reveal in tilt">
+      <div class="logo">
+        <div class="logo-text">GLOW UP<span>ACADEMY</span></div>
+        <div class="mark">G</div>
+      </div>
+      <h2>ساخت حساب کاربری</h2>
+      <p class="auth-sub">چند ثانیه‌ای شروع کن</p>
+      <% if (error) { %><div class="error-box">⚠ <%= error %></div><% } %>
+      <form method="POST" action="/register"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="field has-icon">
+          <label>نام و نام‌خانوادگی</label>
+          <div class="input-icon-group">
+            <span class="f-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+            </span>
+            <input type="text" name="full_name" placeholder="مثلاً امیرحسین رضایی" required>
+          </div>
+        </div>
+        <div class="field has-icon">
+          <label>شماره موبایل</label>
+          <div class="input-icon-group">
+            <span class="f-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-5 18h.01"/></svg>
+            </span>
+            <input type="text" name="phone" id="regPhone" inputmode="numeric" placeholder="09xxxxxxxxx" required>
+            <span class="field-valid-check" id="regPhoneCheck">✓</span>
+          </div>
+        </div>
+        <div class="field has-icon">
+          <label>رمز عبور</label>
+          <div class="input-icon-group">
+            <span class="f-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            </span>
+            <input type="password" name="password" id="regPassword" placeholder="حداقل ۶ کاراکتر" required>
+            <button type="button" class="toggle-pass">نمایش</button>
+          </div>
+          <div class="pw-strength"><div class="pw-strength-fill" id="pwStrengthFill"></div></div>
+          <span class="pw-strength-label" id="pwStrengthLabel"></span>
+        </div>
+        <button type="submit" class="btn btn-gold">ساخت حساب</button>
+      </form>
+      <div class="auth-divider">یا</div>
+      <p class="auth-switch">قبلاً ثبت‌نام کردی؟ <a href="/login" class="small-link">وارد شو</a></p>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const quotes = [
+    { text: '«جلسات ذهن قدرتمند واقعاً روی نظم روزانه‌م اثر گذاشت. پیگیری واقعی پشتیبانی هم عالی بود.»', author: '— محمد، دانشجوی دوره‌ی ذهن قدرتمند' },
+    { text: '«تا قبل از این دوره فکر می‌کردم تغییر ظاهری یعنی فقط باشگاه رفتن. برنامه‌ی چهارفازی کمکم کرد منظم بشم.»', author: '— امیرحسین، دانشجوی گلو‌آپ آکادمی' },
+    { text: '«دسترسی دائمی به دوره یعنی می‌تونم هر وقت خواستم برگردم و مرور کنم. دقیقاً همینو می‌خواستم.»', author: '— علی، دانشجوی گلو‌آپ آکادمی' }
+  ];
+  let qi = 0;
+  const textEl = document.getElementById('quoteText');
+  const authEl = document.getElementById('quoteAuthor');
+  if (textEl) {
+    setInterval(() => {
+      qi = (qi + 1) % quotes.length;
+      textEl.style.animation = 'none'; authEl.style.animation = 'none';
+      void textEl.offsetWidth;
+      textEl.textContent = quotes[qi].text;
+      authEl.textContent = quotes[qi].author;
+      textEl.style.animation = 'quoteFade .5s ease forwards';
+      authEl.style.animation = 'quoteFade .5s ease forwards .1s';
+    }, 5000);
+  }
+
+  const phoneInput = document.getElementById('regPhone');
+  const phoneCheck = document.getElementById('regPhoneCheck');
+  if (phoneInput && phoneCheck) {
+    phoneInput.addEventListener('input', () => {
+      const valid = /^09\d{9}$/.test(phoneInput.value.trim());
+      phoneCheck.classList.toggle('show', valid);
+    });
+  }
+
+  const box = document.querySelector('.auth-box.tilt');
+  if (box) {
+    box.addEventListener('mousemove', (e) => {
+      const r = box.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      box.style.transform = `perspective(900px) rotateY(${x * 3}deg) rotateX(${-y * 3}deg)`;
+    });
+    box.addEventListener('mouseleave', () => { box.style.transform = ''; });
+  }
+})();
+</script>
+<%- include('partials/footer') %>

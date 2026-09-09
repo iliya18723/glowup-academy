@@ -1,0 +1,117 @@
+<%- include('partials/header') %>
+<div class="container course-page" style="padding-top:30px;">
+  <div class="course-detail-grid">
+    <div>
+      <div class="reveal tilt" style="border-radius:18px; margin-bottom:20px; width:100%; aspect-ratio:16/9; overflow:hidden; border:1px solid var(--border); position:relative;">
+        <% if (course.cover_image) { %>
+          <img src="<%= course.cover_image %>" style="width:100%; height:100%; object-fit:cover;"
+               onerror="this.onerror=null; this.outerHTML = document.getElementById('art-fallback-detail-<%= course.id %>').innerHTML;">
+          <template id="art-fallback-detail-<%= course.id %>"><%- include('partials/svg-art', { seedId: course.id }) %></template>
+        <% } else { %>
+          <%- include('partials/svg-art', { seedId: course.id }) %>
+        <% } %>
+        <% const firstPlayable = sessions.find(s => owned || s.is_free_preview); %>
+        <% if (firstPlayable) { %>
+          <a href="/courses/<%= course.slug %>/watch/<%= firstPlayable.id %>" class="video-center-play" style="opacity:1; pointer-events:auto; background:rgba(0,0,0,.3);">
+            <span>▶</span>
+          </a>
+        <% } %>
+      </div>
+      <div class="course-title-row reveal">
+        <div><div class="course-kicker">دوره آموزشی · GlowUp Academy</div><h1><%= course.title %></h1><div class="course-rating"><span class="stars"><%= '★'.repeat(Math.round(ratingAvg)) %><%= '☆'.repeat(5-Math.round(ratingAvg)) %></span> <strong><%= ratingAvg.toFixed(1) %></strong> <small>(<%= ratingCount %> نظر)</small></div></div>
+        <% if(user){ %><button class="wishlist-btn <%= wished?'active':'' %>" data-course-id="<%= course.id %>" type="button" title="ذخیره دوره"><span><%= wished?'♥':'♡' %></span> ذخیره</button><% } %>
+      </div>
+      <p class="reveal course-subtitle"><%= course.subtitle %></p>
+      <div class="course-stats reveal">
+        <div><strong><%= sessions.length.toLocaleString('fa-IR') %></strong><span>جلسه آموزشی</span></div>
+        <div><strong><%= phaseCount.toLocaleString('fa-IR') %></strong><span>بخش اصلی</span></div>
+        <div><strong><%= totalDurationSeconds ? Math.ceil(totalDurationSeconds/60).toLocaleString('fa-IR') : '—' %></strong><span>دقیقه محتوا</span></div>
+        <div><strong><%= ratingAvg ? ratingAvg.toFixed(1) : 'جدید' %></strong><span>امتیاز دوره</span></div>
+      </div>
+      <div class="course-trust-row reveal"><span>★ مسیر عملی</span><span>♾ دسترسی دائمی</span><span>↻ آپدیت رایگان</span><span>🎧 پشتیبانی</span></div>
+      <p class="reveal course-description"><%= course.description %></p>
+
+      <% if (owned && sessions.length) { %>
+      <% const initialPercent = Math.round((completedIds.length / sessions.length) * 100); const nextLesson = sessions.find(s => !completedIds.includes(s.id)) || sessions[0]; %>
+      <div class="reveal course-progress-card" id="courseProgressWrap" data-course="<%= course.id %>" data-total="<%= sessions.length %>">
+        <div class="progress-card-top"><div><span class="eyebrow">YOUR PROGRESS</span><strong id="pdProgressText"><%= initialPercent.toLocaleString('fa-IR') %>٪ تکمیل‌شده</strong></div><span class="progress-count"><%= completedIds.length.toLocaleString('fa-IR') %> از <%= sessions.length.toLocaleString('fa-IR') %> جلسه</span></div>
+        <div class="course-progress-bar"><div class="course-progress-fill" id="pdProgressFill" style="width:<%= initialPercent %>%;"></div></div>
+        <a class="resume-link" href="/courses/<%= course.slug %>/watch/<%= nextLesson.id %>"><span>▶</span> <%= initialPercent ? 'ادامه یادگیری' : 'شروع یادگیری' %> · <%= nextLesson.title %></a>
+      </div>
+      <% } %>
+
+      <div class="curriculum-heading reveal"><div><span class="eyebrow">CURRICULUM</span><h2>سرفصل‌های دوره</h2><p>جلسه‌ها را مرحله‌به‌مرحله جلو برو و پیشرفتت را ثبت کن.</p></div><span class="curriculum-total"><%= sessions.length.toLocaleString('fa-IR') %> جلسه</span></div>
+      <%
+        const groupedPublic = {};
+        sessions.forEach(s => {
+          const key = s.phase || 'سرفصل‌های دوره';
+          groupedPublic[key] = groupedPublic[key] || [];
+          groupedPublic[key].push(s);
+        });
+        let counter = 0;
+      %>
+      <% Object.keys(groupedPublic).forEach(phaseName => { %>
+        <h4 class="reveal" style="color:var(--gold-light); font-size:13.5px; margin:18px 0 8px;"><%= phaseName %></h4>
+        <ul class="reveal-stagger" style="margin-bottom:6px;">
+          <% groupedPublic[phaseName].forEach(s => { counter++; const accessible = owned || s.is_free_preview; %>
+            <% if (accessible) { %>
+              <li>
+                <a class="session-row js-session-row <%= completedIds.includes(s.id) ? 'done' : '' %>" data-session-id="<%= s.id %>" href="/courses/<%= course.slug %>/watch/<%= s.id %>">
+                  <span class="s-left"><span class="s-number"><%= counter.toLocaleString('fa-IR') %></span><span class="s-check"><%= completedIds.includes(s.id) ? '✓' : '▶' %></span><span><b><%= s.title %></b><small><%= s.phase || 'درس' %><% if (s.duration_seconds) { %> · <%= Math.round(s.duration_seconds/60).toLocaleString('fa-IR') %> دقیقه<% } %></small></span></span>
+                  <span class="tag"><%= completedIds.includes(s.id) ? 'تکمیل شد' : 'مشاهده' %></span>
+                </a>
+              </li>
+            <% } else { %>
+              <li>
+                <div class="session-row locked">
+                  <span class="s-left"><span class="s-check">🔒</span><span>جلسه <%= counter %> — <%= s.title %></span></span>
+                </div>
+              </li>
+            <% } %>
+          <% }) %>
+        </ul>
+      <% }) %>
+      <% if (!sessions.length) { %><p style="color:var(--text-muted)">به‌زودی سرفصل‌ها اضافه می‌شود.</p><% } %>
+    </div>
+
+    <div>
+      <div class="form-card glass reveal" style="position:sticky; top:90px;">
+        <div class="price" style="font-size:22px; margin-bottom:16px;">
+          <% if (course.discount_price) { %><del style="display:block;color:var(--text-muted);font-size:14px;"><%= course.price.toLocaleString('fa-IR') %> تومان</del><% } %>
+          <%= (course.discount_price || course.price).toLocaleString('fa-IR') %> تومان
+        </div>
+        <% if (owned && sessions.length) { %>
+          <a href="/courses/<%= course.slug %>/watch/<%= sessions[0].id %>" class="btn btn-gold" style="width:100%; text-align:center; display:block;">مشاهده دوره</a>
+        <% } else if (owned) { %>
+          <span class="btn btn-outline" style="width:100%; text-align:center; display:block; opacity:.7; cursor:not-allowed;">محتوای دوره به‌زودی اضافه می‌شود</span>
+        <% } else { %>
+          <form action="/cart/add/<%= course.id %>" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn btn-gold" style="width:100%;">افزودن به سبد خرید</button>
+          </form>
+        <% } %>
+        <div class="checkout-trust"><div>🔒 پرداخت امن</div><div>♾ دسترسی دائمی</div><div>🎧 پشتیبانی واقعی</div><div>✦ آپدیت رایگان</div></div>
+      </div>
+    </div>
+  </div>
+
+<section id="reviews" class="reviews-section reveal">
+  <div class="section-head"><div><span class="eyebrow">COMMUNITY</span><h2>نظر دانشجوها</h2></div><div class="big-rating"><strong><%= ratingAvg.toFixed(1) %></strong><span class="stars">★★★★★</span><small><%= ratingCount %> نظر</small></div></div>
+  <% if(owned){ %><form class="review-form glass" action="/courses/<%= course.slug %>/review" method="POST"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><h3><%= myReview ? 'ویرایش نظر شما' : 'تجربه‌ات از دوره چطور بود؟' %></h3><div class="star-input"><% for(let i=5;i>=1;i--){ %><input id="star<%= i %>" type="radio" name="rating" value="<%= i %>" <%= myReview&&myReview.rating===i?'checked':'' %> required><label for="star<%= i %>">★</label><% } %></div><textarea name="body" maxlength="1000" placeholder="چند خط درباره تجربه‌ات بنویس…"><%= myReview?.body || '' %></textarea><button class="btn btn-gold">ارسال برای بررسی</button></form><% } %>
+  <div class="reviews-list"><% reviews.forEach(r=>{ %><article class="review-card glass"><div class="review-avatar"><%= r.full_name.charAt(0) %></div><div><strong><%= r.full_name %></strong><div class="stars"><%= '★'.repeat(r.rating) %><%= '☆'.repeat(5-r.rating) %></div><p><%= r.body || '' %></p></div></article><% }) %><% if(!reviews.length){ %><p class="muted">هنوز نظری منتشر نشده؛ اولین نفر باش.</p><% } %></div>
+</section>
+</div>
+
+<% if (relatedCourses && relatedCourses.length) { %>
+<section class="related-courses container">
+  <div class="section-head"><div><span class="eyebrow">YOU MAY LIKE</span><h2>دوره‌های مرتبط</h2><p>اگر این مسیر برات جذابه، این دوره‌ها هم ارزش دیدن دارن.</p></div><a class="btn btn-outline" href="/courses?category=<%= course.category_id %>">مشاهده همه</a></div>
+  <div class="course-grid"><% relatedCourses.forEach(c=>{ %><%- include('partials/course-card',{course:c}) %><% }) %></div>
+</section>
+<% } %>
+
+<% if (owned && sessions.length) { %>
+<script>(function(){const wrap=document.getElementById('courseProgressWrap');if(!wrap)return;const done=<%- JSON.stringify(completedIds || []) %>;const total=Number(wrap.dataset.total)||0;const pct=total?Math.round(done.length/total*100):0;const fill=document.getElementById('pdProgressFill'),text=document.getElementById('pdProgressText');if(fill)fill.style.width=pct+'%';if(text)text.textContent=pct.toLocaleString('fa-IR')+'٪ تکمیل‌شده';})();</script>
+<% } %>
+<script>(function(){const b=document.querySelector('.wishlist-btn');if(!b)return;if(b.dataset.bound==='1')return;b.dataset.bound='1';b.addEventListener('click',async()=>{if(b.disabled)return;b.disabled=true;try{const r=await fetch('/wishlist/'+encodeURIComponent(b.dataset.courseId)+'/toggle',{method:'POST',headers:{'x-csrf-token':document.querySelector('meta[name=csrf-token]')?.content||'',Accept:'application/json'}});if(!r.ok)throw new Error('request');const d=await r.json();b.classList.toggle('active',!!d.wished);b.querySelector('span').textContent=d.wished?'♥':'♡';b.setAttribute('aria-pressed',d.wished?'true':'false');b.title=d.wished?'حذف از ذخیره‌ها':'ذخیره دوره';if(window.showToast)showToast(d.wished?'دوره ذخیره شد':'دوره از ذخیره‌ها حذف شد', 'success');}catch(e){if(window.showToast)showToast('ذخیره دوره انجام نشد؛ دوباره تلاش کن','error');}finally{b.disabled=false;}});})();</script>
+
+<%- include('partials/footer') %>

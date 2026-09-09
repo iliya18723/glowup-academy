@@ -1,0 +1,11 @@
+<%- include('../partials/admin-header') %>
+<section class="form-card glass admin-error-state">
+  <div class="admin-error-code">⚠</div>
+  <h1><%= title || 'عملیات انجام نشد' %></h1>
+  <p><%= message || 'عملیات قابل انجام نبود. اطلاعات را بررسی و دوباره تلاش کن.' %></p>
+  <div class="form-actions">
+    <a class="btn btn-gold" href="/admin">بازگشت به داشبورد</a>
+    <button class="btn btn-outline" type="button" onclick="history.back()">بازگشت</button>
+  </div>
+</section>
+<%- include('../partials/admin-footer') %>

@@ -1,0 +1,24 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar"><div><span class="eyebrow">هوش کسب‌وکار</span><h1>گزارش‌ها و آنالیز</h1><div class="sub">تصمیم‌های بهتر با داده‌های واقعی</div></div>
+<div class="admin-actions"><a class="btn btn-outline" href="/admin/export/orders.csv">خروجی سفارش‌ها CSV ↓</a></div></div>
+<div class="report-filter">
+  <a class="cf-chip <%= days===7?'active':'' %>" href="/admin/reports?days=7">۷ روز</a>
+  <a class="cf-chip <%= days===30?'active':'' %>" href="/admin/reports?days=30">۳۰ روز</a>
+  <a class="cf-chip <%= days===90?'active':'' %>" href="/admin/reports?days=90">۹۰ روز</a>
+</div>
+<div class="admin-grid-2">
+  <section class="form-card glass"><h3>فروش روزانه</h3><div class="mini-bars">
+    <% const max=Math.max(...revenue.map(x=>x.total),1); revenue.forEach(x=>{ %>
+      <div class="mini-bar-col"><div class="mini-bar" style="height:<%= Math.max(4,Math.round(x.total/max*100)) %>%"></div><small><%= new Date(x.d).toLocaleDateString('fa-IR',{day:'numeric',month:'numeric'}) %></small></div>
+    <% }) %>
+  </div></section>
+  <section class="form-card glass"><h3>پرفروش‌ترین دوره‌ها</h3>
+    <% topCourses.forEach((c,i)=>{ %><div class="rank-row"><b>#<%= i+1 %></b><span><%= c.title %></span><strong><%= c.sales.toLocaleString('fa-IR') %> فروش</strong></div><% }) %>
+    <% if(!topCourses.length){ %><p class="muted">هنوز داده‌ای وجود ندارد.</p><% } %>
+  </section>
+</div>
+<section class="form-card glass"><h3>نرخ تکمیل دوره</h3><div class="report-list">
+<% completion.forEach(c=>{ const rate=c.learners?Math.round(c.completed/c.learners*100):0; %>
+<div class="report-course"><div><b><%= c.title %></b><small><%= c.learners.toLocaleString('fa-IR') %> دانشجو</small></div><div class="report-progress"><i style="width:<%= rate %>%"></i></div><strong><%= rate %>٪</strong></div>
+<% }) %></div></section>
+<%- include('../partials/admin-footer') %>

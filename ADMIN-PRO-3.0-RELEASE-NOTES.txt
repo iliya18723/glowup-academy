@@ -1,0 +1,9 @@
+GlowUp Academy Admin Pro 3.0
+
+- Role-safe admin landing pages
+- Prevented editor/support access to financial dashboard
+- Server-side role permissions synchronized with navigation
+- Safer ID and role validation
+- Improved admin error redirect handling
+- System DB size uses the active database path
+- Premium role landing cards and Admin Pro visual polish

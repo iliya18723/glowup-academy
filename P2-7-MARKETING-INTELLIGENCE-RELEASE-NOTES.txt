@@ -1,0 +1,13 @@
+GlowUp Academy Admin Pro 5.6.0 — P2-7 Marketing Intelligence & Campaign Center
+
+- New admin Marketing Intelligence center at /admin/marketing.
+- Unified campaign workspace for flash sales, coupons, referrals and notifications.
+- KPI cards for paid orders, revenue, unique buyers and current conversion.
+- UTM campaign link builder with copy-to-clipboard.
+- Campaign activity logging with CSRF protection and audit trail.
+- Promotion stack: coupon usage snapshot.
+- Top campaign-ready courses from the last 30 days.
+- Active flash-sale offer cards and quick navigation.
+- Responsive RTL design.
+- No database schema changes required.
+- Existing security, payment, coupon and referral flows preserved.

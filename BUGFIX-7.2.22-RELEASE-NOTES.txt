@@ -1,0 +1,11 @@
+GlowUp Academy — 7.2.22 Security / Payment QA Fixes
+
+Fixed in this pass:
+1) Payment callback cancellation could cancel any pending order if only order ID + Status=cancel were supplied. Cancellation now requires the stored ZarinPal Authority to match.
+2) Protected video authorization could become ambiguous when the same video URL was attached to multiple published lessons. Ambiguous mappings are now denied instead of authorizing against the first row.
+3) Password reset code attempts are now persisted per reset token in SQLite, capped at the configured maximum, so process restarts cannot reset the brute-force counter.
+4) Reset token attempt count is migrated safely for existing databases.
+
+Validation:
+- Node syntax checks passed for modified JS files.
+- Full runtime smoke test could not run in this environment because node_modules/better-sqlite3 is not installed.

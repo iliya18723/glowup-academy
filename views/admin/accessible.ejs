@@ -1,0 +1,7 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar"><div><h1><%= title %></h1><div class="sub">دسترسی‌های مجاز نقش شما</div></div></div>
+<div class="pro-welcome glass"><div><span class="eyebrow">GLOW UP ADMIN PRO</span><h2>مرکز کنترل شما آماده است</h2><p>فقط بخش‌هایی که برای نقش شما مجاز هستند نمایش داده می‌شوند.</p></div><span class="pro-status">● Online</span></div>
+<div class="stat-grid pro-role-grid">
+<% cards.forEach(card => { %><a class="stat-card pro-stat-link" href="<%= card.href %>"><div class="stat-icon">✦</div><div class="num"><%= Number(card.value).toLocaleString('fa-IR') %></div><div class="label"><%= card.label %></div><span class="pro-arrow">↗</span></a><% }) %>
+</div>
+<%- include('../partials/admin-footer') %>

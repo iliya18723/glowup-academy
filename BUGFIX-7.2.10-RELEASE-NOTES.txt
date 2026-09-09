@@ -1,0 +1,12 @@
+GlowUp Academy 7.2.10 — Authentication & Session QA
+
+Fixed:
+1. Login session rotation now preserves anonymous course/bundle cart and referral code.
+2. Iranian phone normalization now accepts +98 and 0098 formats.
+3. Password-reset verification code attempts are throttled per IP+phone to reduce brute-force guessing.
+4. Registration handles concurrent duplicate-phone inserts gracefully instead of surfacing a server error.
+5. Payment request/verify failure updates only change orders that are still pending, preventing a race from downgrading a paid order.
+
+Validation:
+- JavaScript syntax checked with node --check.
+- ZIP integrity checked.

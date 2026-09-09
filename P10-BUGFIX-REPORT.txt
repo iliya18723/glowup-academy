@@ -1,0 +1,20 @@
+GlowUp Academy P10 — Bugfix Audit
+
+Fixed in this build:
+- Bundle-only cart was incorrectly shown as empty.
+- Cart could accept invalid/unpublished course IDs; already-enrolled courses are ignored.
+- Registration now rotates the session and preserves cart state.
+- Iranian/Persian/Arabic digits are normalized for phone login/registration.
+- Referral registrations now create a referral record; successful payment marks it rewarded and notifies the referrer.
+- XP/streak is no longer awarded when a user merely unchecks an already-completed session.
+- Default gamification badges are seeded idempotently at DB startup.
+- Course deletion preserves historical purchase/enrollment data by unpublishing instead of deleting when dependencies exist.
+- User deletion is blocked when orders/enrollments exist, and self-deletion is blocked.
+- Admin menu URLs are restricted to safe relative/http(s)/hash URLs.
+- Media MIME types are restricted to an explicit safe allowlist.
+- ZarinPal payment amounts now convert Toman to Rial by default (configurable with ZARINPAL_CURRENCY).
+- Removed duplicate admin bundle GET route.
+- Added referral index and refreshed static asset cache-busting.
+- Upload filenames now use MIME-derived extensions, preventing HTML/script-like extensions from being retained.
+- Coupon percentage values are capped at 100%; flash-sale time ranges are validated.
+- Homepage showcase now falls back to published courses when fewer than 5 featured courses exist, so the first viewport does not become empty.

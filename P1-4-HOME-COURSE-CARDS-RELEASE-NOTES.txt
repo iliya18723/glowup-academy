@@ -1,0 +1,13 @@
+GlowUp Academy — P1-4 Home & Course Cards
+Version: 4.8.0
+
+Highlights
+- Added a dedicated course-card showcase directly after the premium hero.
+- The first home-page experience now exposes up to six real published courses as visible cards, independent of the 3D coverflow.
+- Preserved the existing premium 3D course carousel.
+- Added responsive 4/3/2/1-column layouts for desktop, tablet and mobile.
+- Added a clear CTA to the full courses catalog.
+- Reused the existing course-card partial so pricing, badges, images and links stay consistent.
+
+Intent
+This release specifically addresses the requirement that course cards should be clearly visible in the initial home-page experience rather than relying only on a carousel interaction.

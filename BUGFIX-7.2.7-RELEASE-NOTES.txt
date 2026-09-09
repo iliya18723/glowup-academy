@@ -1,0 +1,14 @@
+GlowUp Academy 7.2.7 — Deep Admin/Data Integrity Bugfix
+
+Fixed:
+- Category deletion no longer crashes on foreign-key constraints; courses are safely uncategorized first.
+- Course creation/edit validates category IDs.
+- Course session deletion now synchronizes courses.sessions_count.
+- Course edit now derives sessions_count from the actual session table instead of trusting a stale form value.
+- Session create/edit validates lesson title and requires a video URL/file.
+- Blog create/edit validates title and clamps long text fields.
+- Added referral_discount_cap default to DB initialization for existing/new installs.
+
+Static validation:
+- JavaScript syntax checked with node --check.
+- ZIP integrity checked after packaging.

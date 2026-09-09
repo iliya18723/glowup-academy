@@ -1,0 +1,9 @@
+GlowUp Academy 7.2.11 — Course Player & Learning Flow QA
+
+1. Fixed watch.ejs script placement: the custom player/learning script now executes before the shared footer closes the document.
+2. Fixed previous/next lesson navigation from free-preview sessions so locked paid lessons are not linked.
+3. Fixed automatic next-lesson redirect after video completion: preview users are never redirected into a paid locked lesson.
+4. Fixed owned courses with zero sessions: the CTA no longer points to an invalid /watch/ URL and instead shows a clear coming-soon state.
+5. Preserved access checks on the server; these are UX/flow fixes in addition to existing authorization.
+
+Static QA: JavaScript syntax check + EJS tag sanity check + ZIP integrity.

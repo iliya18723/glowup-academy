@@ -1,0 +1,18 @@
+GlowUp Academy 7.2.3 — Deep Bugfix / Backend Consistency
+
+Fixed:
+- Unified wishlist behavior and state across course cards and course detail, including non-owned courses.
+- Removed duplicate wishlist event binding from footer.
+- Included bundle count in cart badge.
+- Cleaned stale/invalid cart and bundle session IDs when rendering cart.
+- Made referral discount use configurable settings instead of a hard-coded 5%.
+- Prevented paid orders from being manually moved back to failed/canceled.
+- Validated bundles before creation and before charging; empty/incomplete bundles are rejected.
+- Hardened checkout against duplicate/invalid cart IDs.
+- Preserved bundle course enrollment through order items.
+
+Additional hardening:
+- CMS notification, banner and homepage CTA links now reject unsafe URL schemes.
+- Referral-code copy works on insecure/local browsers with a fallback.
+- Campaign UTM copy now has a fallback instead of failing silently.
+- Cart badge counts bundle entries as well as course entries.

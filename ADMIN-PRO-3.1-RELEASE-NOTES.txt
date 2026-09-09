@@ -1,0 +1,14 @@
+GlowUp Academy — Admin Pro 3.1
+
+New in 3.1:
+- Audit Center: searchable/filterable activity logs with pagination.
+- Activity CSV export (up to 5,000 filtered records).
+- System Health panel with database/uploads/videos/security checks.
+- Lightweight /admin/system/health JSON health endpoint.
+- Dashboard recent orders now link directly to order details.
+- Responsive admin filter/health UI for desktop and mobile.
+
+Validation:
+- node --check routes/admin.js: PASS
+- node --check server.js: PASS
+- Full npm runtime/integration test was not run in this environment.

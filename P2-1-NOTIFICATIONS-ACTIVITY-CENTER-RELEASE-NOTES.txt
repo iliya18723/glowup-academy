@@ -1,0 +1,19 @@
+GlowUp Academy — P2-1 Notifications & Activity Center
+Version: 5.0.0
+
+Implemented:
+- Dedicated /notifications page with all/unread filters.
+- Read one notification and mark all as read.
+- Global unread notification counter in the student header.
+- Desktop notification preview dropdown and mobile notification link.
+- Notification cards with type-aware icons, timestamps and actions.
+- Progress milestone notifications for first lesson and halfway point.
+- Existing certificate/referral notifications remain idempotent.
+- Dashboard notification block now links to the full center.
+- CSRF protection retained on all notification POST actions.
+- Existing admin notification center remains compatible.
+
+Validation:
+- All JavaScript files syntax-checked with node -c.
+- ZIP integrity checked with unzip -t.
+- Full runtime smoke test should still be performed on the Windows machine.

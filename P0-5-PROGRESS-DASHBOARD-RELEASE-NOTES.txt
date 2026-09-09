@@ -1,0 +1,12 @@
+GlowUp Academy Admin Pro 4.4 — P0-5 Progress / Dashboard Fixes
+
+- XP awards are now immutable per user/session via xp_events; toggling completion cannot farm XP.
+- Streak dates use SQLite localtime consistently instead of mixing UTC and local dates.
+- Course certificates require an actual enrollment; free-preview-only activity cannot issue a certificate.
+- Certificate issuance remains idempotent and notification-safe.
+- Existing dashboard progress, badges, XP, streak and certificate flows remain compatible.
+- Added database migration/bootstrap for xp_events on existing installations.
+
+Validation:
+- node --check routes/public.js
+- node --check db/index.js

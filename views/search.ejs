@@ -1,0 +1,26 @@
+<%- include('partials/header') %>
+<div class="container page-shell search-page-pro">
+  <div class="section-head"><div><span class="eyebrow">SMART SEARCH</span><h1>پیدا کردن چیزی که می‌خواهی</h1><p>دوره‌ها و مقالات را با یک جستجو پیدا کن.</p></div></div>
+  <form class="search-hero-pro" action="/search" method="GET">
+    <div class="search-input-pro"><span>⌕</span><input autofocus name="q" value="<%= q %>" placeholder="مثلاً استایل، اعتمادبه‌نفس، ذهن…"></div>
+    <button class="btn btn-gold" type="submit">جستجو</button>
+  </form>
+  <% if(q){ %>
+    <div class="search-controls">
+      <div class="search-chips"><a class="search-chip <%= category==='all'?'active':'' %>" href="/search?q=<%= encodeURIComponent(q) %>">همه</a><% categories.forEach(cat=>{ %><a class="search-chip <%= String(category)===String(cat.id)?'active':'' %>" href="/search?q=<%= encodeURIComponent(q) %>&category=<%= cat.id %>&sort=<%= sort %>"><%= cat.title %></a><% }) %></div>
+      <select onchange="if(this.value) location.href=this.value" aria-label="مرتب‌سازی نتایج">
+        <option value="/search?q=<%= encodeURIComponent(q) %>&category=<%= category %>&sort=featured" <%= sort==='featured'?'selected':'' %>>پیشنهاد گلوآپ</option>
+        <option value="/search?q=<%= encodeURIComponent(q) %>&category=<%= category %>&sort=newest" <%= sort==='newest'?'selected':'' %>>جدیدترین</option>
+        <option value="/search?q=<%= encodeURIComponent(q) %>&category=<%= category %>&sort=price_asc" <%= sort==='price_asc'?'selected':'' %>>ارزان‌ترین</option>
+        <option value="/search?q=<%= encodeURIComponent(q) %>&category=<%= category %>&sort=price_desc" <%= sort==='price_desc'?'selected':'' %>>گران‌ترین</option>
+      </select>
+    </div>
+    <p class="search-count"><%= courses.length + posts.length %> نتیجه برای «<%= q %>»</p>
+    <% if(courses.length){ %><div class="result-heading"><h2>دوره‌ها</h2><span><%= courses.length %> نتیجه</span></div><div class="course-grid"><% courses.forEach(course=>{ %><%- include('partials/course-card',{course}) %><% }) %></div><% } %>
+    <% if(posts.length){ %><div class="result-heading"><h2>مقالات</h2><span><%= posts.length %> نتیجه</span></div><div class="search-posts"><% posts.forEach(p=>{ %><a class="form-card glass search-post" href="/blog/<%= p.slug %>"><small>مقاله</small><h3><%= p.title %></h3><p><%= p.excerpt %></p></a><% }) %></div><% } %>
+    <% if(!courses.length && !posts.length){ %><div class="empty-state glass discovery-empty"><div style="font-size:40px">⌕</div><h3>چیزی پیدا نشد</h3><p>کلمات کوتاه‌تر یا عبارت دیگری را امتحان کن.</p></div><% } %>
+  <% } else { %>
+    <div class="search-suggestions"><div><span>✦</span><strong>محبوب‌ترین جستجوها</strong><p>برای شروع یکی از موضوعات را امتحان کن.</p></div><div class="suggestion-tags"><a href="/search?q=استایل">استایل</a><a href="/search?q=اعتمادبه%E2%80%8Cنفس">اعتمادبه‌نفس</a><a href="/search?q=ذهن">ذهن</a><a href="/search?q=گلوآپ">گلوآپ</a></div></div>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

@@ -1,0 +1,11 @@
+GlowUp Academy — Admin Pro 3.4
+
+Media & Homepage Studio
+- Media Library search and type filters
+- Image/video/audio/PDF previews
+- Copy media URL action
+- Safer media deletion and graceful upload errors
+- Homepage section image URL field
+- Banner image URL field
+- Media Studio responsive luxury UI
+- Version 3.4.0

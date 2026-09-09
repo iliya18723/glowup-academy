@@ -1,0 +1,72 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar crm-pro-head">
+  <div><span class="eyebrow">CUSTOMER INTELLIGENCE · CRM PRO</span><h1>هوش مشتری و CRM</h1><div class="sub">مشتری‌های ارزشمند، کاربران غیرفعال و لیدهای آماده خرید را سریع شناسایی کن.</div></div>
+  <div class="marketing-actions"><a class="btn btn-outline" href="/admin/marketing">بازاریابی</a><a class="btn btn-primary" href="/admin/notifications">ارسال اعلان</a></div>
+</div>
+<% if (notice) { %><div class="notice success"><%= notice %></div><% } %>
+<% if (error) { %><div class="notice error"><%= error %></div><% } %>
+
+<div class="crm-kpis">
+  <div class="stat-card"><span>کل کاربران</span><strong><%= totalUsers.toLocaleString('fa-IR') %></strong><small>کاربر عادی</small></div>
+  <div class="stat-card"><span>خریداران</span><strong><%= buyers.toLocaleString('fa-IR') %></strong><small>حداقل یک خرید موفق</small></div>
+  <div class="stat-card stat-accent"><span>مشتری تکراری</span><strong><%= repeatBuyers.toLocaleString('fa-IR') %></strong><small>۲ سفارش یا بیشتر</small></div>
+  <div class="stat-card"><span>در معرض ریزش</span><strong><%= dormant.toLocaleString('fa-IR') %></strong><small>بدون خرید ۴۵ روز</small></div>
+</div>
+
+<div class="crm-segment-grid">
+  <% segments.forEach(s=>{ %>
+    <a href="/admin/crm?segment=<%= s.key %>" class="crm-segment <%= s.tone %> <%= selected===s.key?'selected':'' %>">
+      <span class="crm-segment-icon"><%= s.key==='vip'?'◆':s.key==='repeat'?'↻':s.key==='dormant'?'⚠':'◇' %></span>
+      <span><b><%= s.label %></b><small><%= s.desc %></small></span>
+      <strong><%= s.count.toLocaleString('fa-IR') %></strong><i>←</i>
+    </a>
+  <% }) %>
+</div>
+
+<div class="crm-main-grid">
+  <section class="form-card glass">
+    <div class="section-head"><div><span class="eyebrow">CUSTOMER LIST</span><h3>لیست مشتری‌ها</h3></div><span class="crm-count"><%= customers.length.toLocaleString('fa-IR') %> نفر</span></div>
+    <div class="crm-table-wrap">
+      <table class="data-table crm-table">
+        <thead><tr><th>کاربر</th><th>سفارش</th><th>ارزش خرید</th><th>آخرین خرید</th><th>سگمنت</th></tr></thead>
+        <tbody>
+          <% customers.forEach(c=>{ %>
+            <tr>
+              <td><span class="avatar-circle"><%= (c.full_name||'?').charAt(0) %></span><div class="crm-user"><b><%= c.full_name||'بدون نام' %></b><small><%= c.phone||'—' %></small></div></td>
+              <td><%= Number(c.orders||0).toLocaleString('fa-IR') %></td>
+              <td><strong><%= Number(c.spend||0).toLocaleString('fa-IR') %></strong> <small>تومان</small></td>
+              <td><%= c.last_order ? new Date(c.last_order).toLocaleDateString('fa-IR') : 'هنوز خرید نکرده' %></td>
+              <td><span class="crm-pill <%= c.segment %>"><%= c.segment==='vip'?'VIP':c.segment==='repeat'?'تکراری':c.segment==='dormant'?'در معرض ریزش':c.segment==='lead'?'لید':'فعال' %></span></td>
+            </tr>
+          <% }) %>
+          <% if (!customers.length) { %><tr><td colspan="5"><div class="empty-state">مشتری‌ای در این سگمنت پیدا نشد.</div></td></tr><% } %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <aside class="crm-side">
+    <section class="form-card glass crm-action-card">
+      <span class="eyebrow">OUTREACH ACTION</span><h3>اقدام ارتباطی</h3>
+      <p>برای یک سگمنت، کانال ارتباطی را مشخص کن تا اقدام در تاریخچه مدیریتی ثبت شود.</p>
+      <form method="post" action="/admin/crm/outreach">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label>سگمنت<select name="segment"><option value="vip">مشتری‌های VIP</option><option value="repeat">مشتری‌های تکراری</option><option value="dormant">در معرض ریزش</option><option value="lead">لیدهای بدون خرید</option></select></label>
+        <label>کانال<select name="channel"><option>اعلان داخل سایت</option><option>پیامک</option><option>تلگرام</option><option>اینستاگرام</option></select></label>
+        <button class="btn btn-primary" style="width:100%">ثبت اقدام در Activity</button>
+      </form>
+    </section>
+    <section class="form-card glass crm-insight">
+      <span class="eyebrow">SMART INSIGHT</span><h3>یک نگاه سریع</h3>
+      <div><small>میانگین ارزش هر سفارش</small><strong><%= Math.round(avgOrder).toLocaleString('fa-IR') %> تومان</strong></div>
+      <div><small>کاربران بدون خرید</small><strong><%= neverBought.toLocaleString('fa-IR') %> نفر</strong></div>
+      <div><small>سهم مشتری تکراری</small><strong><%= buyers ? Math.round(repeatBuyers/buyers*1000)/10 : 0 %>٪</strong></div>
+    </section>
+  </aside>
+</div>
+
+<section class="form-card glass crm-history">
+  <div class="section-head"><div><span class="eyebrow">CRM ACTIVITY</span><h3>آخرین اقدامات ارتباطی</h3></div></div>
+  <% if (recent.length) { recent.forEach(a=>{ %><div class="crm-history-row"><span>⌁</span><div><b><%= a.full_name||'ادمین' %></b><small><%= a.meta||'اقدام CRM' %></small></div><time><%= new Date(a.created_at).toLocaleDateString('fa-IR') %></time></div><% }) } else { %><div class="empty-state">هنوز اقدام ارتباطی ثبت نشده.</div><% } %>
+</section>
+<%- include('../partials/admin-footer') %>

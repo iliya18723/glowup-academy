@@ -1,0 +1,23 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar"><div><span class="eyebrow">AUTOMATION INTELLIGENCE</span><h1>مرکز اتوماسیون هوشمند</h1><div class="sub">هشدارهای مهم فروش و عملیات را بدون جستجوی دستی پیدا کن.</div></div><form action="/admin/automation/run" method="POST"><%- csrfField %><button class="btn btn-gold" type="submit">⚡ اجرای بررسی الآن</button></form></div>
+
+<div class="automation-stats">
+  <div class="stat-card"><span class="automation-dot">⌁</span><div class="num"><%= metrics.pendingOrders.toLocaleString('fa-IR') %></div><div class="label">سفارش‌های معلق</div><small>آستانه: <%= pendingThreshold.toLocaleString('fa-IR') %></small></div>
+  <div class="stat-card"><span class="automation-dot">★</span><div class="num"><%= metrics.unapprovedReviews.toLocaleString('fa-IR') %></div><div class="label">نظرات منتظر تأیید</div><small>آستانه: <%= reviewThreshold.toLocaleString('fa-IR') %></small></div>
+  <div class="stat-card"><span class="automation-dot">◉</span><div class="num"><%= metrics.todayOrders.toLocaleString('fa-IR') %></div><div class="label">فروش موفق امروز</div><small><%= Number(metrics.todayRevenue||0).toLocaleString('fa-IR') %> تومان</small></div>
+</div>
+
+<div class="admin-grid-2">
+<section class="form-card glass"><h3>قوانین هشدار</h3><form action="/admin/automation/settings" method="POST" class="automation-rules"><%- csrfField %>
+<label class="switch-row"><span><b>سفارش‌های معلق</b><small>وقتی تعداد سفارش‌های pending از آستانه عبور کند.</small></span><input type="checkbox" name="pending_enabled" value="1" <%= rules.pending?'checked':'' %>></label>
+<label>آستانه سفارش<input type="number" min="1" max="999" name="pending_threshold" value="<%= pendingThreshold %>"></label>
+<label class="switch-row"><span><b>نظرات منتظر تأیید</b><small>وقتی تعداد نظرات تأییدنشده زیاد شود.</small></span><input type="checkbox" name="reviews_enabled" value="1" <%= rules.reviews?'checked':'' %>></label>
+<label>آستانه نظر<input type="number" min="1" max="999" name="review_threshold" value="<%= reviewThreshold %>"></label>
+<label class="switch-row"><span><b>هشدار بدون فروش</b><small>اگر امروز هنوز سفارش موفقی ثبت نشده باشد.</small></span><input type="checkbox" name="no_sales_enabled" value="1" <%= rules.noSales?'checked':'' %>></label>
+<div class="form-actions"><button class="btn btn-gold" type="submit">ذخیره قوانین</button></div></form></section>
+
+<section class="form-card glass"><h3>نحوه کار</h3><div class="automation-flow"><div><b>۱</b><span>بررسی داده‌ها</span><small>سفارش، نظر و فروش امروز</small></div><i>→</i><div><b>۲</b><span>تشخیص هشدار</span><small>بر اساس قوانین تو</small></div><i>→</i><div><b>۳</b><span>اعلان مدیر</span><small>ثبت در Notification Center</small></div></div><p class="muted automation-note">اجرای دستی، امن و قابل کنترل است؛ هیچ عملیات مالی خودکاری انجام نمی‌شود.</p></section>
+</div>
+
+<section class="form-card glass" style="margin-top:24px"><div class="panel-head"><div><span class="eyebrow">AUTOMATION LOG</span><h3 style="margin:5px 0 0">آخرین اجراها</h3></div></div><div class="saved-list"><% if(recent.length){ recent.forEach(r=>{ %><div class="notification-item"><span>⚡</span><div><strong><%= r.action %></strong><small><%= r.meta || '' %> · <%= new Date(r.created_at).toLocaleString('fa-IR') %></small></div></div><% }) } else { %><p class="muted">هنوز اجرای اتوماسیونی ثبت نشده است.</p><% } %></div></section>
+<%- include('../partials/admin-footer') %>

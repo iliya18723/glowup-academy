@@ -1,0 +1,20 @@
+GlowUp Academy — P1-1 Course Experience
+========================================
+Base: P0-7 End-to-End
+
+Implemented:
+- Professional course detail layout with course metadata/stat cards.
+- Real database-backed progress on course detail (no fake localStorage progress).
+- Resume/continue-learning card points to the next incomplete lesson.
+- Richer curriculum rows with lesson number, phase, duration and completion state.
+- More polished course trust indicators and responsive styling.
+- Watch page lesson badge and keyboard shortcut hint.
+- Watch page CSRF header for progress-completion POST requests.
+- Resume video from last local playback position.
+- Auto-save playback position and clear it after finishing.
+- Auto-mark lesson complete at 90% playback and on video end.
+- Keyboard controls: Space, Left/Right arrows, F fullscreen.
+
+Validation:
+- Node syntax checks passed for routes/public.js, server.js, routes/payment.js.
+- Full browser/runtime E2E still needs to be run on the user's Windows machine with npm install.

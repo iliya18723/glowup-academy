@@ -1,0 +1,9 @@
+GlowUp Academy 4.7.0 — P1-3 Admin Pro 2.0
+
+- Expanded admin dashboard KPIs: today revenue/orders, new users, enrollments.
+- Added attention/action panel for pending payments, pending reviews and unpublished courses.
+- Added latest users panel.
+- Added recent activity feed from real users/orders data.
+- Added responsive dashboard styling.
+- Kept existing revenue chart, live monitor, top courses, command center and recent orders.
+- Version bumped to 4.7.0.

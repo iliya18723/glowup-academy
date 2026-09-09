@@ -1,0 +1,43 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar"><div><span class="eyebrow">CMS / BRAND CONTROL</span><h1>مدیریت صفحه اصلی</h1><div class="sub">بدون دست زدن به کد، بخش‌های اصلی Home، نظرها و FAQ را کنترل کن.</div></div><a href="/" target="_blank" class="btn btn-outline">مشاهده سایت ↗</a></div>
+
+<div class="pro-grid-3">
+  <section class="form-card glass"><span class="pro-icon">◈</span><h3>Hero و بخش‌ها</h3><p class="muted">عنوان، زیرعنوان و CTAهای صفحه اصلی.</p></section>
+  <section class="form-card glass"><span class="pro-icon">★</span><h3>Social Proof</h3><p class="muted"><%= testimonials.length %> نظر ثبت شده برای نمایش.</p></section>
+  <section class="form-card glass"><span class="pro-icon">?</span><h3>FAQ</h3><p class="muted"><%= faqs.length %> سؤال و پاسخ آماده.</p></section>
+</div>
+
+<div class="admin-grid-2">
+<section class="form-card glass"><div class="panel-head"><h3>بخش‌های صفحه اصلی</h3><span class="tag">CMS</span></div>
+<form action="/admin/homepage/section" method="POST">
+    <%- csrfField %>
+
+<div class="field"><label>کلید بخش</label><input name="section_key" placeholder="hero / trust / roadmap" required></div>
+<div class="field"><label>عنوان</label><input name="title"></div>
+<div class="field"><label>زیرعنوان</label><input name="subtitle"></div>
+<div class="field"><label>محتوا</label><textarea name="content" rows="4"></textarea></div><div class="field"><label>URL تصویر</label><input name="image" placeholder="/uploads/..." dir="ltr"></div>
+<div class="field"><label>متن دکمه</label><input name="cta_text" placeholder="شروع مسیر"></div>
+<div class="field"><label>لینک دکمه</label><input name="cta_url" value="/quiz" dir="ltr"></div>
+<div class="form-row"><label>ترتیب<input type="number" name="sort_order" value="0"></label><label class="switch-row"><input type="checkbox" name="is_enabled" checked> فعال</label></div>
+<button class="btn btn-gold full-btn">ذخیره بخش</button></form>
+</section>
+<section class="form-card glass"><div class="panel-head"><h3>بخش‌های فعلی</h3></div>
+<% if(!sections.length){ %><div class="empty-state">هنوز بخش سفارشی نساختی.</div><% } %>
+<div class="sortable-list" id="homeSectionList"><% sections.forEach(s=>{ %><div class="cms-row sortable-item" draggable="true" data-id="<%= s.id %>"><div><b><%= s.title || s.section_key %></b><small><%= s.section_key %> · ترتیب <%= s.sort_order %></small></div><div class="row-actions"><span class="status-pill <%= s.is_enabled?'status-paid':'status-pending' %>"><%= s.is_enabled?'فعال':'خاموش' %></span><form action="/admin/homepage/section/<%= s.id %>/toggle" method="POST" style="display:inline"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="small-link"><%= s.is_enabled?'خاموش':'فعال' %></button></form><form action="/admin/homepage/section/<%= s.id %>/delete" method="POST" onsubmit="return confirm('این بخش حذف شود؟')"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="danger-link">حذف</button></form></div></div><% }) %></div><p class="builder-hint">✦ برای تغییر ترتیب، بخش را بکش و جابه‌جا کن.</p>
+<script>const hs=document.getElementById('homeSectionList');let hd=null;hs?.querySelectorAll('.sortable-item').forEach(r=>{r.addEventListener('dragstart',()=>hd=r);r.addEventListener('dragover',e=>{e.preventDefault();if(hd&&hd!==r){const x=r.getBoundingClientRect();hs.insertBefore(hd,e.clientY<x.top+x.height/2?r:r.nextSibling)}});r.addEventListener('dragend',()=>fetch('/admin/homepage/reorder',{method:'POST',headers:{'Content-Type':'application/json','x-csrf-token':'<%= csrfToken %>'},body:JSON.stringify({ids:[...hs.children].map(x=>x.dataset.id)})}).then(r=>{if(!r.ok)throw new Error('save');return r.json()}).catch(()=>location.reload()))});</script>
+</section></div>
+
+<div class="admin-grid-2">
+<section class="form-card glass"><div class="panel-head"><h3>Testimonials</h3><span class="tag">Social proof</span></div>
+<form action="/admin/testimonials/new" method="POST">
+    <%- csrfField %>
+<div class="form-row"><label>نام<input name="name" required></label><label>سمت/توضیح<input name="role"></label></div><label>متن نظر<textarea name="quote" rows="4" required></textarea></label><div class="form-row"><label>امتیاز<input type="number" name="rating" min="1" max="5" value="5"></label><label>ترتیب<input type="number" name="sort_order" value="0"></label></div><label class="switch-row"><input type="checkbox" name="is_published" checked> نمایش در سایت</label><button class="btn btn-gold">افزودن نظر</button></form>
+<div class="mini-list"><% testimonials.forEach(t=>{ %><div class="cms-row"><div><b><%= t.name %></b><small><%= '★'.repeat(t.rating) %> · <%= t.quote.slice(0,70) %><%= t.quote.length>70?'…':'' %></small></div><div class="row-actions"><form action="/admin/testimonials/<%= t.id %>/toggle" method="POST"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="small-link"><%= t.is_published?'مخفی':'نمایش' %></button></form><form action="/admin/testimonials/<%= t.id %>/delete" method="POST" onsubmit="return confirm('حذف شود؟')"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="danger-link">حذف</button></form></div></div><% }) %></div></section>
+
+<section class="form-card glass"><div class="panel-head"><h3>FAQ</h3><span class="tag">Help center</span></div>
+<form action="/admin/faqs/new" method="POST">
+    <%- csrfField %>
+<label>سؤال<input name="question" required></label><label>پاسخ<textarea name="answer" rows="4" required></textarea></label><div class="form-row"><label>ترتیب<input type="number" name="sort_order" value="0"></label><label class="switch-row"><input type="checkbox" name="is_published" checked> نمایش</label></div><button class="btn btn-gold">افزودن FAQ</button></form>
+<div class="mini-list"><% faqs.forEach(f=>{ %><div class="cms-row"><div><b><%= f.question %></b><small><%= f.answer.slice(0,90) %><%= f.answer.length>90?'…':'' %></small></div><div class="row-actions"><form action="/admin/faqs/<%= f.id %>/toggle" method="POST"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="small-link"><%= f.is_published?'مخفی':'نمایش' %></button></form><form action="/admin/faqs/<%= f.id %>/delete" method="POST" onsubmit="return confirm('حذف شود؟')"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="danger-link">حذف</button></form></div></div><% }) %></div></section>
+</div>
+<%- include('../partials/admin-footer') %>

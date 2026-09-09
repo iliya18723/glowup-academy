@@ -1,0 +1,8 @@
+GlowUp Academy 2.8 Admin Stability
+
+- Hardened admin fallback for unknown URLs.
+- Fixed missing course-session delete crash.
+- Fixed admin system DB path.
+- User deletion now handles invalid/missing IDs without raw 400/500 responses.
+- Added admin error safety net for predictable DB/upload failures.
+- Kept authorization and CSRF protections intact; valid admin sessions should not hit 403.

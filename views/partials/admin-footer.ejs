@@ -1,0 +1,83 @@
+  </div>
+</div>
+<script>
+window.GLOWUP_CSRF = '<%= csrfToken %>';
+document.addEventListener('submit', function(e) {
+  const form = e.target;
+  if ((form.method || 'GET').toUpperCase() === 'POST' && !form.querySelector('input[name="_csrf"]')) {
+    const input = document.createElement('input');
+    input.type = 'hidden'; input.name = '_csrf'; input.value = window.GLOWUP_CSRF;
+    form.appendChild(input);
+  }
+});
+</script>
+<script src="/js/site.js?v=p10-fix"></script>
+<script id="admin-form-ux">
+(() => {
+  document.querySelectorAll('.admin-content form[method="POST"], .admin-content form[method="post"]').forEach(form => {
+    form.addEventListener('submit', () => {
+      const btn = form.querySelector('button[type="submit"], button:not([type])');
+      if (!btn || btn.dataset.locked) return;
+      btn.dataset.locked = '1';
+      btn.classList.add('is-saving');
+      const original = btn.innerHTML;
+      btn.dataset.original = original;
+      btn.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span> در حال ذخیره…';
+      setTimeout(() => { if (btn.isConnected && !document.hidden) { btn.disabled = true; } }, 0);
+    });
+  });
+})();
+</script>
+
+<script id="admin-ux-enhancer">
+(() => {
+  // Give every destructive action a clear confirmation unless it already has one.
+  document.querySelectorAll('.admin-content form').forEach(form => {
+    const btn = form.querySelector('button');
+    if (!btn) return;
+    const action = form.getAttribute('action') || '';
+    const text = (btn.textContent || '').trim();
+    const destructive = /delete|remove|حذف|پاک/.test(action + ' ' + text);
+    if (destructive && !form.hasAttribute('data-no-confirm') && !form.hasAttribute('onsubmit')) {
+      form.addEventListener('submit', e => {
+        if (!window.confirm('این عملیات قابل بازگشت نیست. ادامه می‌دهی؟')) e.preventDefault();
+      });
+    }
+  });
+
+  // Mark primary save/create actions consistently.
+  document.querySelectorAll('.admin-content button[type="submit"], .admin-content a.btn').forEach(btn => {
+    const text = (btn.textContent || '').trim();
+    if (/ذخیره|ساخت|افزودن|ارسال|ثبت|ایجاد/.test(text)) btn.classList.add('action-primary');
+    if (/حذف|پاک/.test(text)) btn.classList.add('danger-action');
+  });
+
+  // Add accessible descriptions to compact action buttons.
+  document.querySelectorAll('.admin-content .small-link, .admin-content .danger-link').forEach(btn => {
+    if (!btn.getAttribute('aria-label')) btn.setAttribute('aria-label', (btn.textContent || '').trim());
+  });
+})();
+</script>
+<script id="admin-ux-enhancer-v3">
+(() => {
+  // Non-destructive UX helpers only. Destructive confirmations live in admin-ux-enhancer above.
+  document.querySelectorAll('.table-search[data-table-filter]').forEach(input=>{
+    const table=document.querySelector(input.dataset.tableFilter); if(!table)return;
+    input.addEventListener('input',()=>{
+      const q=input.value.trim().toLocaleLowerCase('fa-IR');
+      table.querySelectorAll('tbody tr').forEach(row=>row.hidden=!!q&&!row.innerText.toLocaleLowerCase('fa-IR').includes(q));
+    });
+  });
+  document.querySelectorAll('[data-category-edit]').forEach(btn=>btn.addEventListener('click',()=>{
+    const id=btn.dataset.categoryEdit,form=document.getElementById('category-edit-'+id); if(!form)return;
+    form.hidden=false; btn.closest('.row-actions')?.setAttribute('hidden','hidden'); form.querySelector('input')?.focus();
+  }));
+  document.querySelectorAll('[data-category-cancel]').forEach(btn=>btn.addEventListener('click',()=>{
+    const id=btn.dataset.categoryCancel,form=document.getElementById('category-edit-'+id); if(!form)return;
+    form.hidden=true; form.closest('td')?.querySelector('.row-actions')?.removeAttribute('hidden');
+  }));
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,7 @@
+<%- include('../partials/admin-header') %><div class="admin-topbar"><div><h1>فروش فوری ⚡</h1><div class="sub">قیمت موقت برای کمپین‌های محدود.</div></div></div><section class="form-card glass"><form method="POST" action="/admin/flash-sales/new" class="admin-form-grid">
+    <%- csrfField %>
+<label>دوره<select name="course_id"><% courses.forEach(c=>{ %><option value="<%= c.id %>"><%= c.title %></option><% }) %></select></label><label>قیمت فروش<input name="sale_price" type="number" required></label><label>شروع<input name="starts_at" type="datetime-local" required></label><label>پایان<input name="ends_at" type="datetime-local" required></label><button class="btn btn-gold">فعال‌سازی</button></form></section><table class="data-table"><thead><tr><th>دوره</th><th>قیمت</th><th>بازه</th><th>وضعیت</th><th></th></tr></thead><tbody><% sales.forEach(x=>{ %><tr><td><%= x.title %></td><td><%= x.sale_price.toLocaleString('fa-IR') %></td><td><%= new Date(x.starts_at).toLocaleString('fa-IR') %> تا <%= new Date(x.ends_at).toLocaleString('fa-IR') %></td><td><%= x.is_active?'فعال':'خاموش' %></td><td><form method="POST" action="/admin/flash-sales/<%= x.id %>/toggle" style="display:inline">
+  <%- csrfField %>
+<button class="btn btn-outline">فعال / غیرفعال</button></form> <form method="POST" action="/admin/flash-sales/<%= x.id %>/delete" onsubmit="return confirm('این فروش فوری حذف شود؟')" style="display:inline">
+  <%- csrfField %>
+<button class="btn btn-danger">حذف</button></form></td></tr><% }) %></tbody></table><%- include('../partials/admin-footer') %>

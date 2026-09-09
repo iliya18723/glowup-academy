@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+<div class="container" style="max-width:750px; padding-top:30px;">
+  <p class="reveal" style="margin:0 0 14px;"><a href="/blog" class="small-link">→ بازگشت به وبلاگ</a></p>
+  <div class="reveal blog-meta" style="margin-bottom:14px;">
+    <span>📖 <%= post.reading_time %> دقیقه مطالعه</span>
+    <span>🗓 <%= new Date(post.created_at).toLocaleDateString('fa-IR') %></span>
+  </div>
+  <img src="<%= post.cover_image || '/uploads/placeholder.jpg' %>" class="reveal" style="border-radius:18px; width:100%; aspect-ratio:16/9; object-fit:cover; margin-bottom:24px; border:1px solid var(--border);">
+  <h1 class="reveal"><%= post.title %></h1>
+  <div class="reveal blog-content" style="line-height:2; color:#ddd;"><%- post.content %></div>
+
+  <div class="reveal watch-actions" style="margin-top:36px;">
+    <% if (prevPost) { %><a class="btn btn-outline" href="/blog/<%= prevPost.slug %>">‹ <%= prevPost.title.length > 20 ? prevPost.title.slice(0,20)+'…' : prevPost.title %></a><% } %>
+    <% if (nextPost) { %><a class="btn btn-gold" href="/blog/<%= nextPost.slug %>"><%= nextPost.title.length > 20 ? nextPost.title.slice(0,20)+'…' : nextPost.title %> ›</a><% } %>
+  </div>
+
+  <% if (relatedPosts.length) { %>
+  <h3 class="reveal" style="margin-top:44px;">مطالب مرتبط</h3>
+  <div class="course-grid reveal-stagger" style="margin-bottom:20px;">
+    <% relatedPosts.forEach(p => { %>
+      <a class="course-card tilt blog-card" href="/blog/<%= p.slug %>">
+        <div class="thumb"><img src="<%= p.cover_image || '/uploads/placeholder.jpg' %>" alt="<%= p.title %>"></div>
+        <div class="body"><h3><%= p.title %></h3></div>
+      </a>
+    <% }) %>
+  </div>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

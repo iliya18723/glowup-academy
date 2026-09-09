@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta charset="UTF-8"><title><%= title %></title><link rel="stylesheet" href="/css/style.css">    <link rel="stylesheet" href="/css/responsive-final.css">
+</head>
+<body>
+<div class="container" style="text-align:center; padding-top:80px;">
+  <h1 style="font-size:60px; color:var(--gold);">۴۰۳</h1>
+  <p style="color:var(--text-muted)"><%= title === 'درخواست نامعتبر' ? 'نشست یا فرم امنیتی منقضی شده است. صفحه را یک‌بار تازه‌سازی کن و دوباره ذخیره کن.' : 'این بخش برای نقش کاربری فعلی فعال نیست.' %></p>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px;">
+    <a href="/admin" class="btn btn-gold">بازگشت به پنل</a>
+    <button type="button" class="btn btn-outline" onclick="location.reload()">تازه‌سازی صفحه</button>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<%- include('../partials/admin-header') %>
+<div class="pro-welcome" style="margin-bottom:16px;">
+  <div><span class="eyebrow">COURSE BUILDER PRO · 3.2</span><h1 style="margin:4px 0 0;"><%= course ? 'ویرایش و تکمیل دوره' : 'ساخت دوره جدید' %></h1><p style="margin:5px 0 0;color:var(--text-muted);">دوره را آماده انتشار کن؛ پنل کیفیت محتوا و ساختار جلسات را همزمان کنترل می‌کند.</p></div>
+  <% if (course) { %><a class="btn btn-outline" href="/courses/<%= course.slug %>" target="_blank" rel="noopener">پیش‌نمایش سایت ↗</a><% } %>
+</div>
+<% if (course) { %>
+<div class="pro-role-grid" id="courseReadiness" style="margin-bottom:16px;">
+  <div class="pro-stat-link"><strong id="readinessScore">—%</strong><span>آمادگی انتشار</span></div>
+  <div class="pro-stat-link"><strong id="readinessSessions">—</strong><span>جلسه</span></div>
+  <div class="pro-stat-link"><strong id="readinessVideos">—</strong><span>ویدیو</span></div>
+  <div class="pro-stat-link"><strong id="readinessPreviews">—</strong><span>پیش‌نمایش رایگان</span></div>
+</div>
+<% } %>
+<div class="form-card">
+  <form method="POST" action="<%= course ? `/admin/courses/${course.id}/edit` : '/admin/courses/new' %>"
+  enctype="multipart/form-data">
+  <%- csrfField %>
+    <div class="field"><label>عنوان دوره</label><input type="text" name="title" value="<%= course ? course.title : '' %>" required></div>
+    <div class="field"><label>زیرعنوان</label><input type="text" name="subtitle" value="<%= course ? course.subtitle : '' %>"></div>
+    <div class="field"><label>توضیحات</label><textarea name="description"><%= course ? course.description : '' %></textarea></div>
+    <% if (course && course.cover_image) { %>
+      <div class="field">
+        <label>تصویر فعلی</label>
+        <div style="width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden;">
+          <img src="<%= course.cover_image %>" style="width:100%; height:100%; object-fit:cover;">
+        </div>
+      </div>
+    <% } %>
+    <div class="field"><label>تصویر کاور جدید (اختیاری — اگر عکس نداری، یک طرح گرافیکی خودکار نمایش داده می‌شود)</label><input type="file" name="cover_image" accept="image/*"></div>
+    <div class="field"><label>قیمت (تومان)</label><input type="number" name="price" value="<%= course ? course.price : '' %>" required></div>
+    <div class="field"><label>قیمت با تخفیف (اختیاری)</label><input type="number" name="discount_price" value="<%= course && course.discount_price ? course.discount_price : '' %>"></div>
+    <div class="field"><label>تعداد جلسات <small style="color:var(--text-muted)">(خودکار از جلسات محاسبه می‌شود)</small></label><input type="number" name="sessions_count" value="<%= course ? course.sessions_count : '' %>" readonly></div>
+    <div class="field">
+      <label>دسته‌بندی</label>
+      <select name="category_id">
+        <option value="">بدون دسته</option>
+        <% categories.forEach(cat => { %>
+          <option value="<%= cat.id %>" <%= course && course.category_id === cat.id ? 'selected' : '' %>><%= cat.title %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="checkbox-row"><input type="checkbox" name="is_published" <%= !course || course.is_published ? 'checked' : '' %>> <label>منتشر شود</label></div>
+    <div class="checkbox-row"><input type="checkbox" name="is_featured" <%= course && course.is_featured ? 'checked' : '' %>> <label>در صفحه اصلی نمایش داده شود</label></div>
+    <button type="submit" class="btn btn-gold" style="width:100%;">ذخیره</button>
+  </form>
+</div>
+
+<% if (course) { %>
+  <h2 style="margin-top:40px;">افزودن دسته‌بندی سریع</h2>
+  <div class="form-card">
+    <form method="POST" action="/admin/categories/new">
+    <%- csrfField %>
+
+      <div class="field"><label>عنوان دسته جدید</label><input type="text" name="title" required></div>
+      <button type="submit" class="btn btn-outline">افزودن دسته</button>
+    </form>
+  </div>
+
+  <h2 style="margin-top:40px;">جلسات دوره</h2>
+  <p style="color:var(--text-muted); font-size:13px; margin-top:-10px;">می‌تونی جلسات رو داخل فازهای مختلف دسته‌بندی کنی (مثلاً «فاز ۱: پایه»، «فاز ۲: پیشرفته») تا توی صفحه‌ی دوره هم مرتب نمایش داده بشن.</p>
+
+  <%
+    const grouped = {};
+    (sessions || []).forEach(s => {
+      const key = s.phase || 'بدون دسته‌بندی';
+      grouped[key] = grouped[key] || [];
+      grouped[key].push(s);
+    });
+  %>
+  <% Object.keys(grouped).forEach(phaseName => { %>
+    <h4 style="color:var(--gold-light); font-size:13.5px; margin:18px 0 8px;"><%= phaseName %></h4>
+    <table class="data-table session-builder-table" style="margin-bottom:10px;">
+      <thead><tr><th>عنوان جلسه</th><th>منبع ویدیو</th><th>پیش‌نمایش</th><th>عملیات</th></tr></thead>
+      <tbody>
+        <% grouped[phaseName].forEach(s => { %>
+          <tr draggable="true" data-session-id="<%= s.id %>">
+            <td><span class="drag-handle" title="برای جابه‌جایی بکش">⠿</span><%= s.title %></td>
+            <td style="direction:ltr; text-align:left;">
+              <% if (s.video_url && s.video_url.startsWith('/uploads/videos/')) { %>
+                <span class="tag">فایل آپلودی 📁</span>
+              <% } else if (s.video_url) { %>
+                <span class="tag">لینک 🔗</span>
+              <% } else { %>
+                <span class="tag" style="opacity:.6;">بدون ویدیو</span>
+              <% } %>
+            </td>
+            <td><%= s.is_free_preview ? 'بله' : 'خیر' %></td>
+            <td style="white-space:nowrap;">
+              <form action="/admin/sessions/<%= s.id %>/move" method="POST" style="display:inline;">
+                <%- csrfField %><input type="hidden" name="direction" value="up">
+                <button type="submit" style="background:none;border:none;color:var(--gold-light);cursor:pointer;" title="انتقال جلسه به بالا" aria-label="انتقال جلسه به بالا">↑ بالا</button>
+              </form>
+              <form action="/admin/sessions/<%= s.id %>/move" method="POST" style="display:inline;">
+                <%- csrfField %><input type="hidden" name="direction" value="down">
+                <button type="submit" style="background:none;border:none;color:var(--gold-light);cursor:pointer;" title="انتقال جلسه به پایین" aria-label="انتقال جلسه به پایین">↓ پایین</button>
+              </form>
+              <a href="/admin/sessions/<%= s.id %>/edit" class="small-link">ویرایش</a>
+              <form action="/admin/sessions/<%= s.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('حذف شود؟')">
+                <%- csrfField %><button type="submit" style="background:none;border:none;color:#ff9a9a;cursor:pointer;">حذف</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% }) %>
+  <% if (!(sessions || []).length) { %><p class="empty">هنوز جلسه‌ای اضافه نشده</p><% } %>
+  <p class="builder-hint">✦ برای مرتب‌سازی سریع، ردیف جلسه را بکش و جابه‌جا کن.</p>
+  <script>document.querySelectorAll(".session-builder-table tbody").forEach(tbody=>{let drag=null; tbody.querySelectorAll("tr[draggable]").forEach(row=>{row.addEventListener("dragstart",()=>{drag=row;row.classList.add("dragging")});row.addEventListener("dragend",async()=>{row.classList.remove("dragging");drag=null;const ids=[...tbody.querySelectorAll("tr[data-session-id]")].map(x=>x.dataset.sessionId);try{const r=await fetch("/admin/courses/<%= course.id %>/sessions/reorder",{method:"POST",headers:{"Content-Type":"application/json","x-csrf-token":"<%= csrfToken %>"},body:JSON.stringify({session_ids:ids})});if(!r.ok) throw 0;row.closest("table").classList.add("saved-flash");setTimeout(()=>row.closest("table").classList.remove("saved-flash"),700)}catch(e){location.reload()}});row.addEventListener("dragover",e=>{e.preventDefault();if(drag&&drag!==row){const rect=row.getBoundingClientRect();tbody.insertBefore(drag,e.clientY<rect.top+rect.height/2?row:row.nextSibling)}})})});</script>
+
+  <div class="form-card" style="margin-top:16px;">
+    <h3 style="margin-top:0; font-size:14px;">افزودن جلسه جدید</h3>
+    <form method="POST" action="/admin/courses/<%= course.id %>/sessions/new" enctype="multipart/form-data">
+  <%- csrfField %>
+
+      <div class="field"><label>عنوان جلسه</label><input type="text" name="title" required></div>
+      <div class="field"><label>نام فاز/بخش (اختیاری)</label><input type="text" name="phase" placeholder="مثلاً: فاز ۱ - پایه"></div>
+
+      <div class="field">
+        <label>لینک ویدیو (مثلاً آپارات، یوتیوب، یا هر لینک مستقیم)</label>
+        <input type="text" name="video_url" placeholder="https://..." dir="ltr">
+      </div>
+
+      <div class="field">
+        <label>یا فایل ویدیو آپلود کن (اگر فایل انتخاب کنی، اولویت با فایل است و لینک نادیده گرفته می‌شود)</label>
+        <input type="file" name="video_file" accept="video/*">
+        <small style="color:var(--text-muted);">حداکثر حجم: ۱ گیگابایت</small>
+      </div>
+
+      <div class="field"><label>مدت زمان (ثانیه)</label><input type="number" name="duration_seconds"></div>
+      <div class="checkbox-row"><input type="checkbox" name="is_free_preview"> <label>پیش‌نمایش رایگان</label></div>
+      <button type="submit" class="btn btn-gold">افزودن جلسه</button>
+    </form>
+  </div>
+<% } %>
+<% if (course) { %><script>
+(async()=>{try{const r=await fetch('/admin/courses/<%= course.id %>/health');const d=await r.json();if(!d.ok)return;document.getElementById('readinessScore').textContent=d.score+'%';document.getElementById('readinessSessions').textContent=Number(d.sessions.total).toLocaleString('fa-IR');document.getElementById('readinessVideos').textContent=Number(d.sessions.videos).toLocaleString('fa-IR');document.getElementById('readinessPreviews').textContent=Number(d.sessions.previews).toLocaleString('fa-IR');}catch(e){}})();
+</script><% } %>
+<%- include('../partials/admin-footer') %>

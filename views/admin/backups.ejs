@@ -1,0 +1,33 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar backup-topbar">
+  <div><span class="eyebrow">BACKUP & RECOVERY</span><h1>مرکز بکاپ و بازیابی</h1><div class="sub">یک نسخه امن از دیتابیس بساز، دانلود کن یا در مواقع اضطراری بازیابی کن.</div></div>
+  <form action="/admin/backups/create" method="POST"><%- csrfField %><button class="btn btn-gold">＋ ساخت بکاپ جدید</button></form>
+</div>
+<div class="stat-grid backup-stats">
+  <div class="stat-card"><div class="stat-icon">◉</div><div class="num"><%= (dbSize/1024/1024).toFixed(2) %>MB</div><div class="label">حجم دیتابیس فعال</div></div>
+  <div class="stat-card"><div class="stat-icon">▣</div><div class="num"><%= backups.length %></div><div class="label">بکاپ‌های موجود</div></div>
+  <div class="stat-card"><div class="stat-icon">⌛</div><div class="num"><%= keep %></div><div class="label">حداکثر نگهداری</div></div>
+  <div class="stat-card"><div class="stat-icon">DB</div><div class="num" style="font-size:16px"><%= dbPath %></div><div class="label">فایل فعال</div></div>
+</div>
+<section class="form-card glass backup-warning"><strong>⚠️ نکته مهم بازیابی</strong><span>بازیابی، دیتابیس فعلی را با نسخه انتخاب‌شده جایگزین می‌کند. قبل از آن یک Emergency Snapshot از دیتابیس فعلی ساخته می‌شود. بعد از بازیابی، سرور باید Restart شود.</span></section>
+<section class="form-card glass">
+  <div class="panel-head"><h3>Snapshotهای موجود</h3><span class="tag">SQLite</span></div>
+  <% if (!backups.length) { %><div class="empty-state">هنوز بکاپی ساخته نشده است. اولین Snapshot را بساز.</div><% } else { %>
+  <div class="backup-list">
+    <% backups.forEach(b => { %>
+      <div class="backup-row">
+        <div class="backup-file"><div class="backup-icon">DB</div><div><strong><%= b.name %></strong><small><%= (b.size/1024/1024).toFixed(2) %> MB · <%= new Date(b.created_at).toLocaleString('fa-IR') %></small></div></div>
+        <div class="row-actions backup-actions">
+          <a class="btn btn-outline" href="/admin/backups/download/<%= encodeURIComponent(b.name) %>">دانلود</a>
+          <form action="/admin/backups/<%= encodeURIComponent(b.name) %>/restore" method="POST" data-restore-confirm="1"><%- csrfField %><button class="btn btn-gold">بازیابی</button></form>
+          <form action="/admin/backups/<%= encodeURIComponent(b.name) %>/delete" method="POST"><%- csrfField %><button class="danger-link">حذف</button></form>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+  <% } %>
+</section>
+<script>
+document.querySelectorAll('form[data-restore-confirm]').forEach(f=>f.addEventListener('submit',e=>{if(!confirm('این عملیات دیتابیس فعال را با این بکاپ جایگزین می‌کند. یک Emergency Snapshot هم ساخته می‌شود. ادامه می‌دهی؟'))e.preventDefault();}));
+</script>
+<%- include('../partials/admin-footer') %>

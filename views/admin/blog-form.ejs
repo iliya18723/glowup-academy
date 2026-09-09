@@ -1,0 +1,15 @@
+<%- include('../partials/admin-header') %>
+<h1><%= post ? 'ویرایش مطلب' : 'مطلب جدید' %></h1>
+<div class="form-card">
+  <form method="POST" action="<%= post ? `/admin/blog/${post.id}/edit` : '/admin/blog/new' %>"
+  enctype="multipart/form-data">
+  <%- csrfField %>
+    <div class="field"><label>عنوان</label><input type="text" name="title" value="<%= post ? post.title : '' %>" required></div>
+    <div class="field"><label>تصویر کاور</label><input type="file" name="cover_image" accept="image/*"></div>
+    <div class="field"><label>خلاصه</label><input type="text" name="excerpt" value="<%= post ? post.excerpt : '' %>"></div>
+    <div class="field"><label>متن کامل (HTML مجاز است)</label><textarea name="content" style="min-height:250px;"><%= post ? post.content : '' %></textarea></div>
+    <div class="checkbox-row"><input type="checkbox" name="is_published" <%= !post || post.is_published ? 'checked' : '' %>> <label>منتشر شود</label></div>
+    <button type="submit" class="btn btn-gold" style="width:100%;">ذخیره</button>
+  </form>
+</div>
+<%- include('../partials/admin-footer') %>

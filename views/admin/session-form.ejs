@@ -1,0 +1,30 @@
+<%- include('../partials/admin-header') %>
+<h1>ویرایش جلسه</h1>
+<div class="form-card">
+  <form method="POST" action="/admin/sessions/<%= session.id %>/edit" enctype="multipart/form-data">
+  <%- csrfField %>
+
+    <div class="field"><label>عنوان جلسه</label><input type="text" name="title" value="<%= session.title %>" required></div>
+    <div class="field"><label>نام فاز/بخش (اختیاری)</label><input type="text" name="phase" value="<%= session.phase || '' %>" placeholder="مثلاً: فاز ۱ - پایه"></div>
+
+    <div class="field">
+      <label>لینک ویدیوی فعلی</label>
+      <input type="text" name="video_url" value="<%= (session.video_url && !session.video_url.startsWith('/uploads/videos/')) ? session.video_url : '' %>" dir="ltr" placeholder="https://...">
+    </div>
+
+    <% if (session.video_url && session.video_url.startsWith('/uploads/videos/')) { %>
+      <p style="color:var(--text-muted); font-size:12.5px;">در حال حاضر یک فایل ویدیوی آپلودی برای این جلسه ثبت شده. اگه فایل جدید آپلود نکنی، همون فایل قبلی می‌مونه.</p>
+    <% } %>
+
+    <div class="field">
+      <label>جایگزینی با فایل ویدیوی جدید (اختیاری)</label>
+      <input type="file" name="video_file" accept="video/*">
+      <small style="color:var(--text-muted);">حداکثر حجم: ۱ گیگابایت</small>
+    </div>
+
+    <div class="field"><label>مدت زمان (ثانیه)</label><input type="number" name="duration_seconds" value="<%= session.duration_seconds || 0 %>"></div>
+    <div class="checkbox-row"><input type="checkbox" name="is_free_preview" <%= session.is_free_preview ? 'checked' : '' %>> <label>پیش‌نمایش رایگان</label></div>
+    <button type="submit" class="btn btn-gold" style="width:100%;">ذخیره تغییرات</button>
+  </form>
+</div>
+<%- include('../partials/admin-footer') %>

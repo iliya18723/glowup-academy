@@ -1,0 +1,4 @@
+GlowUp Academy 7.2.6 — Deep Stability Patch
+
+- Corrected course-detail script placement so all inline scripts render before the footer closes </body></html>.
+- Retains 7.2.5 admin confirmation de-duplication and Zarinpal timeout/error hardening.

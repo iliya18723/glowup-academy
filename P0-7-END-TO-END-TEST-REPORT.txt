@@ -1,0 +1,40 @@
+GlowUp Academy — P0-7 End-to-End Test & Hardening Report
+========================================================
+Version: 4.4.1
+
+STATIC TESTS PASSED
+- Node syntax check: server.js, routes, middleware, utils, db, scripts
+- CSRF coverage audit: POST forms in admin/cart/course/dashboard templates checked and missing tokens fixed
+- Payment/checkout source audit: bundle-covered standalone courses no longer contribute a second standalone price
+- Cart display audit: bundle-covered standalone courses are hidden so cart total matches checkout total
+- Payment idempotency audit: paid transition is guarded by pending+authority and enrollments use INSERT OR IGNORE
+- Progress audit: XP ledger uses UNIQUE(user_id,session_id); certificate requires enrollment and full completion
+- Referral audit: reward transition is guarded by pending status and reward ledger uses INSERT OR IGNORE
+
+FIXES MADE IN P0-7
+1. Bundle + standalone duplicate charge fixed in checkout.
+2. Cart display normalized to the same bundle pricing rule.
+3. Missing CSRF hidden fields added to affected POST forms.
+4. Version bumped to 4.4.1.
+
+RUNTIME LIMITATION
+- Full HTTP smoke testing could not be completed in this isolated build environment because dependencies were not preinstalled and npm install did not complete within the available execution window.
+- Therefore this release must still be run locally before production.
+
+LOCAL SMOKE TEST CHECKLIST
+1. npm install
+2. npm start
+3. GET /health -> 200 + ok:true
+4. Register -> redirect home and session persists
+5. Login -> redirect home/admin and session persists
+6. Add course -> /cart shows one item
+7. Add bundle containing that course -> standalone duplicate disappears and total is bundle price
+8. Apply valid/expired/maxed coupon -> totals update correctly
+9. Checkout -> pending order created, payment redirect works with configured gateway
+10. Verify callback twice -> only one paid transition/enrollment/reward
+11. Complete free preview -> no certificate
+12. Complete purchased course -> certificate and finisher badge created once
+13. Repeat completion -> no extra XP
+14. Admin create/edit/delete actions -> valid CSRF succeeds; missing token is rejected
+15. Admin role change/delete -> stale session permissions are not retained
+16. Referral purchase -> one reward ledger entry and one notification

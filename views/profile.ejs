@@ -1,0 +1,50 @@
+<%- include('partials/header') %>
+<section class="profile-page container">
+  <div class="profile-hero glass">
+    <div class="profile-identity">
+      <div class="profile-avatar-wrap">
+        <% if (profile.avatar) { %><img class="profile-avatar" src="<%= profile.avatar %>" alt="آواتار <%= profile.full_name %>"><% } else { %><div class="profile-avatar profile-avatar-fallback"><%= (profile.full_name||'?').charAt(0) %></div><% } %>
+        <span class="profile-online-dot"></span>
+      </div>
+      <div><span class="eyebrow">حساب کاربری</span><h1><%= profile.full_name %></h1><p><%= profile.phone %> · عضو از <%= new Date(profile.created_at).toLocaleDateString('fa-IR') %></p></div>
+    </div>
+    <a class="btn btn-gold" href="/dashboard">← بازگشت به داشبورد</a>
+  </div>
+
+  <% if (success) { %><div class="profile-alert success">✓ اطلاعات پروفایل با موفقیت ذخیره شد.</div><% } %>
+  <% if (error) { %><div class="profile-alert error">⚠ <%= error %></div><% } %>
+
+  <div class="profile-stats">
+    <div class="profile-stat glass"><span>🎓</span><b><%= stats.enrolled_count %></b><small>دوره فعال</small></div>
+    <div class="profile-stat glass"><span>⚡</span><b><%= stats.total_xp.toLocaleString('fa-IR') %></b><small>XP کل</small></div>
+    <div class="profile-stat glass"><span>🏆</span><b><%= stats.certificates_count %></b><small>گواهینامه</small></div>
+    <div class="profile-stat glass"><span>❤️</span><b><%= stats.wishlist_count %></b><small>ذخیره‌شده</small></div>
+  </div>
+
+  <div class="profile-grid">
+    <div class="glass profile-card">
+      <div class="section-heading"><div><span class="eyebrow">اطلاعات شخصی</span><h2>پروفایل حرفه‌ای</h2></div><span class="profile-lock">شماره موبایل قابل تغییر نیست</span></div>
+      <form action="/profile" method="POST" class="profile-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <label>نام و نام خانوادگی<input name="full_name" value="<%= profile.full_name %>" maxlength="100" required></label>
+        <label>شماره موبایل<input value="<%= profile.phone %>" dir="ltr" disabled></label>
+        <label>ایمیل<input type="email" name="email" value="<%= profile.email || '' %>" maxlength="160" placeholder="example@email.com" dir="ltr"></label>
+        <label>لینک تصویر پروفایل<input type="url" name="avatar" value="<%= profile.avatar || '' %>" maxlength="500" placeholder="https://..." dir="ltr"><small>فعلاً تصویر را با لینک مستقیم ذخیره می‌کنیم.</small></label>
+        <button class="btn btn-gold" type="submit">ذخیره تغییرات</button>
+      </form>
+    </div>
+
+    <div class="glass profile-card">
+      <div class="section-heading"><div><span class="eyebrow">سطح شما</span><h2>پیشرفت حساب</h2></div><strong class="level-pill">Level <%= stats.level %></strong></div>
+      <div class="level-display"><div class="level-ring" style="--level-progress:<%= stats.levelProgress %>%"><b><%= stats.level %></b><small>LVL</small></div><div><h3><%= stats.total_xp.toLocaleString('fa-IR') %> XP</h3><p>تا Level بعدی ادامه بده؛ هر درس کامل‌شده تو را جلوتر می‌برد.</p></div></div>
+      <div class="progress-track"><span style="width:<%= stats.levelProgress %>%"></span></div><div class="progress-caption"><span>پیشرفت Level</span><b><%= stats.levelProgress %>٪</b></div>
+      <div class="profile-quick-links"><a href="/notifications">🔔 اعلان‌ها</a><a href="/dashboard">📚 دوره‌های من</a><a href="/referral">🎁 معرفی دوستان</a></div>
+    </div>
+  </div>
+
+  <div class="glass profile-card profile-activity">
+    <div class="section-heading"><div><span class="eyebrow">فعالیت اخیر</span><h2>آخرین پیشرفت‌ها</h2></div><a href="/dashboard" class="small-link">مشاهده داشبورد</a></div>
+    <% if (recentActivity.length) { %><div class="activity-list"><% recentActivity.forEach(a=>{ %><a href="/courses/<%= a.slug %>" class="profile-activity-row"><span class="activity-icon">⚡</span><div><b><%= a.session_title %></b><small><%= a.course_title %></small></div><strong>+<%= a.amount %> XP</strong><time><%= new Date(a.created_at).toLocaleDateString('fa-IR') %></time></a><% }) %></div><% } else { %><div class="profile-empty">هنوز فعالیت آموزشی ثبت نشده. اولین درس را شروع کن 🚀</div><% } %>
+  </div>
+</section>
+<%- include('partials/footer') %>

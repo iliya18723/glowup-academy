@@ -1,0 +1,6 @@
+GlowUp Academy 7.2.19 — Production Security + Backup Recovery QA
+
+- Production seed no longer creates the documented default admin credentials. It requires explicit ADMIN_INITIAL_PHONE and ADMIN_INITIAL_PASSWORD (12+ chars).
+- Added scripts/change-admin-password.js and npm run admin:password for secure bootstrap/rotation of an existing admin password.
+- Backup restore now exits the process after a successful DB swap so the closed SQLite handle cannot serve further requests. Process managers such as Render/PM2 can restart the app cleanly.
+- Updated README and .env.example for production-safe admin bootstrap.

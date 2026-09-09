@@ -1,0 +1,8 @@
+GlowUp Academy 7.2.14
+
+Password reset + media upload QA fixes:
+- Password reset token consumption is now atomic, preventing concurrent reuse of a one-time reset code.
+- Reset-code hash comparison uses timing-safe comparison.
+- Password reset handles a token consumed concurrently with a clear user-facing message.
+- Image/video/media upload environment limits are clamped to safe positive ranges.
+- Existing upload CSRF cleanup and MIME allowlists retained.

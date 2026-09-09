@@ -1,0 +1,8 @@
+GlowUp Academy 7.2 — 5.7 Visual Base + 7.x Capabilities
+
+- Preserved the 5.7 visual/UI files as the design baseline.
+- Added password recovery: request a 6-digit code, 10-minute expiry, single-use token, hashed code storage, and reset throttling.
+- Added password_reset_tokens migration in db/index.js.
+- Added forgot/reset views using the existing 5.7 auth visual classes.
+- Added a subtle “forgot password” link to the existing 5.7 login page.
+- Kept all 5.7 business/admin features intact: payments, enrollment, referrals, progress, notifications, profile, achievements, wishlist, checkout, analytics, marketing, CRM, etc.

@@ -1,0 +1,7 @@
+GlowUp Academy 7.2.8
+
+FIXES
+- Payment referral discount now uses the configured referral_reward_percent and referral_discount_cap instead of hardcoded 5%/100000 values.
+- Cart referral label now reflects the configured referral reward percent instead of always displaying 5%.
+- Admin homepage sections now have a server-side toggle endpoint for enabled/disabled state.
+- JavaScript syntax checks passed for modified route files.

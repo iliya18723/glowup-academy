@@ -1,0 +1,22 @@
+GlowUp Academy Admin Pro 4.4 — P0-4 Referral Fix
+
+Changes:
+- Added an auditable referral_rewards ledger with one reward record per successful referral/order.
+- Successful paid referral now stores the actual reward_amount instead of leaving it at zero.
+- Referral reward is configurable through settings:
+  referral_reward_percent = 5
+  referral_reward_cap = 100000
+- Duplicate/callback-safe reward creation: referral status is changed only once from pending to rewarded, and the ledger uses unique referral/order constraints.
+- Referrer notification now includes the registered reward amount.
+- User referral page now shows both successful referrals and total registered rewards.
+- Admin referral analytics now shows total registered reward amount per referrer.
+- Existing installations receive the new table and default settings automatically on next startup.
+
+Validation:
+- node --check routes/payment.js
+- node --check routes/public.js
+- node --check routes/admin.js
+- node --check db/index.js
+
+Note:
+- This release records rewards as an auditable balance/ledger. It does not automatically transfer cash to a bank account or create a spendable wallet; a wallet/redemption flow can be added as a later P1 feature.

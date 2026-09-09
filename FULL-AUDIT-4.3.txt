@@ -1,0 +1,25 @@
+GlowUp Academy — Admin Pro 4.3 Full Audit
+
+Static audit performed against Admin Pro 4.2 source.
+
+FIXED
+- CSRF token preserved across authentication/session regeneration.
+- CSRF enforced for multipart Media Library uploads after multer parsing.
+- Course create/edit numeric and title validation hardened.
+- Course/session IDs validated before mutations.
+- Replaced course covers are cleaned up after successful replacement.
+- Media delete path is constrained to the public directory.
+- Friendly DB error handling extended for CHECK constraints.
+- Session edit GET/POST ID handling verified.
+
+CHECKED
+- Node syntax for server.js, routes/*.js, middleware/*.js, db/*.js, utils/*.js, scripts/*.js, public/js/*.js.
+- SQLite schema/table references.
+- Admin POST form CSRF coverage. Multipart routes use post-parser CSRF checks.
+- Admin role routing and protected financial/security/backup endpoints.
+- Backup filename/path validation.
+- Media upload size limit (1 GiB max).
+- ZIP integrity.
+
+LIMITATION
+- Full dependency install/integration test could not be completed in the build environment because npm install timed out.

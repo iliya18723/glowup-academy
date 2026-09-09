@@ -1,0 +1,8 @@
+GlowUp Academy 7.2.29 — Final Pre-Deploy QA
+
+- Fixed course cover replacement cleanup: old uploaded covers are now removed from DATA_DIR/uploads instead of the obsolete public/uploads path.
+- Fixed course lesson video replacement cleanup: the previous local uploaded video is removed after a successful replacement.
+- Kept externally hosted video URLs untouched.
+- Made Render Blueprint production admin bootstrap variables explicit (ADMIN_INITIAL_PHONE / ADMIN_INITIAL_PASSWORD) as non-committed secrets.
+- Bumped package version to 7.2.29.
+- ZIP integrity and Node.js syntax checks should be run before deployment.

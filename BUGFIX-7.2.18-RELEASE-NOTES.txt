@@ -1,0 +1,8 @@
+GlowUp Academy 7.2.18 — Media Cleanup + Admin AJAX QA
+
+- Removed orphaned course video files when a deletable course is deleted.
+- Removed replaced/deleted blog cover files.
+- Prevented deleting Media Library assets still referenced by courses, blog posts, homepage banners or homepage sections.
+- Media Library now displays the configured MAX_MEDIA_MB limit.
+- Admin drag/drop reorder actions now detect server-side failures and reload instead of silently pretending the save succeeded.
+- Version bumped to 7.2.18.

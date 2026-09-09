@@ -1,0 +1,10 @@
+GlowUp Academy — Admin Pro 3.2
+
+- Course Builder Pro readiness score and health endpoint
+- Duplicate course as safe draft with all sessions copied
+- Automatic course session count synchronization
+- Improved course edit header and live readiness metrics
+- Course list duplicate action
+- Safer session duration normalization
+
+Validation: Node syntax checks passed; full npm integration test may require npm install in the target environment.

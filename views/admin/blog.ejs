@@ -1,0 +1,29 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar">
+  <div><h1>مدیریت وبلاگ</h1><div class="sub"><%= posts.length %> مطلب ثبت شده</div></div>
+  <div class="table-search-wrap">
+    <span class="ts-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span>
+    <input type="text" class="js-table-search" placeholder="جستجوی عنوان…">
+  </div>
+  <a href="/admin/blog/new" class="btn btn-gold">+ مطلب جدید</a>
+</div>
+<table class="data-table">
+  <thead><tr><th>عنوان</th><th>وضعیت</th><th>تاریخ</th><th>عملیات</th></tr></thead>
+  <tbody>
+    <% posts.forEach(p => { %>
+      <tr>
+        <td><%= p.title %></td>
+        <td><span class="status-pill <%= p.is_published ? 'status-paid' : 'status-pending' %>"><%= p.is_published ? 'منتشر شده' : 'پیش‌نویس' %></span></td>
+        <td><%= new Date(p.created_at).toLocaleDateString('fa-IR') %></td>
+        <td>
+          <a href="/admin/blog/<%= p.id %>/edit" class="small-link">ویرایش</a> &nbsp;|&nbsp;
+          <form action="/admin/blog/<%= p.id %>/delete" method="POST" style="display:inline" onsubmit="return confirm('حذف شود؟')"><%- csrfField %>
+            <button type="submit" style="background:none;border:none;color:#ff9a9a;cursor:pointer;">حذف</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+    <% if (!posts.length) { %><tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:24px;">هنوز مطلبی ثبت نشده</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('../partials/admin-footer') %>

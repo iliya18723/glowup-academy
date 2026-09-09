@@ -1,0 +1,52 @@
+  </main>
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="logo" style="margin-bottom:12px;">
+          <div class="logo-text">GLOW UP<span>ACADEMY</span></div>
+          <div class="mark">G</div>
+        </div>
+        <p style="color:var(--text-muted); font-size:12.5px; line-height:1.9; max-width:260px;">
+          آکادمی تخصصی گلو‌آپ مردانه — دوره‌های کاربردی برای تغییر واقعی در ظاهر، ذهن و سبک زندگی.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>دسترسی سریع</h4>
+        <a href="/">خانه</a>
+        <a href="/courses">دوره‌ها</a>
+        <a href="/blog">وبلاگ</a>
+      </div>
+      <div class="footer-col">
+        <h4>حساب کاربری</h4>
+        <a href="/login">ورود</a>
+        <a href="/register">ثبت‌نام</a>
+        <a href="/cart">سبد خرید</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© <%= new Date().getFullYear() %> گلو آپ آکادمی — تمامی حقوق محفوظ است.</div>
+  </footer>
+  <script>
+  window.GLOWUP_CSRF = '<%= csrfToken %>';
+  document.addEventListener('submit', function(e) {
+    const form = e.target;
+    if (form.method && form.method.toUpperCase() !== 'POST') return;
+    if (!form.querySelector('input[name="_csrf"]')) {
+      const input = document.createElement('input');
+      input.type = 'hidden'; input.name = '_csrf'; input.value = window.GLOWUP_CSRF;
+      form.appendChild(input);
+    }
+  });
+  const _fetch = window.fetch;
+  window.fetch = function(input, init) {
+    init = init || {};
+    const method = (init.method || 'GET').toUpperCase();
+    if (!['GET','HEAD','OPTIONS'].includes(method)) {
+      init.headers = new Headers(init.headers || {});
+      init.headers.set('X-CSRF-Token', window.GLOWUP_CSRF);
+    }
+    return _fetch(input, init);
+  };
+</script>
+<script src="/js/site.js?v=p10-fix"></script>
+</body>
+</html>

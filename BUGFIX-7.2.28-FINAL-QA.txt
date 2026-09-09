@@ -1,0 +1,22 @@
+GlowUp Academy 7.2.28 — Final QA
+
+Final static QA pass completed.
+
+FIXED
+- Removed a stale in-memory auth-throttle cleanup timer left behind after migration to persistent SQLite throttling.
+- The stale timer referenced deleted variables and could throw a ReferenceError after its interval, potentially triggering the production uncaughtException shutdown path.
+- Persistent login/reset throttling remains fully SQLite-backed.
+- package.json version bumped to 7.2.28.
+
+QA CHECKS
+- All JavaScript files pass node --check.
+- render.yaml parses successfully; production uses persistent /var/data storage.
+- CSRF coverage reviewed for POST forms/routes, including multipart upload wrappers.
+- Admin role boundaries reviewed.
+- Protected video route reviewed for ownership, preview access, path traversal, range requests and ambiguous mappings.
+- Payment checkout/verify reviewed for server-side pricing, ownership re-checks, coupon race handling and gateway authority validation.
+- Certificate/completion flow reviewed for idempotency and collision handling.
+- XSS/navigation sanitization reviewed for rich content, profile URLs and admin navigation.
+
+KNOWN LIMITATION
+- Full runtime/integration execution remains environment-limited because better-sqlite3 native dependency is not available in the current execution environment and npm install previously timed out. Static/syntax QA was completed successfully.

@@ -1,0 +1,60 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar">
+  <div>
+    <span class="eyebrow">ساختار محتوا</span>
+    <h1>مدیریت دسته‌بندی‌ها</h1>
+    <div class="sub">دسته‌ها را بساز، نامشان را ویرایش کن و سریع ببین هر دسته چند دوره دارد.</div>
+  </div>
+  <div class="topbar-actions"><a class="btn btn-outline" href="/admin/courses">مشاهده دوره‌ها</a><a class="btn btn-gold" href="#newCategory">＋ دسته جدید</a></div>
+</div>
+
+<% if (notice) { %><div class="admin-alert success"><span>✓</span><%= notice %></div><% } %>
+<% if (error) { %><div class="admin-alert error"><span>!</span><%= error %></div><% } %>
+
+<div class="admin-summary-grid">
+  <div class="mini-stat"><span>کل دسته‌ها</span><strong><%= categories.length.toLocaleString('fa-IR') %></strong><small>ساختار محتوای فعلی</small></div>
+  <div class="mini-stat"><span>دوره‌های دسته‌بندی‌شده</span><strong><%= categories.reduce((n,c)=>n+Number(c.course_count||0),0).toLocaleString('fa-IR') %></strong><small>دوره متصل به دسته‌ها</small></div>
+  <div class="mini-stat"><span>دسته بدون دوره</span><strong><%= categories.filter(c=>!Number(c.course_count)).length.toLocaleString('fa-IR') %></strong><small>مناسب برای تکمیل محتوا</small></div>
+</div>
+
+<section class="form-card glass category-create-card" id="newCategory">
+  <div class="section-heading"><div><span class="eyebrow">ایجاد سریع</span><h2>افزودن دسته‌بندی</h2><p>مثلاً «استایل و پوشش» یا «مراقبت پوست»</p></div><span class="section-badge">۱ مرحله</span></div>
+  <form action="/admin/categories/new" method="POST" class="admin-form-grid category-create-form">
+    <%- csrfField %>
+    <label>نام دسته‌بندی<input name="title" required maxlength="100" placeholder="نام واضح و کوتاه وارد کن"></label>
+    <div class="form-help-box"><strong>نکته</strong><span>Slug به‌صورت خودکار ساخته می‌شود و لازم نیست دستی واردش کنی.</span></div>
+    <button type="submit" class="btn btn-gold action-primary">＋ افزودن دسته‌بندی</button>
+  </form>
+</section>
+
+<section class="form-card glass admin-list-card">
+  <div class="section-heading"><div><span class="eyebrow">مدیریت</span><h2>دسته‌های موجود</h2><p>برای تغییر نام، روی «ویرایش» بزن.</p></div><div class="table-tools"><input type="search" class="table-search" data-table-filter="#categoriesTable" placeholder="جستجوی دسته…"></div></div>
+  <div class="table-scroll">
+  <table class="data-table" id="categoriesTable">
+    <thead><tr><th>دسته‌بندی</th><th>Slug</th><th>تعداد دوره</th><th>وضعیت</th><th>عملیات</th></tr></thead>
+    <tbody>
+      <% categories.forEach(c=>{ %>
+        <tr>
+          <td><div class="entity-cell"><span class="entity-icon">#</span><div><strong><%= c.title %></strong><small>شناسه #<%= c.id %></small></div></div></td>
+          <td><code class="slug-chip"><%= c.slug %></code></td>
+          <td><span class="count-chip"><%= Number(c.course_count||0).toLocaleString('fa-IR') %> دوره</span></td>
+          <td><span class="status-pill <%= c.course_count ? 'status-paid' : 'status-pending' %>"><%= c.course_count ? 'در حال استفاده' : 'بدون دوره' %></span></td>
+          <td>
+            <div class="row-actions">
+              <button type="button" class="btn btn-outline btn-sm" data-category-edit="<%= c.id %>">✎ ویرایش</button>
+              <form method="POST" action="/admin/categories/<%= c.id %>/delete">
+                <%- csrfField %><button type="submit" class="btn btn-danger btn-sm">حذف</button>
+              </form>
+            </div>
+            <form method="POST" action="/admin/categories/<%= c.id %>/edit" class="category-inline-edit" id="category-edit-<%= c.id %>" hidden>
+              <%- csrfField %><input name="title" value="<%= c.title %>" maxlength="100" required><button class="btn btn-gold btn-sm" type="submit">ذخیره تغییر</button><button class="btn btn-outline btn-sm" type="button" data-category-cancel="<%= c.id %>">انصراف</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+      <% if (!categories.length) { %><tr><td colspan="5" class="empty-state">هنوز دسته‌ای ساخته نشده. اولین دسته را از فرم بالا اضافه کن.</td></tr><% } %>
+    </tbody>
+  </table>
+  </div>
+</section>
+<%- include('../partials/admin-footer') %>

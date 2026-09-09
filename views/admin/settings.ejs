@@ -1,0 +1,20 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar"><div><span class="eyebrow">کنترل برند</span><h1>تنظیمات آکادمی</h1><div class="sub">اطلاعات عمومی و پیام‌های اصلی سایت.</div></div></div>
+<form action="/admin/settings" method="POST" class="settings-grid">
+    <%- csrfField %>
+
+<section class="form-card glass"><h3>اطلاعات</h3><label>نام آکادمی<input name="academy_name" value="<%= settings.academy_name||'GlowUp Academy' %>"></label><label>شماره پشتیبانی<input name="support_phone" value="<%= settings.support_phone||'' %>"></label><label>ایمیل پشتیبانی<input name="support_email" value="<%= settings.support_email||'' %>"></label><label>Instagram<input name="instagram" value="<%= settings.instagram||'' %>"></label><label>Telegram<input name="telegram" value="<%= settings.telegram||'' %>"></label></section>
+<section class="form-card glass"><h3>پیام صفحه اصلی</h3><label>Headline<textarea name="home_headline" rows="3"><%= settings.home_headline||'بهترین نسخه‌ی خودت باش' %></textarea></label><label>Subheadline<textarea name="home_subheadline" rows="4"><%= settings.home_subheadline||'' %></textarea></label><label>اعلان بالای سایت<textarea name="announcement" rows="3"><%= settings.announcement||'' %></textarea></label><button class="btn btn-gold full-btn">ذخیره تغییرات ✓</button></section>
+</form>
+
+<section class="form-card glass security-password-card">
+  <div class="security-card-head"><div><span class="eyebrow">SECURITY</span><h3>تغییر رمز ادمین</h3><p class="sub">برای امنیت بیشتر، رمز فعلی را وارد کن و یک رمز جدید حداقل ۸ کاراکتری بساز.</p></div><span class="security-badge">🔐 محافظت‌شده</span></div>
+  <form action="/admin/settings/password" method="POST" class="password-form">
+    <%- csrfField %>
+    <label>رمز فعلی<input type="password" name="current_password" autocomplete="current-password" required></label>
+    <label>رمز جدید<input type="password" name="new_password" minlength="8" maxlength="200" autocomplete="new-password" required></label>
+    <label>تکرار رمز جدید<input type="password" name="confirm_password" minlength="8" maxlength="200" autocomplete="new-password" required></label>
+    <button class="btn btn-gold full-btn">تغییر رمز امن ✓</button>
+  </form>
+</section>
+<%- include('../partials/admin-footer') %>

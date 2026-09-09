@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+<div class="container quiz-page">
+  <section class="quiz-hero reveal"><span class="eyebrow">GLOWUP QUIZ</span><h1>مسیر مناسب <span class="gold">تو</span> چیه؟</h1><p>۴ سؤال کوتاه جواب بده تا بفهمیم از کجا شروع کنی.</p></section>
+  <form id="glowQuiz" class="quiz-card glass reveal">
+    <% [
+      ['هدف اصلیت چیه؟',['استایل و ظاهر','فیتنس و بدن','اعتمادبه‌نفس و ذهن']],
+      ['چقدر در روز وقت داری؟',['۱۵ دقیقه','۳۰ دقیقه','بیشتر از یک ساعت']],
+      ['الان بزرگ‌ترین چالشت چیه؟',['بی‌نظمی','استایل','اعتمادبه‌نفس']],
+      ['سبک یادگیریت؟',['ویدیو کوتاه','برنامه مرحله‌ای','ترکیبی']]
+    ].forEach((q,i)=>{ %>
+      <fieldset><legend><span>0<%=i+1%></span><%=q[0]%></legend><div class="quiz-options">
+      <% q[1].forEach((a,j)=>{ %><label><input required type="radio" name="q<%=i%>" value="<%=j%>"><span><%=a%></span></label><% }) %>
+      </div></fieldset>
+    <% }) %>
+    <button class="btn btn-gold btn-xl full-btn" type="submit">تحلیل مسیر من ✦</button>
+  </form>
+  <div id="quizResult" class="quiz-result glass" hidden></div>
+</div>
+<script>
+document.getElementById('glowQuiz').addEventListener('submit',e=>{
+ e.preventDefault(); const a=[0,0,0]; [...new FormData(e.target).values()].forEach((v,i)=>a[(+v+i)%3]++);
+ const idx=a.indexOf(Math.max(...a));
+ const data=[
+  ['Glow Up ظاهر','از استایل و ظاهر شروع کن؛ دوره‌های استایل و گلوآپ برایت بهترین نقطه شروع‌اند.'],
+  ['Glow Up فیتنس','انرژی را روی بدن و روتین روزانه بگذار؛ یک برنامه مرحله‌ای برایت بهتر جواب می‌دهد.'],
+  ['Glow Up ذهن','اول نظم و اعتمادبه‌نفس را بساز؛ بعد سراغ ظاهر برو تا تغییرت ماندگار شود.']
+ ];
+ const r=document.getElementById('quizResult'); r.hidden=false; r.innerHTML='<span class="eyebrow">پیشنهاد من برای تو</span><h2>'+data[idx][0]+'</h2><p>'+data[idx][1]+'</p><a class="btn btn-gold" href="/courses">دیدن دوره‌های پیشنهادی ←</a>'; r.scrollIntoView({behavior:'smooth',block:'center'});
+});
+</script>
+<%- include('partials/footer') %>

@@ -1,0 +1,33 @@
+<%- include('partials/header') %>
+<div class="container checkout-page" style="padding-top:30px;">
+  <div class="checkout-head"><div><span class="eyebrow">SECURE CHECKOUT</span><h1>سبد خرید</h1><p class="muted">قبل از پرداخت، سفارش و تخفیف‌های خود را بررسی کن.</p></div><div class="checkout-steps"><span class="active">۱ سبد</span><i>→</i><span>۲ پرداخت</span><i>→</i><span>۳ دسترسی</span></div></div>
+  <% if (!items.length && !bundles.length) { %>
+    <div class="empty-state glass" style="padding:50px;text-align:center"><div style="font-size:54px">🛒</div><h2>سبد خریدت خالیه</h2><p class="muted">دوره‌ای که دوست داری انتخاب کن و مسیر یادگیریت رو شروع کن.</p><a href="/courses" class="btn btn-gold">مشاهده دوره‌ها</a></div>
+  <% } else { %>
+    <div class="checkout-layout">
+      <section class="checkout-items">
+        <div class="checkout-section-head"><div><h2>اقلام سفارش</h2><span><%= items.length + bundles.length %> مورد</span></div><a href="/courses" class="small-link">ادامه خرید ←</a></div>
+        <% bundles.forEach(b => { %><div class="cart-item" style="display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border);padding:14px;border-radius:14px;margin-bottom:12px;"><div style="font-size:34px">📦</div><div style="flex:1"><h3 style="margin:0 0 6px"><%= b.title %></h3><small class="muted"><%= b.course_count %> دوره در این پکیج</small></div><strong><%= (b.charge_price ?? b.price).toLocaleString('fa-IR') %> تومان</strong><form method="POST" action="/cart/bundle/remove/<%= b.id %>"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="btn btn-outline">حذف</button></form></div><% }) %>
+        <% items.forEach(c => { %>
+          <div class="cart-item" style="display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border);padding:14px;border-radius:14px;margin-bottom:12px;">
+            <div style="width:78px;height:78px;border-radius:12px;overflow:hidden;flex-shrink:0"><% if(c.cover_image){ %><img src="<%= c.cover_image %>" style="width:100%;height:100%;object-fit:cover" onerror="this.onerror=null;this.outerHTML=document.getElementById('art-fallback-cart-<%= c.id %>').innerHTML"><template id="art-fallback-cart-<%= c.id %>"><%- include('partials/svg-art',{seedId:c.id}) %></template><% }else{ %><%- include('partials/svg-art',{seedId:c.id}) %><% } %></div>
+            <div style="flex:1"><h3 style="margin:0 0 6px"><%= c.title %></h3><% if(c.category_title){ %><span class="chip"><%= c.category_title %></span><% } %><div class="price" style="margin-top:7px"><%= (c.discount_price||c.price).toLocaleString('fa-IR') %> تومان</div></div>
+            <form action="/cart/remove/<%= c.id %>" method="POST"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="btn btn-outline">حذف</button></form>
+          </div>
+        <% }) %>
+      </section>
+      <aside class="cart-summary glass checkout-summary">
+        <div class="summary-title"><div><span class="eyebrow">ORDER SUMMARY</span><h2>خلاصه سفارش</h2></div><span class="secure-badge">🔒 امن</span></div>
+        <form action="/cart/coupon" method="POST" class="coupon-apply"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input name="code" placeholder="کد تخفیف دارید؟" value="<%= coupon?.code||'' %>"><button class="btn btn-outline">اعمال</button></form>
+        <form action="/cart/referral" method="POST" class="coupon-apply" style="margin-top:10px"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input name="code" placeholder="کد معرف دوستتان" value="<%= referral?.code||'' %>"><button class="btn btn-outline">اعمال</button></form>
+        <% if(referral){ %><div class="coupon-active">🎁 تخفیف معرفی <b><%= Math.min(100, Math.max(0, Number(referralRewardPercent ?? 5) || 0)) %>٪</b> اعمال شد <form method="POST" action="/cart/referral/remove"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button>×</button></form></div><% } %>
+        <% if(coupon){ %><div class="coupon-active">٪ کد <b><%= coupon.code %></b> اعمال شد <form method="POST" action="/cart/coupon/remove"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button>×</button></form></div><% } %>
+        <div class="cart-lines"><div><span>جمع اولیه</span><b><%= subtotal.toLocaleString('fa-IR') %> تومان</b></div><% if(referralDiscount){ %><div class="discount-line"><span>تخفیف معرفی</span><b>− <%= referralDiscount.toLocaleString('fa-IR') %> تومان</b></div><% } %><% if(discount){ %><div class="discount-line"><span>تخفیف</span><b>− <%= discount.toLocaleString('fa-IR') %> تومان</b></div><% } %><div class="cart-total"><span>مبلغ قابل پرداخت</span><b><%= total.toLocaleString('fa-IR') %> تومان</b></div></div>
+        <div class="checkout-perks"><div>✓ پرداخت امن</div><div>✓ دسترسی فوری پس از پرداخت</div><div>✓ دسترسی دائمی به دوره</div></div>
+        <form action="/payment/checkout" method="POST"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><button type="submit" class="btn btn-gold btn-xl full-btn">ادامه به پرداخت امن →</button></form>
+      </aside>
+    </div>
+    <% if(recommended && recommended.length){ %><section class="cart-recommendations"><div class="checkout-section-head"><div><span class="eyebrow">YOU MAY ALSO LIKE</span><h2>شاید این دوره‌ها هم به کارت بیاد</h2></div></div><div class="course-grid compact-grid"><% recommended.forEach(course=>{ %><%- include('partials/course-card',{course}) %><% }) %></div></section><% } %>
+  <% } %>
+</div>
+<%- include('partials/footer') %>

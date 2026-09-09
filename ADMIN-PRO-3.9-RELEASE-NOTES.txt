@@ -1,0 +1,16 @@
+GlowUp Academy — Admin Pro 3.9
+Backup & Recovery Fortress
+
+Highlights:
+- Super Admin-only Backup & Recovery Center at /admin/backups
+- SQLite online backup snapshots with configurable retention (BACKUP_KEEP, default 20)
+- Secure backup downloads with filename validation
+- Explicit backup deletion
+- Destructive restore flow with emergency snapshot before replacement
+- Restart notice after restore so SQLite reopens cleanly
+- Dark Luxury / Gold responsive UI
+- Activity log entry for successful backup creation
+
+Notes:
+- Backups are local files. On ephemeral hosting they can disappear on restart/redeploy.
+- For production durability, move backups to persistent/object storage and use PostgreSQL/object storage.

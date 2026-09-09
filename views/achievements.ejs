@@ -1,0 +1,19 @@
+<%- include('partials/header') %>
+<div class="container achievements-page">
+  <section class="achievement-hero premium-panel reveal">
+    <div><span class="eyebrow">GLOWUP ACHIEVEMENTS</span><h1>دستاوردهای تو 🏆</h1><p>هر جلسه، هر روز و هر قدم کوچک می‌تواند یک نشان تازه برایت باز کند.</p></div>
+    <div class="achievement-score"><b><%= earned.length.toLocaleString('fa-IR') %></b><span>از <%= all.length.toLocaleString('fa-IR') %> نشان</span><small><%= current.xp.toLocaleString('fa-IR') %> XP · <%= current.streak.toLocaleString('fa-IR') %> روز استریک</small></div>
+  </section>
+  <% if(newly.length){ %><div class="new-badge-banner glass"><span>✨</span><div><b>نشان جدید باز شد!</b><small><%= newly.map(x=>x.icon+' '+x.title).join(' · ') %></small></div></div><% } %>
+  <section class="achievement-grid reveal-stagger">
+    <% all.forEach(a=>{ %>
+      <article class="achievement-card glass <%= a.earned?'earned':'locked' %>">
+        <div class="achievement-icon"><span><%= a.earned?a.icon:'?' %></span><% if(a.earned){ %><i>✓</i><% } %></div>
+        <div class="achievement-copy"><div class="achievement-title"><h2><%= a.title %></h2><span><%= a.label %></span></div><p><%= a.description %></p>
+          <% if(a.earned){ %><small class="earned-label">✓ باز شده</small><% } else { %><div class="achievement-progress"><span><i style="width:<%= a.progress %>%"></i></span><b><%= Math.min(a.value,a.target).toLocaleString('fa-IR') %> / <%= a.target.toLocaleString('fa-IR') %></b></div><small>هنوز باز نشده</small><% } %>
+        </div>
+      </article>
+    <% }) %>
+  </section>
+</div>
+<%- include('partials/footer') %>

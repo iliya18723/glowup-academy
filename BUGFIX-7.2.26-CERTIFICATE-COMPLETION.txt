@@ -1,0 +1,7 @@
+GlowUp Academy 7.2.26 — Certificate / Completion QA
+
+- Certificate codes now use 8 random bytes instead of 5.
+- Certificate issuance retries safely on certificate-code collisions.
+- Certificate notification is created only when the certificate row was actually inserted, preventing duplicate notifications during concurrent completion requests.
+- Finisher badge issuance is defensive if the badge row is unexpectedly missing.
+- Package version bumped to 7.2.26.

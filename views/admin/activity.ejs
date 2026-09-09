@@ -1,0 +1,14 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar"><div><span class="eyebrow">AUDIT CENTER</span><h1>گزارش فعالیت‌ها</h1><div class="sub">ردپای تغییرات مهم پنل؛ قابل جستجو، فیلتر و خروجی گرفتن.</div></div><a class="btn btn-outline" href="/admin/activity/export.csv?<%= new URLSearchParams({q:filters.q,action:filters.action,entity:filters.entity}).toString() %>">دانلود CSV</a></div>
+<div class="form-card glass activity-filters">
+<form method="GET" action="/admin/activity" class="filter-grid">
+  <div class="field"><label>جستجو</label><input name="q" value="<%= filters.q %>" placeholder="ادمین، عملیات، جزئیات…"></div>
+  <div class="field"><label>عملیات</label><select name="action"><option value="">همه عملیات</option><% actions.forEach(a=>{ %><option value="<%= a %>" <%= filters.action===a?'selected':'' %>><%= a %></option><% }) %></select></div>
+  <div class="field"><label>بخش</label><select name="entity"><option value="">همه بخش‌ها</option><% entities.forEach(e=>{ %><option value="<%= e %>" <%= filters.entity===e?'selected':'' %>><%= e %></option><% }) %></select></div>
+  <div class="filter-actions"><button class="btn btn-gold" type="submit">اعمال فیلتر</button><a class="btn btn-outline" href="/admin/activity">پاک کردن</a></div>
+</form>
+<div class="activity-summary">نمایش <b><%= logs.length.toLocaleString('fa-IR') %></b> از <b><%= filters.total.toLocaleString('fa-IR') %></b> رویداد</div>
+</div>
+<table class="data-table"><thead><tr><th>زمان</th><th>ادمین</th><th>عملیات</th><th>بخش</th><th>جزئیات</th></tr></thead><tbody><% logs.forEach(l=>{ %><tr><td><%= new Date(l.created_at).toLocaleString('fa-IR') %></td><td><%= l.full_name||'سیستم' %></td><td><code><%= l.action %></code></td><td><%= l.entity %></td><td class="meta-cell"><%= l.meta||'—' %></td></tr><% }) %><% if(!logs.length){ %><tr><td colspan="5" class="empty">موردی با این فیلتر پیدا نشد.</td></tr><% } %></tbody></table>
+<% if(filters.pages>1){ %><div class="pagination"><% for(let i=1;i<=filters.pages;i++){ %><a class="<%= i===filters.page?'active':'' %>" href="/admin/activity?<%= new URLSearchParams({q:filters.q,action:filters.action,entity:filters.entity,page:i}).toString() %>"><%= i.toLocaleString('fa-IR') %></a><% } %></div><% } %>
+<%- include('../partials/admin-footer') %>

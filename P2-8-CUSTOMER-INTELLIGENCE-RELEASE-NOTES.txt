@@ -1,0 +1,10 @@
+GlowUp Academy 5.7.0 — P2-8 Customer Intelligence & CRM Pro
+
+- Added /admin/crm customer intelligence center.
+- Segments: VIP, repeat buyers, dormant users, and leads with no purchase.
+- Customer table with order count, lifetime spend, last successful purchase, and segment.
+- CRM outreach action logger with CSRF protection.
+- Recent CRM activity history.
+- Added CRM navigation item for admins.
+- Responsive admin UI.
+- No database schema changes.

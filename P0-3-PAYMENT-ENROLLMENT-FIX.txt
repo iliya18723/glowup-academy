@@ -1,0 +1,10 @@
+GlowUp Academy — P0-3 Payment & Enrollment Fix
+
+Fixed:
+- Payment verification is now idempotent: only a pending order with the matching authority can transition to paid.
+- Duplicate gateway callbacks no longer repeat post-payment side effects.
+- Successful payment enrolls every course recorded in the order.
+- Admin manual status change to paid now also creates enrollments, matching real gateway behavior.
+- Existing enrollments remain protected by UNIQUE(user_id, course_id).
+
+Next recommended P0: Referral rewards and Progress/Dashboard consistency.

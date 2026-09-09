@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="<%= csrfToken %>">
+  <title><%= title %> | پنل ادمین گلو آپ</title>
+  <link rel="stylesheet" href="/css/style.css?v=p10-fix">
+    <link rel="stylesheet" href="/css/responsive-final.css?v=p10-fix">
+  <link rel="stylesheet" href="/css/admin.css?v=4.1">
+</head>
+<body>
+<%
+  const role = user?.role || 'user';
+  const permissions = {
+    admin: ['*'],
+    editor: ['/admin/courses','/admin/blog','/admin/categories','/admin/homepage','/admin/banners','/admin/menu','/admin/media'],
+    support: ['/admin/users','/admin/reviews','/admin/notifications','/admin/orders']
+  };
+  const canSee = href => role === 'admin' || (permissions[role] || []).some(p => href === p || href.startsWith(p + '/'));
+  const roleHome = role === 'admin' ? '/admin' : '/admin/accessible';
+  const navGroups = [
+    { title: 'نمای کلی', items: [
+      { href: roleHome, label: role === 'admin' ? 'داشبورد پرو' : 'مرکز کار', icon: 'dashboard' },
+      { href: '/admin/analytics', label: 'آنالیز پیشرفته', icon: 'reports' },
+      { href: '/admin/marketing', label: 'مرکز بازاریابی', icon: 'reports' },
+      { href: '/admin/crm', label: 'هوش مشتری CRM', icon: 'users' },
+      { href: '/admin/reports', label: 'گزارش فروش', icon: 'reports' },
+      { href: '/admin/activity', label: 'فعالیت‌ها', icon: 'activity' },
+      { href: '/admin/automation', label: 'اتوماسیون هوشمند', icon: 'activity' }
+    ]},
+    { title: 'مدیریت محتوا', items: [
+      { href: '/admin/courses', label: 'دوره‌ها', icon: 'courses' },
+      { href: '/admin/categories', label: 'دسته‌بندی‌ها', icon: 'category' },
+      { href: '/admin/blog', label: 'وبلاگ', icon: 'blog' },
+      { href: '/admin/homepage', label: 'صفحه اصلی', icon: 'home' },
+      { href: '/admin/banners', label: 'بنرها', icon: 'home' },
+      { href: '/admin/menu', label: 'منوی سایت', icon: 'category' },
+      { href: '/admin/media', label: 'کتابخانه رسانه', icon: 'blog' }
+    ]},
+    { title: 'فروش و کاربران', items: [
+      { href: '/admin/users', label: 'کاربران', icon: 'users' },
+      { href: '/admin/orders', label: 'سفارش‌ها', icon: 'orders' },
+      { href: '/admin/reviews', label: 'نظرات', icon: 'reviews' },
+      { href: '/admin/notifications', label: 'اعلان‌ها', icon: 'notification' },
+      { href: '/admin/coupons', label: 'کدهای تخفیف', icon: 'coupon' },
+      { href: '/admin/bundles', label: 'پکیج‌ها', icon: 'courses' },
+      { href: '/admin/flash-sales', label: 'فروش فوری', icon: 'coupon' },
+      { href: '/admin/referrals', label: 'معرفی دوستان', icon: 'users' }
+    ]},
+    { title: 'سیستم', items: [
+      { href: '/admin/system', label: 'وضعیت سیستم', icon: 'activity' },
+      { href: '/admin/security', label: 'مرکز امنیت', icon: 'activity' },
+      { href: '/admin/settings', label: 'تنظیمات', icon: 'settings' }
+    ]}
+  ].map(group => ({...group, items: group.items.filter(item => canSee(item.href))})).filter(group => group.items.length);
+  const icons = {
+    dashboard: '<path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6V11h-6v9Zm0-16v5h6V4h-6Z"/>',
+    courses:   '<path d="M12 3 2 8l10 5 8-4.2V16h2V8L12 3Zm0 7.9L5 7l7-3.5L19 7l-7 3.9ZM4 12.7V17c0 1.8 3.6 4 8 4s8-2.2 8-4v-4.3l-8 4.2-8-4.2Z"/>',
+    users:     '<path d="M12 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4Zm0 2c-3.3 0-8 1.6-8 4.5V21h16v-2.5c0-2.9-4.7-4.5-8-4.5Z"/>',
+    orders:    '<path d="M6 2 4 5v15a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V5l-2-3H6Zm2 7h8m-8 4h8m-8 4h5"/>',
+    blog:      '<path d="M4 4h13l3 3v13H4V4Zm3 5h9M7 12h9M7 15h6"/>',
+    reports:   '<path d="M4 19V5m0 14h16M8 16v-5m4 5V7m4 9v-8"/>',
+    coupon:    '<path d="M20 12a2 2 0 0 0 0-4V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v3a2 2 0 0 0 0 4v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3Z"/>',
+    category:  '<path d="m4 7 8-4 8 4-8 4-8-4Zm0 5 8 4 8-4M4 17l8 4 8-4"/>',
+    activity:  '<path d="M4 12h4l2-7 4 14 2-7h4"/>',
+    notification: '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4"/>' ,
+    reviews:   '<path d="M20 4H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4l4 3 4-3h4a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2ZM7 9h10M7 13h7"/>' ,
+    settings:  '<path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.4 1a8 8 0 0 0-2-1.2L14.2 3h-4.4l-.3 2.7a8 8 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.5A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.5 2 3.4 2.4-1a8 8 0 0 0 2 1.2l.3 2.7h4.4l.3-2.7a8 8 0 0 0 2-1.2l2.4 1 2-3.4-2-1.5c.1-.4.1-.8.1-1.2Z"/>',
+    home:      '<path d="M4 11 12 4l8 7v9h-5v-6H9v6H4v-9Z"/>',
+    logout:    '<path d="M10 3H5a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h5M17 16l4-4-4-4m4 4H9"/>'
+  };
+%>
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <button id="sidebarToggle" type="button" class="sidebar-toggle-btn" aria-label="جمع کردن منوی مدیریت" title="جمع کردن / باز کردن منو"><span aria-hidden="true">‹</span><span class="toggle-label">منو</span></button>
+    <div class="logo">
+      <div class="logo-text">GLOW UP<span>ADMIN PRO</span></div>
+      <div class="mark">G</div>
+    </div>
+    <% navGroups.forEach(group => { %>
+      <div class="admin-nav-group">
+        <div class="admin-nav-group-title"><span class="label"><%= group.title %></span></div>
+        <% group.items.forEach(item => { %>
+          <% const isActive = item.href === '/admin' ? currentPath === '/admin' : currentPath.startsWith(item.href); %>
+          <a href="<%= item.href %>" class="<%= isActive ? 'active' : '' %>" title="<%= item.label %>">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><%- icons[item.icon] %></svg>
+            <span class="label"><%= item.label %></span>
+          </a>
+        <% }) %>
+      </div>
+    <% }) %>
+    <a href="/" style="margin-top:8px;">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><%- icons.home %></svg>
+      <span class="label">مشاهده سایت</span>
+    </a>
+    <form action="/logout" method="POST" style="margin-top:18px;"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button type="submit" class="btn btn-outline" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><%- icons.logout %></svg>
+        <span class="label">خروج</span>
+      </button>
+    </form>
+  </aside>
+  <div class="admin-content">
+    <div class="admin-breadcrumbs"><a href="/admin">داشبورد</a><span>‹</span><strong><%= title %></strong></div>
+    <div class="help-note admin-help"><strong>راهنمای سریع</strong><span>طلایی = عملیات اصلی · خاکستری = مشاهده/ویرایش · قرمز = حذف. قبل از حذف تأیید می‌گیری.</span><span class="admin-help-key">⌘K جستجوی سریع</span></div>
+    <% if (typeof adminError !== 'undefined' && adminError) { %><div class="admin-alert error"><span>!</span><%= adminError %></div><% } %>
+    <% if (typeof adminNotice !== 'undefined' && adminNotice) { %><div class="admin-alert success"><span>✓</span><%= adminNotice %></div><% } %>
+    <div class="admin-role-chip"><span class="role-dot">●</span> <%= ({admin:"Super Admin",editor:"Editor",support:"Support"}[role] || "Admin") %><span class="role-hint">سطح دسترسی</span></div>
+    <div class="admin-bell-wrap">
+      <button id="cmdkBtn" class="admin-bell" type="button" aria-label="جستجوی سراسری" title="جستجوی سراسری (Ctrl+K)" style="margin-inline-end:8px;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+    </div>
+    <div class="admin-bell-wrap" style="left:78px;">
+      <button id="notifBellBtn" class="admin-bell" type="button" aria-label="اعلان‌ها">
+        🔔
+        <% if (typeof adminNotifications !== 'undefined' && adminNotifications.length) { %><span class="admin-bell-dot"></span><% } %>
+      </button>
+      <div class="admin-bell-panel" id="notifBellPanel">
+        <div class="admin-bell-title">فعالیت‌های اخیر</div>
+        <% if (typeof adminNotifications !== 'undefined' && adminNotifications.length) { %>
+          <% adminNotifications.forEach(n => { %>
+            <div class="admin-bell-item">
+              <span class="admin-bell-ico"><%= n.type === 'order' ? '💳' : '👤' %></span>
+              <div>
+                <div><%= n.label %> <%= n.type === 'order' ? 'خرید موفق ثبت کرد' : 'ثبت‌نام کرد' %></div>
+                <div class="admin-bell-time"><%= new Date(n.created_at).toLocaleDateString('fa-IR') %></div>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div class="admin-bell-item" style="color:var(--text-muted);">فعالیت جدیدی نیست</div>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="cmdk-overlay" id="cmdkOverlay">
+      <div class="cmdk-box">
+        <div class="cmdk-input-row">
+          <span>⌘</span>
+          <input type="text" id="cmdkInput" placeholder="جستجوی دوره، کاربر، سفارش…" autocomplete="off">
+          <kbd>Esc</kbd>
+        </div>
+        <div class="cmdk-results" id="cmdkResults">
+          <div class="cmdk-empty">برای جستجو تایپ کن…</div>
+        </div>
+      </div>
+    </div>

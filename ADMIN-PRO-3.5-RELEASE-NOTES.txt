@@ -1,0 +1,14 @@
+GlowUp Academy — Admin Pro 3.5
+Marketing & Sales Studio
+
+- New admin-only Marketing & Sales Center at /admin/marketing
+- 30-day revenue, paid orders, coupon usage, discount and growth KPIs
+- Coupon performance ranking
+- Simple sales funnel based on available database signals
+- 14-day sales pulse visualization
+- Quick links for coupons, flash sales, bundles and referrals
+- CSV export for coupon inventory
+- Duplicate coupon code handled gracefully
+- Admin navigation updated
+- Responsive luxury/gold marketing UI
+- Version 3.5.0

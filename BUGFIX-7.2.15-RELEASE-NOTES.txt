@@ -1,0 +1,10 @@
+GlowUp Academy 7.2.15
+Protected Course Video Access QA
+
+1. Local course video files under /uploads/videos are no longer served as public static assets.
+2. Added authenticated/ownership checks before streaming uploaded course videos. Free-preview lessons remain accessible to logged-in users without enrollment.
+3. Added HTTP Range/206 streaming support so browser video seeking works normally.
+4. Added HEAD support, correct MIME types, Content-Length/Content-Range and private no-store caching for protected videos.
+5. Blocked path traversal / malformed video filenames.
+6. The watch page now explicitly uses the protected video endpoint for locally uploaded course videos. External HTTPS video URLs remain unchanged.
+7. Static JavaScript syntax checks passed.

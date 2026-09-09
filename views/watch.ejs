@@ -1,0 +1,242 @@
+<%- include('partials/header') %>
+<div class="container" style="padding-top:26px;">
+  <p style="margin:0 0 14px;">
+    <a href="/courses/<%= course.slug %>" class="small-link">→ بازگشت به صفحه‌ی دوره</a>
+  </p>
+
+  <div class="watch-layout">
+    <div>
+      <div class="video-wrap" id="videoWrap">
+        <% if (session.video_url) { %>
+          <video id="mainVideo" src="<%= videoSrc %>" playsinline></video>
+          <div class="video-error" id="videoError" style="display:none;">
+            ⚠️ این فرمت ویدیو توسط مرورگرت پشتیبانی نمی‌شه. لطفاً فایل رو به MP4 (H.264) تبدیل کن یا از لینک آپارات/یوتیوب استفاده کن.
+          </div>
+        <% } else { %>
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:13px;">
+            ویدیوی این جلسه هنوز اضافه نشده است.
+          </div>
+        <% } %>
+        <div class="video-center-play" id="centerPlay"><span>▶</span></div>
+        <% if (session.video_url) { %>
+        <div class="video-controls">
+          <input type="range" class="vc-seek" id="seekBar" value="0" min="0" max="100" step="0.1">
+          <div class="vc-row">
+            <button class="vc-btn" id="playBtn">▶</button>
+            <button class="vc-btn" id="backBtn" title="۱۰ ثانیه عقب">⏪</button>
+            <button class="vc-btn" id="fwdBtn" title="۱۰ ثانیه جلو">⏩</button>
+            <span class="vc-time"><span id="curTime">۰۰:۰۰</span> / <span id="durTime">۰۰:۰۰</span></span>
+            <span class="vc-spacer"></span>
+            <select class="vc-speed" id="speedSelect">
+              <option value="0.75">۰.۷۵x</option>
+              <option value="1" selected>۱x</option>
+              <option value="1.25">۱.۲۵x</option>
+              <option value="1.5">۱.۵x</option>
+              <option value="2">۲x</option>
+            </select>
+            <button class="vc-btn" id="fsBtn" title="تمام‌صفحه">⛶</button>
+          </div>
+        </div>
+        <% } %>
+      </div>
+
+      <div class="lesson-heading" style="margin-top:18px; display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap;">
+        <div class="lesson-badge">LESSON <%= String(sessions.findIndex(s => s.id === session.id) + 1).padStart(2,'0') %></div>
+        <div class="lesson-heading-main">
+          <h1 style="margin:0 0 6px; font-size:19px;"><%= session.title %></h1>
+          <p style="color:var(--text-muted); font-size:13px; margin:0;"><%= course.title %><% if (session.phase) { %> · <%= session.phase %><% } %></p>
+        </div>
+        <button class="btn btn-outline" id="completeBtn" data-session="<%= session.id %>" data-completed="<%= completedIds.includes(session.id) ? '1' : '0' %>"><%= completedIds.includes(session.id) ? '✔ دیده‌شده' : '✔ علامت‌گذاری به‌عنوان دیده‌شده' %></button>
+      </div>
+
+      <div class="watch-actions">
+        <% if (prevSession && (owned || prevSession.is_free_preview)) { %>
+          <a class="btn btn-outline" href="/courses/<%= course.slug %>/watch/<%= prevSession.id %>">‹ جلسه قبل</a>
+        <% } else if (prevSession) { %>
+          <span class="btn btn-outline" style="opacity:.5;cursor:not-allowed;">🔒 جلسه قبل</span>
+        <% } %>
+        <% if (nextSession && (owned || nextSession.is_free_preview)) { %>
+          <a class="btn btn-gold" href="/courses/<%= course.slug %>/watch/<%= nextSession.id %>">جلسه بعد ›</a>
+        <% } else if (nextSession) { %>
+          <span class="btn btn-gold" style="opacity:.5;cursor:not-allowed;">جلسه بعد 🔒</span>
+        <% } %>
+      </div>
+      <div class="watch-tip"><span>⌨</span> میانبرها: <b>Space</b> پخش/توقف · <b>← →</b> جابه‌جایی ۱۰ ثانیه‌ای · <b>F</b> تمام‌صفحه</div>
+    </div>
+
+    <div class="playlist-panel glass">
+      <div class="playlist-head">
+        <h3>سرفصل‌های دوره</h3>
+        <div class="course-progress-wrap" style="margin:10px 0 0;">
+          <div class="course-progress-bar"><div class="course-progress-fill" id="progressFill" style="width:<%= percent %>%;"></div></div>
+          <div class="course-progress-text"><span id="progressText"><%= percent.toLocaleString('fa-IR') %>٪ تکمیل‌شده</span><span><%= sessions.length %> جلسه</span></div>
+        </div>
+      </div>
+      <div class="playlist-body" id="playlistBody">
+        <%
+          const groupedWatch = {};
+          sessions.forEach(s => {
+            const key = s.phase || 'سرفصل‌های دوره';
+            groupedWatch[key] = groupedWatch[key] || [];
+            groupedWatch[key].push(s);
+          });
+          let widx = 0;
+        %>
+        <% Object.keys(groupedWatch).forEach(phaseName => { %>
+          <div style="padding:8px 8px 2px; font-size:11.5px; color:var(--gold-light);"><%= phaseName %></div>
+          <% groupedWatch[phaseName].forEach(s => { widx++; const accessible = owned || s.is_free_preview; %>
+            <% if (accessible) { %>
+              <a class="playlist-item <%= s.id === session.id ? 'active' : '' %> <%= completedIds.includes(s.id) ? 'done' : '' %>" data-session-id="<%= s.id %>" href="/courses/<%= course.slug %>/watch/<%= s.id %>">
+                <span class="p-idx"><%= completedIds.includes(s.id) ? '✓' : widx %></span>
+                <span class="p-title"><%= s.title %></span>
+                <span class="p-dur"><% if (s.duration_seconds) { %><%= Math.round(s.duration_seconds/60) %>′<% } %></span>
+              </a>
+            <% } else { %>
+              <span class="playlist-item locked" style="opacity:.5; cursor:default;">
+                <span class="p-idx">🔒</span>
+                <span class="p-title"><%= s.title %></span>
+              </span>
+            <% } %>
+          <% }) %>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const sessionId = <%= session.id %>;
+  const apiBase = '/courses/<%= course.slug %>/watch/' + sessionId + '/complete';
+
+  function applyProgress(data) {
+    const fill = document.getElementById('progressFill');
+    const text = document.getElementById('progressText');
+    if (fill) fill.style.width = data.percent + '%';
+    if (text) text.textContent = data.percent.toLocaleString('fa-IR') + '٪ تکمیل‌شده';
+  }
+
+  async function toggleComplete(forceMark, watchedSeconds) {
+    try {
+      const res = await fetch(apiBase, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-csrf-token': document.querySelector('meta[name=csrf-token]')?.content || '' },
+        body: JSON.stringify({ action: forceMark ? 'mark' : (completeBtn?.dataset.completed === '1' ? 'unmark' : 'mark'), watched_seconds: Number(watchedSeconds ?? video?.currentTime ?? 0) })
+      });
+      if (!res.ok) throw new Error('request failed');
+      const data = await res.json();
+      applyProgress(data);
+      if (completeBtn) { completeBtn.textContent = data.completed ? '✔ دیده‌شده' : '✔ علامت‌گذاری به‌عنوان دیده‌شده'; completeBtn.dataset.completed = data.completed ? '1' : '0'; }
+      const item = document.querySelector('.playlist-item[data-session-id="' + sessionId + '"]');
+      if (item) {
+        item.dataset.idx = item.dataset.idx || (item.querySelector('.p-idx')?.textContent || '');
+        item.classList.toggle('done', data.completed);
+        const idx = item.querySelector('.p-idx');
+        if (idx) idx.textContent = data.completed ? '✓' : item.dataset.idx;
+      }
+      return data;
+    } catch (e) {
+      if (window.showToast) showToast('ثبت پیشرفت با خطا مواجه شد، دوباره امتحان کن', 'error');
+    }
+  }
+
+  const completeBtn = document.getElementById('completeBtn');
+  if (completeBtn) {
+    completeBtn.addEventListener('click', async () => {
+      const data = await toggleComplete(false, video?.currentTime || 0);
+      if (data && window.showToast) {
+        showToast(data.completed ? 'این جلسه به‌عنوان دیده‌شده ثبت شد' : 'علامت دیده‌شده برداشته شد', data.completed ? 'success' : 'default');
+      }
+    });
+  }
+
+  // ---------- کنترل‌های سفارشی پخش‌کننده‌ی ویدیو ----------
+  const video = document.getElementById('mainVideo');
+  const wrap = document.getElementById('videoWrap');
+  const videoError = document.getElementById('videoError');
+  if (video && wrap) {
+    const playBtn = document.getElementById('playBtn');
+    const centerPlay = document.getElementById('centerPlay');
+    const seekBar = document.getElementById('seekBar');
+    const curTime = document.getElementById('curTime');
+    const durTime = document.getElementById('durTime');
+    const speedSelect = document.getElementById('speedSelect');
+    const fsBtn = document.getElementById('fsBtn');
+
+    function fmt(sec) {
+      if (!isFinite(sec)) return '۰۰:۰۰';
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = Math.floor(sec % 60).toString().padStart(2, '0');
+      return (m + ':' + s).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+    }
+    function togglePlay() {
+      if (video.paused) { video.play().catch(() => {}); } else { video.pause(); }
+    }
+    function syncPlayState() {
+      const playing = !video.paused;
+      wrap.classList.toggle('paused', !playing);
+      if (playBtn) playBtn.textContent = playing ? '⏸' : '▶';
+    }
+    [playBtn, centerPlay].forEach(el => el && el.addEventListener('click', togglePlay));
+    video.addEventListener('play', syncPlayState);
+    video.addEventListener('pause', syncPlayState);
+    video.addEventListener('loadedmetadata', () => { durTime.textContent = fmt(video.duration); });
+    video.addEventListener('timeupdate', () => {
+      if (video.duration) seekBar.value = (video.currentTime / video.duration) * 100;
+      curTime.textContent = fmt(video.currentTime);
+    });
+    seekBar.addEventListener('input', () => {
+      if (video.duration) video.currentTime = (seekBar.value / 100) * video.duration;
+    });
+    document.getElementById('backBtn').addEventListener('click', () => { video.currentTime = Math.max(0, video.currentTime - 10); });
+    document.getElementById('fwdBtn').addEventListener('click', () => { video.currentTime = Math.min(video.duration || 0, video.currentTime + 10); });
+    speedSelect.addEventListener('change', () => { video.playbackRate = parseFloat(speedSelect.value); });
+    fsBtn.addEventListener('click', () => {
+      if (wrap.requestFullscreen) wrap.requestFullscreen();
+    });
+
+    // اگه مرورگر نتونه فرمت ویدیو رو پخش کنه، پیام روشن به‌جای صفحه‌ی خالی نشون بده
+    video.addEventListener('error', () => {
+      video.style.display = 'none';
+      if (videoError) videoError.style.display = 'flex';
+      const controls = wrap.querySelector('.video-controls');
+      if (controls) controls.style.display = 'none';
+      if (centerPlay) centerPlay.style.display = 'none';
+    });
+
+    // ادامه‌ی پخش از آخرین نقطه روی همین دستگاه
+    const resumeKey = 'gu_resume_' + <%= session.id %>;
+    let savedAt = 0;
+    try { savedAt = Number(localStorage.getItem(resumeKey) || 0); } catch(e) {}
+    video.addEventListener('loadedmetadata', () => {
+      if (savedAt > 8 && savedAt < video.duration - 5) video.currentTime = savedAt;
+    }, { once:true });
+    let lastSave = 0;
+    let autoCompleted = <%= completedIds.includes(session.id) ? 'true' : 'false' %>;
+    video.addEventListener('timeupdate', () => {
+      if (video.currentTime - lastSave >= 5) {
+        lastSave = video.currentTime;
+        try { localStorage.setItem(resumeKey, String(Math.floor(video.currentTime))); } catch(e) {}
+      }
+      if (!autoCompleted && video.duration && video.currentTime / video.duration >= .9) { autoCompleted = true; toggleComplete(true, video.currentTime); }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.target && ['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+      if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+      if (e.key === 'ArrowLeft') video.currentTime = Math.max(0, video.currentTime - 10);
+      if (e.key === 'ArrowRight') video.currentTime = Math.min(video.duration || 0, video.currentTime + 10);
+      if (e.key.toLowerCase() === 'f' && wrap.requestFullscreen) wrap.requestFullscreen();
+    });
+
+    video.addEventListener('ended', () => {
+      try { localStorage.removeItem(resumeKey); } catch(e) {}
+      toggleComplete(true, video.currentTime);
+      <% if (nextSession && (owned || nextSession.is_free_preview)) { %>
+      if (window.showToast) showToast('در حال رفتن به جلسه بعدی…');
+      setTimeout(() => { window.location.href = '/courses/<%= course.slug %>/watch/<%= nextSession.id %>'; }, 1400);
+      <% } %>
+    });
+    wrap.classList.add('paused');
+  }
+})();
+</script>
+<%- include('partials/footer') %>

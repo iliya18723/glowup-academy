@@ -1,0 +1,17 @@
+GlowUp Academy — Admin UX 2.0
+
+Changes in this build:
+- Admin sidebar is grouped into Overview / Content / Sales & Users / System.
+- Active page is visually highlighted; collapsed sidebar keeps accessible tooltips.
+- Admin forms now render labels as full-width fields instead of cramped inline controls.
+- Primary actions (save/create/send/add) have consistent emphasis.
+- Delete actions have consistent red styling and confirmation when needed.
+- Tables and row actions have clearer spacing and hover states.
+- Drag handles are visually identifiable.
+- Mobile admin forms stack cleanly.
+- Existing CSRF/session fixes from the previous build are preserved.
+
+Local development:
+NODE_ENV=development
+COOKIE_SECURE=false
+TRUST_PROXY=0

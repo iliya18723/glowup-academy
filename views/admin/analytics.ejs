@@ -1,0 +1,76 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-topbar analytics-pro-head">
+  <div><span class="eyebrow">ANALYTICS PRO</span><h1>مرکز تحلیل و رشد</h1><div class="sub">تصمیم‌گیری سریع با فروش، مشتری، دوره و روند رشد در یک صفحه.</div></div>
+  <div class="analytics-actions"><a class="btn btn-outline" href="/admin/analytics/export.csv">دانلود CSV</a><% [7,30,90].forEach(n=>{ %><a class="btn <%= range===n?'btn-primary':'btn-outline' %>" href="/admin/analytics?range=<%= n %>"><%= n %> روز</a><% }) %></div>
+</div>
+
+<div class="analytics-hero-grid">
+  <section class="analytics-hero-card glass">
+    <div><span class="eyebrow">REVENUE PULSE</span><h2><%= metrics.periodRevenue.toLocaleString('fa-IR') %> <small>تومان</small></h2><p>درآمد <%= range %> روز اخیر</p></div>
+    <div class="hero-growth <%= metrics.growthRevenue>=0?'up':'down' %>"><b><%= metrics.growthRevenue>=0?'↑':'↓' %> <%= Math.abs(metrics.growthRevenue) %>٪</b><span>نسبت به دوره قبل</span></div>
+  </section>
+  <section class="analytics-hero-card glass"><span class="eyebrow">ORDERS</span><strong><%= metrics.periodOrders.toLocaleString('fa-IR') %></strong><span>سفارش موفق</span><em class="growth-chip <%= metrics.growthOrders>=0?'up':'down' %>"><%= metrics.growthOrders>=0?'+':'' %><%= metrics.growthOrders %>٪</em></section>
+  <section class="analytics-hero-card glass"><span class="eyebrow">BUYERS</span><strong><%= metrics.periodBuyers.toLocaleString('fa-IR') %></strong><span>خریدار یکتا</span><em class="growth-chip <%= metrics.growthBuyers>=0?'up':'down' %>"><%= metrics.growthBuyers>=0?'+':'' %><%= metrics.growthBuyers %>٪</em></section>
+  <section class="analytics-hero-card glass"><span class="eyebrow">NEW USERS</span><strong><%= metrics.periodUsers.toLocaleString('fa-IR') %></strong><span>کاربر جدید</span><em class="growth-chip <%= metrics.growthUsers>=0?'up':'down' %>"><%= metrics.growthUsers>=0?'+':'' %><%= metrics.growthUsers %>٪</em></section>
+</div>
+
+<div class="analytics-kpi-grid">
+  <div class="stat-card"><div class="analytics-kpi-label">میانگین ارزش سفارش</div><div class="num"><%= Math.round(metrics.avg).toLocaleString('fa-IR') %></div><small><%= metrics.growthAvg>=0?'+':'' %><%= metrics.growthAvg %>٪ نسبت به قبل</small></div>
+  <div class="stat-card"><div class="analytics-kpi-label">نرخ تبدیل تقریبی</div><div class="num"><%= metrics.conversion %>٪</div><small>کل کاربران → خریداران</small></div>
+  <div class="stat-card"><div class="analytics-kpi-label">نرخ تبدیل بازه</div><div class="num"><%= metrics.periodConversion %>٪</div><small>ثبت‌نام‌های جدید → خرید</small></div>
+  <div class="stat-card"><div class="analytics-kpi-label">خریداران تکراری</div><div class="num"><%= metrics.retention %>٪</div><small><%= metrics.returningBuyers.toLocaleString('fa-IR') %> نفر در کل</small></div>
+</div>
+
+<section class="form-card glass analytics-chart-card">
+  <div class="section-head"><div><span class="eyebrow">REVENUE & ORDERS</span><h3>روند فروش</h3></div><span><%= range %> روز اخیر</span></div>
+  <div class="pro-chart" id="analyticsChart" data-chart='<%- JSON.stringify(daily) %>'>
+    <% const maxR=Math.max(...daily.map(x=>Number(x.revenue)),1); daily.forEach(d=>{ %>
+      <div class="pro-chart-col" title="<%= d.d %> — <%= Number(d.revenue).toLocaleString('fa-IR') %> تومان — <%= d.orders %> سفارش">
+        <div class="pro-chart-value"><%= d.revenue ? Math.round(Number(d.revenue)/1000000*10)/10+'M' : '—' %></div>
+        <div class="pro-chart-bar" style="height:<%= Math.max(5,Math.round(Number(d.revenue)/maxR*100)) %>%"></div>
+        <small><%= new Date(d.d).toLocaleDateString('fa-IR',{day:'2-digit',month:'2-digit'}) %></small>
+      </div>
+    <% }) %>
+  </div>
+  <div class="chart-legend"><span><i class="legend-dot revenue"></i> درآمد</span><span>برای دیدن جزئیات، روی ستون‌ها مکث کن</span></div>
+</section>
+
+<div class="analytics-two-col">
+  <section class="form-card glass">
+    <div class="section-head"><div><span class="eyebrow">TOP COURSES</span><h3>پرفروش‌ترین دوره‌ها</h3></div><a class="small-link" href="/admin/courses">مدیریت دوره‌ها ←</a></div>
+    <div class="analytics-rank-list">
+      <% coursePerformance.forEach((c,i)=>{ %><div class="analytics-rank"><b>#<%= i+1 %></b><span><strong><%= c.title %></strong><small><%= c.category %> · <%= c.reviews %> نظر</small></span><em><%= Number(c.revenue).toLocaleString('fa-IR') %><small><%= c.sales %> فروش</small></em></div><% }) %>
+      <% if(!coursePerformance.length){ %><div class="empty-state">هنوز داده‌ای برای تحلیل وجود ندارد.</div><% } %>
+    </div>
+  </section>
+
+  <section class="form-card glass">
+    <div class="section-head"><div><span class="eyebrow">CATEGORIES</span><h3>عملکرد دسته‌ها</h3></div><span>بازه جاری</span></div>
+    <div class="category-bars">
+      <% const maxCat=Math.max(...categoryPerformance.map(x=>Number(x.revenue)),1); categoryPerformance.forEach(c=>{ %><div class="category-bar-row"><div class="category-meta"><b><%= c.category %></b><span><%= c.sales %> فروش · <%= Number(c.revenue).toLocaleString('fa-IR') %> تومان</span></div><div class="category-track"><i style="width:<%= Math.max(c.revenue?4:0,Math.round(Number(c.revenue)/maxCat*100)) %>%"></i></div></div><% }) %>
+      <% if(!categoryPerformance.length){ %><div class="empty-state">داده‌ای ثبت نشده.</div><% } %>
+    </div>
+  </section>
+</div>
+
+<div class="analytics-two-col">
+  <section class="form-card glass">
+    <div class="section-head"><div><span class="eyebrow">CUSTOMER FUNNEL</span><h3>قیف مشتری</h3></div><span>تصویر کلی</span></div>
+    <div class="analytics-funnel">
+      <div><strong><%= metrics.users.toLocaleString('fa-IR') %></strong><span>کاربر</span></div><i>↓</i>
+      <div><strong><%= metrics.buyers.toLocaleString('fa-IR') %></strong><span>خریدار</span></div><i>↓</i>
+      <div><strong><%= metrics.returningBuyers.toLocaleString('fa-IR') %></strong><span>خریدار تکراری</span></div>
+    </div>
+    <p class="funnel-note">نرخ تبدیل کل: <b><%= metrics.conversion %>٪</b> · نرخ خریدار تکراری: <b><%= metrics.retention %>٪</b></p>
+  </section>
+  <section class="form-card glass">
+    <div class="section-head"><div><span class="eyebrow">LATEST SALES</span><h3>آخرین فروش‌ها</h3></div><a class="small-link" href="/admin/orders">همه سفارش‌ها ←</a></div>
+    <div class="latest-sales"><% latestOrders.forEach(o=>{ %><div><span class="avatar-circle"><%= (o.full_name||'?').charAt(0) %></span><span><b><%= o.full_name %></b><small>سفارش #<%= o.id %></small></span><strong><%= Number(o.amount).toLocaleString('fa-IR') %></strong></div><% }) %><% if(!latestOrders.length){ %><div class="empty-state">هنوز فروشی ثبت نشده.</div><% } %></div>
+  </section>
+</div>
+
+<section class="form-card glass">
+  <div class="section-head"><div><span class="eyebrow">COHORTS</span><h3>تحلیل Cohort ماهانه</h3></div><span>ثبت‌نام → خرید</span></div>
+  <div class="table-scroll"><table class="data-table analytics-table"><thead><tr><th>ماه</th><th>کاربر</th><th>خریدار</th><th>نرخ خرید</th><th>درآمد</th></tr></thead><tbody><% cohorts.forEach(c=>{ %><tr><td><strong><%= c.cohort %></strong></td><td><%= c.users %></td><td><%= c.buyers %></td><td><span class="status-pill"><%= c.rate %>٪</span></td><td><%= Number(c.revenue).toLocaleString('fa-IR') %> تومان</td></tr><% }) %></tbody></table></div>
+</section>
+<%- include('../partials/admin-footer') %>

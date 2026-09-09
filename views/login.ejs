@@ -1,0 +1,107 @@
+<%- include('partials/header') %>
+<div class="auth-screen">
+  <div class="auth-visual">
+    <canvas id="particle-canvas"></canvas>
+    <div class="av-orb av-orb-1"></div>
+    <div class="av-orb av-orb-2"></div>
+    <span class="av-badge">✦ آکادمی تخصصی گلو‌آپ</span>
+    <h2>خوش برگشتی به <span class="gold">مسیر تحول</span> خودت</h2>
+    <p>وارد حسابت شو و همون‌جایی که متوقف شده بودی، ادامه بده. دسترسی دائمی به همه‌ی دوره‌هات، همیشه در دسترسه.</p>
+    <div class="av-points">
+      <div><span class="av-ico">✓</span> دسترسی دائمی به دوره‌ها</div>
+      <div><span class="av-ico">✓</span> پیگیری پیشرفت و جلسات دیده‌شده</div>
+      <div><span class="av-ico">✓</span> پشتیبانی مستقیم و واقعی</div>
+    </div>
+    <div class="av-stats">
+      <div><b>+۱۲۰۰</b><span>دانشجو</span></div>
+      <div><b>۴.۹</b><span>میانگین رضایت</span></div>
+      <div><b>۲۴/۷</b><span>پشتیبانی</span></div>
+    </div>
+    <div class="av-quote" id="quoteBox">
+      <p id="quoteText">«تا قبل از این دوره فکر می‌کردم تغییر ظاهری یعنی فقط باشگاه رفتن. برنامه‌ی چهارفازی کمکم کرد منظم بشم.»</p>
+      <div class="av-quote-author" id="quoteAuthor">— امیرحسین، دانشجوی گلو‌آپ آکادمی</div>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-box reveal in tilt">
+      <div class="logo">
+        <div class="logo-text">GLOW UP<span>ACADEMY</span></div>
+        <div class="mark">G</div>
+      </div>
+      <h2>ورود به حساب</h2>
+      <p class="auth-sub">خوشحالیم دوباره می‌بینیمت</p>
+      <% if (error) { %><div class="error-box">⚠ <%= error %></div><% } %>
+      <form method="POST" action="/login"><input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="field has-icon">
+          <label>شماره موبایل</label>
+          <div class="input-icon-group">
+            <span class="f-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-5 18h.01"/></svg>
+            </span>
+            <input type="text" name="phone" id="loginPhone" inputmode="numeric" placeholder="09xxxxxxxxx" required>
+            <span class="field-valid-check" id="loginPhoneCheck">✓</span>
+          </div>
+        </div>
+        <div class="field has-icon">
+          <label>رمز عبور</label>
+          <div class="input-icon-group">
+            <span class="f-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            </span>
+            <input type="password" name="password" placeholder="••••••••" required>
+            <button type="button" class="toggle-pass">نمایش</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-gold">ورود به حساب</button>
+        <div style="text-align:center;margin-top:10px"><a href="/forgot-password" class="small-link">رمز عبورت رو فراموش کردی؟</a></div>
+      </form>
+      <div class="auth-divider">یا</div>
+      <p class="auth-switch">حساب نداری؟ <a href="/register" class="small-link">همین حالا ثبت‌نام کن</a></p>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const quotes = [
+    { text: '«تا قبل از این دوره فکر می‌کردم تغییر ظاهری یعنی فقط باشگاه رفتن. برنامه‌ی چهارفازی کمکم کرد منظم بشم.»', author: '— امیرحسین، دانشجوی گلو‌آپ آکادمی' },
+    { text: '«جلسات ذهن قدرتمند واقعاً روی نظم روزانه‌م اثر گذاشت. پیگیری واقعی پشتیبانی هم عالی بود.»', author: '— محمد، دانشجوی دوره‌ی ذهن قدرتمند' },
+    { text: '«دسترسی دائمی به دوره یعنی می‌تونم هر وقت خواستم برگردم و مرور کنم. دقیقاً همینو می‌خواستم.»', author: '— علی، دانشجوی گلو‌آپ آکادمی' }
+  ];
+  let qi = 0;
+  const textEl = document.getElementById('quoteText');
+  const authEl = document.getElementById('quoteAuthor');
+  if (textEl) {
+    setInterval(() => {
+      qi = (qi + 1) % quotes.length;
+      textEl.style.animation = 'none'; authEl.style.animation = 'none';
+      void textEl.offsetWidth;
+      textEl.textContent = quotes[qi].text;
+      authEl.textContent = quotes[qi].author;
+      textEl.style.animation = 'quoteFade .5s ease forwards';
+      authEl.style.animation = 'quoteFade .5s ease forwards .1s';
+    }, 5000);
+  }
+
+  const phoneInput = document.getElementById('loginPhone');
+  const phoneCheck = document.getElementById('loginPhoneCheck');
+  if (phoneInput && phoneCheck) {
+    phoneInput.addEventListener('input', () => {
+      const valid = /^09\d{9}$/.test(phoneInput.value.trim());
+      phoneCheck.classList.toggle('show', valid);
+    });
+  }
+
+  const box = document.querySelector('.auth-box.tilt');
+  if (box) {
+    box.addEventListener('mousemove', (e) => {
+      const r = box.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      box.style.transform = `perspective(900px) rotateY(${x * 3}deg) rotateX(${-y * 3}deg)`;
+    });
+    box.addEventListener('mouseleave', () => { box.style.transform = ''; });
+  }
+})();
+</script>
+<%- include('partials/footer') %>

@@ -1,0 +1,14 @@
+GlowUp Academy — Admin Pro 4.3
+
+FULL STABILITY & BUGFIX HARDENING
+
+- Fixed CSRF false-rejection after session regeneration by preserving the per-session CSRF token across login, registration, and admin password changes.
+- Added CSRF validation to multipart Media Library uploads after multer parsing.
+- Hardened course create/edit validation and numeric inputs.
+- Validated course/session IDs before database mutations.
+- Cleaned replaced course cover files when a new cover is saved.
+- Hardened media deletion against path traversal.
+- Improved SQLite CHECK/constraint error messages.
+- Preserved the existing admin error boundary and friendly redirect behavior.
+- Static Node syntax checks passed.
+- Full npm install/integration test could not be completed in the build environment because npm install timed out.
