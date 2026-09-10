@@ -1,0 +1,43 @@
+/* Homepage course showcase — minimal visual treatment inspired by the approved reference */
+.p10-course-showcase{max-width:1180px;margin:28px auto 0;position:relative}
+.p10-showcase-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:0 0 22px;padding:0 8px}
+.p10-showcase-heading strong{display:block;font-size:1.05rem;font-weight:700;color:#f4f1ea;margin-top:5px}
+.p10-showcase-note{font-size:.78rem;color:#8f8b83;white-space:nowrap}
+.p10-showcase-heading .eyebrow{color:#d7aa55}
+.p10-coverflow{position:relative}
+.p10-coverflow .coverflow-stage{min-height:410px;display:flex;align-items:stretch;justify-content:center;gap:12px;padding:0 42px;overflow:hidden}
+.p10-coverflow .coverflow-item{width:218px;min-width:218px;height:390px;display:flex;align-items:stretch;justify-content:center;transition:transform .28s ease,opacity .28s ease}
+.p10-coverflow .coverflow-item .course-card-shell{width:100%;height:100%}
+.p10-coverflow .coverflow-item .premium-course-card{height:100%;border:1px solid rgba(255,255,255,.11);border-radius:18px;overflow:hidden;background:#111214;box-shadow:0 16px 38px rgba(0,0,0,.28);transform:none!important}
+.p10-coverflow .coverflow-item .premium-course-card:hover{transform:translateY(-4px)!important;border-color:rgba(214,169,84,.4);box-shadow:0 20px 44px rgba(0,0,0,.4)}
+.p10-coverflow .coverflow-item .thumb{height:100%;min-height:100%;border-radius:17px;position:relative}
+.p10-coverflow .coverflow-item .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.p10-coverflow .coverflow-item .image-frame{inset:0;border-radius:17px}
+.p10-coverflow .coverflow-item .image-vignette{inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 25%,rgba(0,0,0,.22) 48%,rgba(0,0,0,.92) 100%)}
+.p10-coverflow .coverflow-item .thumb-topline{opacity:.72;font-size:.55rem;padding:12px 12px 0}
+.p10-coverflow .coverflow-item .thumb-cta{display:none}
+.p10-coverflow .coverflow-item .discount-flag,.p10-coverflow .coverflow-item .badge-flag{display:none}
+.p10-coverflow .coverflow-item .card-depth{display:none}
+.p10-coverflow .coverflow-item .body{position:absolute;inset:auto 0 0;padding:0 16px 16px;text-align:right;background:linear-gradient(transparent,rgba(0,0,0,.88) 34%);z-index:3}
+.p10-coverflow .coverflow-item .body h3{font-size:1rem;line-height:1.55;margin:0 0 5px;color:#fff}
+.p10-coverflow .coverflow-item .body p{font-size:.7rem;line-height:1.7;color:#c2beb6;margin:0 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.p10-coverflow .coverflow-item .meta{display:flex;align-items:center;justify-content:flex-start}
+.p10-coverflow .coverflow-item .price{display:none}
+.p10-coverflow .coverflow-item .tag{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(215,170,85,.28);background:rgba(35,29,19,.78);color:#e6c278;border-radius:999px;padding:6px 11px;font-size:.66rem}
+.p10-coverflow .coverflow-item .card-wishlist{display:none}
+.p10-coverflow .coverflow-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:10px}
+.p10-coverflow .carousel-arrow{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(12,12,14,.72);color:#eee;font-size:1.5rem;line-height:1;display:grid;place-items:center}
+.p10-coverflow .carousel-arrow:hover{border-color:rgba(215,170,85,.65);color:#e1b968}
+.p10-coverflow .coverflow-dots{display:flex;align-items:center;gap:7px}
+.p10-coverflow .cf-dot{width:24px;height:3px;border-radius:99px;background:#3b3b3e;display:block;transition:all .25s ease}
+.p10-coverflow .cf-dot.active{background:#d7aa55;width:30px}
+@media (max-width:900px){
+  .p10-showcase-heading{padding:0 14px}.p10-showcase-note{display:none}
+  .p10-coverflow .coverflow-stage{justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding:0 18px 8px}.p10-coverflow .coverflow-stage::-webkit-scrollbar{display:none}
+  .p10-coverflow .coverflow-item{width:190px;min-width:190px;height:345px}
+}
+@media (max-width:560px){
+  .p10-course-showcase{margin-top:18px}.p10-showcase-heading{margin-bottom:14px}.p10-showcase-heading strong{font-size:.92rem}
+  .p10-coverflow .coverflow-stage{gap:10px}.p10-coverflow .coverflow-item{width:168px;min-width:168px;height:315px}
+  .p10-coverflow .coverflow-item .body{padding:0 12px 12px}.p10-coverflow .coverflow-item .body h3{font-size:.88rem}.p10-coverflow .coverflow-item .body p{font-size:.63rem}
+}
