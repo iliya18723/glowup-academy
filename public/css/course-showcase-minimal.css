@@ -1,43 +1,57 @@
-/* Homepage course showcase — minimal visual treatment inspired by the approved reference */
-.p10-course-showcase{max-width:1180px;margin:28px auto 0;position:relative}
-.p10-showcase-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:0 0 22px;padding:0 8px}
-.p10-showcase-heading strong{display:block;font-size:1.05rem;font-weight:700;color:#f4f1ea;margin-top:5px}
-.p10-showcase-note{font-size:.78rem;color:#8f8b83;white-space:nowrap}
-.p10-showcase-heading .eyebrow{color:#d7aa55}
+/* GlowUp Academy — approved homepage reference layout */
+.p10-course-showcase{width:min(1080px,calc(100% - 80px));max-width:none;margin:8px auto 0;position:relative;z-index:5}
+.p10-showcase-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin:0 0 20px;padding:0 4px}
+.p10-showcase-heading>div{text-align:right}
+.p10-showcase-heading .eyebrow{display:block;color:#d4a956;font-size:.72rem;font-weight:700;margin-bottom:5px}
+.p10-showcase-heading strong{display:block;color:#f4f1ea;font-size:1rem;font-weight:700;line-height:1.6}
+.p10-showcase-note{font-size:.68rem;color:#88847d;white-space:nowrap}
 .p10-coverflow{position:relative}
-.p10-coverflow .coverflow-stage{min-height:410px;display:flex;align-items:stretch;justify-content:center;gap:12px;padding:0 42px;overflow:hidden}
-.p10-coverflow .coverflow-item{width:218px;min-width:218px;height:390px;display:flex;align-items:stretch;justify-content:center;transition:transform .28s ease,opacity .28s ease}
-.p10-coverflow .coverflow-item .course-card-shell{width:100%;height:100%}
-.p10-coverflow .coverflow-item .premium-course-card{height:100%;border:1px solid rgba(255,255,255,.11);border-radius:18px;overflow:hidden;background:#111214;box-shadow:0 16px 38px rgba(0,0,0,.28);transform:none!important}
-.p10-coverflow .coverflow-item .premium-course-card:hover{transform:translateY(-4px)!important;border-color:rgba(214,169,84,.4);box-shadow:0 20px 44px rgba(0,0,0,.4)}
-.p10-coverflow .coverflow-item .thumb{height:100%;min-height:100%;border-radius:17px;position:relative}
-.p10-coverflow .coverflow-item .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.p10-coverflow .coverflow-item .image-frame{inset:0;border-radius:17px}
-.p10-coverflow .coverflow-item .image-vignette{inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 25%,rgba(0,0,0,.22) 48%,rgba(0,0,0,.92) 100%)}
-.p10-coverflow .coverflow-item .thumb-topline{opacity:.72;font-size:.55rem;padding:12px 12px 0}
-.p10-coverflow .coverflow-item .thumb-cta{display:none}
-.p10-coverflow .coverflow-item .discount-flag,.p10-coverflow .coverflow-item .badge-flag{display:none}
-.p10-coverflow .coverflow-item .card-depth{display:none}
-.p10-coverflow .coverflow-item .body{position:absolute;inset:auto 0 0;padding:0 16px 16px;text-align:right;background:linear-gradient(transparent,rgba(0,0,0,.88) 34%);z-index:3}
-.p10-coverflow .coverflow-item .body h3{font-size:1rem;line-height:1.55;margin:0 0 5px;color:#fff}
-.p10-coverflow .coverflow-item .body p{font-size:.7rem;line-height:1.7;color:#c2beb6;margin:0 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.p10-coverflow .coverflow-stage{height:300px;min-height:300px;display:flex;align-items:center;justify-content:center;gap:10px;padding:0 24px;overflow:hidden;direction:rtl}
+.p10-coverflow .coverflow-item{width:190px;min-width:190px;height:278px;display:flex;align-items:stretch;justify-content:center;transition:transform .3s ease,opacity .3s ease;position:relative}
+.p10-coverflow .coverflow-item:nth-child(3){width:250px;min-width:250px;height:292px;z-index:3}
+.p10-coverflow .coverflow-item .course-card-shell{width:100%;height:100%;position:relative}
+.p10-coverflow .coverflow-item .premium-course-card{width:100%;height:100%;display:block;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:#101113;box-shadow:0 14px 32px rgba(0,0,0,.38);transform:none!important}
+.p10-coverflow .coverflow-item .premium-course-card:hover{transform:translateY(-3px)!important;border-color:rgba(214,169,84,.45);box-shadow:0 18px 38px rgba(0,0,0,.48)}
+.p10-coverflow .coverflow-item .thumb{position:absolute;inset:0;width:100%;height:100%;min-height:0;padding:0;border-radius:15px;overflow:hidden;background:#111}
+.p10-coverflow .coverflow-item .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.p10-coverflow .coverflow-item .image-frame{position:absolute!important;inset:0!important;border:0!important;border-radius:15px;background:linear-gradient(180deg,rgba(0,0,0,.02) 25%,rgba(0,0,0,.12) 45%,rgba(0,0,0,.93) 100%);z-index:1}
+.p10-coverflow .coverflow-item .image-vignette{position:absolute!important;inset:0!important;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.08) 45%,rgba(0,0,0,.9) 100%)!important;z-index:2}
+.p10-coverflow .coverflow-item .thumb-topline{display:none!important}
+.p10-coverflow .coverflow-item .thumb-cta{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:grid!important;place-items:center;width:48px;height:48px;padding:0;border:1px solid rgba(255,255,255,.8);border-radius:50%;background:rgba(0,0,0,.25);color:#fff;font-size:0;z-index:4;opacity:0;transition:opacity .2s ease}
+.p10-coverflow .coverflow-item:nth-child(3) .thumb-cta{opacity:1}
+.p10-coverflow .coverflow-item .thumb-cta .play-dot{font-size:1.05rem;margin:0;line-height:1;transform:translateX(-1px)}
+.p10-coverflow .coverflow-item .discount-flag,.p10-coverflow .coverflow-item .badge-flag{display:none!important}
+.p10-coverflow .coverflow-item .card-depth{display:none!important}
+.p10-coverflow .coverflow-item .body{position:absolute!important;inset:auto 0 0!important;width:100%;padding:0 14px 12px!important;text-align:right;background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.76) 25%,rgba(0,0,0,.96) 100%)!important;z-index:5}
+.p10-coverflow .coverflow-item .body h3{font-size:.88rem;line-height:1.55;margin:0 0 3px;color:#fff;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p10-coverflow .coverflow-item:nth-child(3) .body h3{font-size:1rem}
+.p10-coverflow .coverflow-item .body p{font-size:.62rem;line-height:1.6;color:#c5c1ba;margin:0 0 7px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.p10-coverflow .coverflow-item:nth-child(3) .body p{-webkit-line-clamp:2}
 .p10-coverflow .coverflow-item .meta{display:flex;align-items:center;justify-content:flex-start}
-.p10-coverflow .coverflow-item .price{display:none}
-.p10-coverflow .coverflow-item .tag{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(215,170,85,.28);background:rgba(35,29,19,.78);color:#e6c278;border-radius:999px;padding:6px 11px;font-size:.66rem}
-.p10-coverflow .coverflow-item .card-wishlist{display:none}
-.p10-coverflow .coverflow-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:10px}
-.p10-coverflow .carousel-arrow{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(12,12,14,.72);color:#eee;font-size:1.5rem;line-height:1;display:grid;place-items:center}
-.p10-coverflow .carousel-arrow:hover{border-color:rgba(215,170,85,.65);color:#e1b968}
-.p10-coverflow .coverflow-dots{display:flex;align-items:center;gap:7px}
-.p10-coverflow .cf-dot{width:24px;height:3px;border-radius:99px;background:#3b3b3e;display:block;transition:all .25s ease}
-.p10-coverflow .cf-dot.active{background:#d7aa55;width:30px}
+.p10-coverflow .coverflow-item .price{display:none!important}
+.p10-coverflow .coverflow-item .tag{display:inline-flex!important;align-items:center;border:1px solid rgba(215,170,85,.28);background:rgba(47,39,25,.82);color:#e4c27d;border-radius:6px;padding:4px 9px;font-size:.58rem;line-height:1.2}
+.p10-coverflow .coverflow-item .card-wishlist{display:none!important}
+.p10-coverflow .coverflow-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:-222px;position:relative;z-index:8;pointer-events:none}
+.p10-coverflow .carousel-arrow{pointer-events:auto;width:34px;height:54px;border-radius:9px;border:1px solid rgba(255,255,255,.08);background:rgba(44,46,49,.78);color:#eee;font-size:1.7rem;line-height:1;display:grid;place-items:center}
+.p10-coverflow .carousel-arrow:hover{border-color:rgba(215,170,85,.55);color:#e1b968}
+.p10-coverflow .coverflow-dots{display:none!important}
 @media (max-width:900px){
-  .p10-showcase-heading{padding:0 14px}.p10-showcase-note{display:none}
-  .p10-coverflow .coverflow-stage{justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding:0 18px 8px}.p10-coverflow .coverflow-stage::-webkit-scrollbar{display:none}
-  .p10-coverflow .coverflow-item{width:190px;min-width:190px;height:345px}
+ .p10-course-showcase{width:calc(100% - 28px)}
+ .p10-showcase-note{display:none}
+ .p10-coverflow .coverflow-stage{justify-content:flex-start;overflow-x:auto;scrollbar-width:none;padding:0 6px 8px;direction:rtl}
+ .p10-coverflow .coverflow-stage::-webkit-scrollbar{display:none}
+ .p10-coverflow .coverflow-item,.p10-coverflow .coverflow-item:nth-child(3){width:190px;min-width:190px;height:278px}
+ .p10-coverflow .coverflow-item:nth-child(3) .thumb-cta{opacity:0}
+ .p10-coverflow .coverflow-controls{margin-top:-210px}
 }
 @media (max-width:560px){
-  .p10-course-showcase{margin-top:18px}.p10-showcase-heading{margin-bottom:14px}.p10-showcase-heading strong{font-size:.92rem}
-  .p10-coverflow .coverflow-stage{gap:10px}.p10-coverflow .coverflow-item{width:168px;min-width:168px;height:315px}
-  .p10-coverflow .coverflow-item .body{padding:0 12px 12px}.p10-coverflow .coverflow-item .body h3{font-size:.88rem}.p10-coverflow .coverflow-item .body p{font-size:.63rem}
+ .p10-course-showcase{margin-top:10px}
+ .p10-showcase-heading{margin-bottom:12px}
+ .p10-showcase-heading strong{font-size:.86rem}
+ .p10-coverflow .coverflow-stage{gap:8px;height:260px;min-height:260px}
+ .p10-coverflow .coverflow-item,.p10-coverflow .coverflow-item:nth-child(3){width:160px;min-width:160px;height:240px}
+ .p10-coverflow .coverflow-item .body{padding:0 10px 10px!important}
+ .p10-coverflow .coverflow-item .body h3,.p10-coverflow .coverflow-item:nth-child(3) .body h3{font-size:.78rem}
+ .p10-coverflow .coverflow-item .body p{font-size:.56rem}
+ .p10-coverflow .coverflow-controls{margin-top:-190px}
 }
